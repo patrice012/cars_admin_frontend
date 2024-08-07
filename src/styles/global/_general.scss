@@ -1,0 +1,270 @@
+//imports
+@use "../global/breakpoints" as b;
+@import "./variables";
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Gilroy", sans-serif;
+  font-weight: 500;
+}
+
+body {
+  max-width: 100vw;
+  min-height: 100vh;
+  background-color: $background !important;
+  overflow-x: hidden;
+  /* fallback to clip */
+  overflow-x: clip;
+  scroll-behavior: smooth;
+  position: relative;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+}
+
+// disable btn
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* scroll bar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background: white;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #1013201d;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b1b1b1;
+  border-radius: 10px;
+}
+
+.main-container {
+  display: grid;
+  grid-template-columns: 16rem 1fr;
+  max-width: 100vw;
+
+  &.toggle-sideBar {
+    display: block;
+
+    & .sidebar {
+      display: none;
+    }
+
+    & .main {
+      max-width: 100vw;
+      margin-inline: auto;
+      overflow-x: hidden;
+    }
+
+    & #openSidebar.activeBtn {
+      display: inline-flex;
+    }
+
+    & .centerer {
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+  }
+
+  @include b.breakpoint-down("1000") {
+    display: block;
+
+    & .sidebar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 16rem;
+      z-index: 100;
+
+      @include b.breakpoint-down("500") {
+        width: 19rem;
+      }
+    }
+
+    
+
+    & .table-header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+
+      @include b.breakpoint-down("500") {
+        flex-direction: column;
+      }
+    }
+  }
+
+  & #openSidebar {
+    background-color: $green-light;
+    border-color: $accent;
+    padding: 0.2rem 0.7rem;
+    margin-inline-end: 0.5rem;
+    transition: all 0.3s ease-in;
+    display: none;
+
+    &.activeBtn {
+      display: inline-flex;
+    }
+
+    &:hover {
+      @extend %gradient-bg;
+      color: $white;
+
+      & svg {
+        color: inherit;
+      }
+
+      transition: all 0.3s ease-in;
+    }
+
+    & svg {
+      color: $accent;
+      font-size: 1.2rem;
+    }
+  }
+
+  .main {
+    width: 94%;
+    margin-inline: auto;
+    min-height: 100vh;
+    // max-height: auto;
+    overflow-x: hidden;
+  }
+}
+
+.centerer {
+  width: 100%;
+  margin-inline: auto;
+  margin-block-start: 2.2rem;
+}
+
+.notif {
+  width: 100%;
+  height: fit-content;
+  overflow: hidden;
+  // border: 3px solid black;
+  position: fixed;
+  bottom: 0;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  width: 300px;
+  height: fit-content;
+  right: 1rem;
+  top: 2rem;
+  // }
+}
+
+.notification-alert {
+  background-color: white;
+  color: black;
+  position: relative;
+  width: 80%;
+  margin: 0 auto;
+  padding: 0.7rem 1rem 0.7rem 1rem;
+  border-radius: 10px 10px 0 10px;
+  border-bottom: 0.3rem solid $accent;
+  box-shadow: 0 0 12px 12px rgba(20, 20, 20, 0.103);
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 14px;
+
+  svg {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+}
+
+.popups {
+  form {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+  }
+}
+
+.back-btn {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 10px 10px 10px #8b8b8b13;
+  width: fit-content;
+  padding: 3px 5px;
+  border-radius: 10px;
+  border-bottom: 1px solid $accent;
+}
+
+.form-page {
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  form {
+    // width: 600px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 10px 10px #8b8b8b13;
+    margin: 0 auto;
+    border-radius: 10px;
+    margin-top: 1rem;
+
+    .big-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+
+      .btns {
+        display: flex;
+        flex-direction: column;
+        gap: 0.7rem;
+        margin-top: 0.7rem;
+      }
+    }
+  }
+}
+
+.btn-capitilized {
+  text-transform: capitalize !important;
+}

@@ -1,0 +1,205 @@
+//imports
+@use "../../styles/global/breakpoints" as b;
+@import "../../styles/global/variables";
+
+.menu-tab-parent {
+  background-color: white;
+  // padding: 0 1rem;
+  border-radius: 15px;
+
+  .tab-bordered {
+    height: 2.5rem;
+    font-size: 15px;
+    text-transform: capitalize;
+  }
+
+  .tab-active {
+    border-color: $accent;
+    color: $accent;
+  }
+}
+
+.account {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+
+  @include b.breakpoint-down("800") {
+    display: flex;
+    flex-direction: column;
+
+    & .quick-links {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.account-details {
+  width: 100%;
+  margin: 0 auto;
+  background-color: $white;
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 10px 10px #8b8b8b13;
+  padding: 2rem;
+  height: fit-content;
+  border-bottom: 2px solid $accent;
+
+  &:hover {
+    @extend %gradient-bg;
+
+    ul {
+      li {
+        color: $white !important;
+      }
+    }
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    li {
+      font-size: 14px;
+
+      span {
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+.your-account {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  margin: 0 auto;
+  background-color: $white;
+  border-radius: 10px;
+  padding: 2rem 0;
+  text-align: center;
+
+  .change {
+    width: 600px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1rem, .8rem + 1.2vw, 1.5rem);
+
+    @include b.breakpoint-down('768') {
+      width: 100%;
+    }
+
+    & label {
+      font-size: clamp(1rem, .8rem + 1.2vw, 1.2rem);
+
+    }
+
+    & form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      & input {
+        @extend %input-style;
+      }
+    }
+
+    & button {
+      margin-top: 1rem;
+      @extend %gradient-bg;
+      border: $accent;
+      transition: all .3s ease-in;
+
+      &:hover {
+        background: $green-light;
+        border: 2px solid $accent;
+        color: $accent;
+        transition: all .3s ease-in;
+      }
+    }
+  }
+}
+
+
+.account-quick-links {
+  grid-template-columns: 1fr 1fr !important;
+
+  @include b.breakpoint-down("500") {
+    display: flex;
+    flex-wrap: wrap;
+
+    & a {
+      width: 100%;
+    }
+  }
+}
+
+
+.account-list {
+  .actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.8rem;
+
+    a {
+      text-transform: capitalize;
+      font-size: 20px;
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+      @extend %gradient-bg;
+      border-color: $accent;
+      transition: all 0.3s ease-in;
+
+      &:hover {
+        background: $green-light;
+        color: $accent;
+        transition: all 0.3s ease-in;
+      }
+
+      p {
+        font-size: 15px;
+      }
+    }
+
+    p {
+      font-size: 15px;
+    }
+  }
+
+  & tbody button {
+    background: $green-light;
+    border: 2px solid $accent;
+    padding: 0.8rem 2rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    font-size: clamp(0.6rem, 0.7rem + 0.6vw, 1rem);
+    text-transform: capitalize;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+      @extend %gradient-bg;
+      border: 2px solid $accent;
+
+      & svg {
+        color: $white;
+      }
+
+      transition: all 0.3s ease-in-out;
+    }
+
+    & svg {
+      color: $accent;
+      transition: all 0.3s ease-in-out;
+    }
+  }
+}

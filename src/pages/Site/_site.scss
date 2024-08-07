@@ -1,0 +1,116 @@
+@use "../../styles/global/breakpoints" as b;
+@import "../../styles/global/variables";
+
+.site--container {
+  @include b.breakpoint-down("768") {
+    overflow-x: auto;
+    margin-inline-end: 2rem;
+  }
+
+  & .actions {
+    & button {
+      @extend %gradient-bg;
+      color: $white;
+      border-radius: 0.375rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      font-size: clamp(0.6rem, 0.7rem + 0.6vw, 1rem);
+      text-transform: capitalize;
+      margin-inline: auto;
+
+      &:hover {
+        background-color: $border;
+        color: $gray;
+
+        transition: all 0.3s ease-in-out;
+      }
+
+      &:hover {
+        & svg {
+          color: $gray;
+        }
+      }
+
+      & svg {
+        margin-left: 1rem;
+        color: $white;
+        transition: all 0.3s ease-in-out;
+      }
+    }
+  }
+  & ~ .table-footer {
+    @include b.breakpoint-down("768") {
+      max-width: 94vw;
+    }
+  }
+}
+
+.site {
+  & .modal-box {
+    min-width: 450px;
+
+    @include b.breakpoint-down("768") {
+      min-width: 90vw;
+    }
+  }
+
+  form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  & input {
+    @extend %input-style;
+    padding: 0.8rem 1rem;
+    border: 1px solid $border;
+    border-radius: 0.375rem;
+    font-size: clamp(0.6rem, 0.7rem + 0.6vw, 1rem);
+  }
+
+  & .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  & button {
+    @extend %gradient-bg;
+    color: $white;
+    border-radius: 0.375rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    font-size: clamp(0.6rem, 0.7rem + 0.6vw, 1rem);
+    text-transform: capitalize;
+    margin-inline: auto;
+
+    &:hover {
+      background-color: $border;
+      color: $gray;
+
+      transition: all 0.3s ease-in-out;
+    }
+
+    &:hover {
+      & svg {
+        color: $gray;
+      }
+    }
+
+    & svg {
+      margin-left: 1rem;
+      color: $white;
+      transition: all 0.3s ease-in-out;
+    }
+  }
+}
+
+.content-site {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 0.8fr;
+  grid-template-rows: 1fr;
+  gap: 40px;
+}

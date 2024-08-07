@@ -1,0 +1,129 @@
+$track-border: rgba(94, 202, 195, 1);
+$track-background: rgba(94, 202, 195, 1);
+$focus-ring: 0px 0px 0px 2px #202123;
+$black: #202123;
+$gray-border: #374151;
+
+$speed: .3s;
+
+// Toggle specific styles
+.toggleBtn {
+    align-items: center;
+    border-radius: 8rem;
+    display: flex;
+    font-weight: 700;
+    height: 1.2rem !important;
+    width: 40px !important;
+
+    &:last-of-type {
+        margin: 0;
+    }
+
+    transition:all $speed ease-in;
+
+    & * {
+        transition: all $speed ease-in;
+    }
+
+}
+
+// Since we can't style the checkbox directly, we "hide" it so we can draw the toggle.
+.toggle__input {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+
+
+
+    // This style sets the focus ring.
+    // The ":not([disabled])" prevents the focus ring from creating a flash
+    //when the element is clicked.
+
+    // &:not([disabled]):active+.toggle-track,
+    // &:not([disabled]):focus+.toggle-track {
+    //     // border: 1px solid transparent;
+    //     // box-shadow: $focus-ring;
+    // }
+
+
+    &:disabled+.toggle-track {
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    transition:all $speed ease-in;
+
+}
+
+.toggle-track {
+    background: $black;
+    border: 2.2px solid $gray-border;
+    border-radius: 100px;
+    cursor: pointer;
+    display: flex;
+    position: relative;
+    height: 100%;
+    width: 100%;
+    transition: all $speed ease-in;
+
+}
+
+.toggle-indicator {
+    align-items: center;
+    background: #fff;
+    border-radius: 14px;
+    bottom: -1.5px;
+    height: 18px;
+    justify-content: center;
+    left: 0px;
+    outline: 2px solid #0000;
+    position: absolute;
+    width: 18.5px;
+    border: 2px solid $gray-border;
+}
+
+.toggle__input:checked+.toggle-track .toggle-indicator {
+    background: $black;
+    border-color: $track-border;
+    transform: translateX(calc(100% - .5px));
+    transition: all $speed ease-in;
+}
+
+.toggle__input:checked+.toggle-track {
+    background: $track-border;
+    border-color: $track-border;
+    transition: all $speed ease-in;
+}
+
+
+@media screen and (-ms-high-contrast: active) {
+    .toggle-track {
+        border-radius: 0;
+    }
+}
+
+
+// custom behaviour base on the page
+.pdfDetailPage {
+    & .toggle__input:checked+.toggle-track {
+        background: $black;
+        border-color: $black;
+        transition: all $speed ease-in;
+
+    }
+
+    .toggle__input:checked+.toggle-track .toggle-indicator {
+        background: $track-border;
+        transform: translateX(calc(100% - -3.5px));
+    }
+
+    & .toggle-indicator {
+        bottom: 1.5px;
+        height: 14px;
+        width: 15.5px;
+    }
+}

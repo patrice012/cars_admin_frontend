@@ -1,0 +1,298 @@
+//import
+@use "../../styles/global/breakpoints" as b;
+@import "../../styles/global/variables";
+
+.upload {
+  width: auto;
+
+  & &-files {
+    background-color: $white;
+    padding: 2rem clamp(2.2rem, 1.8rem + 2vw, 2.5rem);
+    border-radius: 0.375rem;
+
+    @include b.breakpoint-down("500") {
+      padding-inline: 0;
+    }
+
+    & form {
+      display: flex;
+      align-items: center;
+      gap: clamp(1.8rem, 1.5rem + 2.2vw, 2rem);
+    }
+
+    & button {
+      @extend %gradient-bg;
+      color: $white;
+      padding: 0.8rem 2rem;
+      border-radius: 0.375rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      font-size: clamp(0.6rem, 0.7rem + 0.6vw, 1rem);
+      text-transform: capitalize;
+
+      &:hover {
+        background-color: $border;
+        color: $gray;
+
+        transition: all 0.3s ease-in-out;
+      }
+
+      &:hover {
+        & svg {
+          color: $gray;
+        }
+      }
+
+      & svg {
+        margin-left: 1rem;
+        color: $white;
+        transition: all 0.3s ease-in-out;
+      }
+    }
+
+    & label.form-control {
+      border: 1px solid $border;
+      cursor: pointer;
+      padding: 0.8rem 2rem;
+      border-radius: 0.375rem;
+      transition: all 0.3s ease-in-out;
+      font-size: clamp(0.6rem, 0.7rem + 0.6vw, 1rem);
+      text-transform: capitalize;
+
+      @include b.breakpoint-down("500") {
+        padding-inline: calc(1rem + 0.5vw);
+      }
+
+      &:hover {
+        transition: all 0.3s ease-in-out;
+        background-color: $border;
+        color: $gray;
+      }
+
+      & span {
+        text-align: center;
+      }
+    }
+
+    & input[type="file"] {
+      display: none;
+    }
+  }
+
+
+}
+
+
+.modal--container {
+  & .modal-box {
+    width: auto;
+    max-width: 78.125rem;
+    height: auto;
+    padding: 2rem;
+  }
+
+  & .close-modal {
+    position: absolute;
+    top: .5rem;
+    right: clamp(.7rem, .7rem + 1vw, 1.9rem);
+    padding: 0.3rem;
+    cursor: pointer;
+    background-color: $green-light;
+    border: $accent;
+    border-radius: 0.25rem;
+    transition: all 0.3s ease-in-out;
+    color: $gray;
+    font-size: clamp(0.6rem, 0.7rem + 0.6vw, 1rem);
+    text-transform: capitalize;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      @extend %gradient-bg;
+      color: $accent;
+
+      & svg {
+        color: $white;
+        transition: all 0.3s ease-in-out;
+      }
+
+      transition: all 0.3s ease-in-out;
+    }
+
+    & svg {
+      font-size: 2.5rem;
+      z-index: 4;
+      color: $accent;
+      transition: all 0.3s ease-in-out;
+    }
+  }
+
+  & .export-data__link {
+    font-size: 1rem !important;
+    background: $green-light !important;
+    color: $accent;
+    border: 1px solid $accent !important;
+
+    padding: .67rem;
+    border-radius: .375rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+
+    width: fit-content;
+    margin-inline: auto;
+    margin-top: 1.5rem;
+
+    & svg {
+      color: $accent !important;
+      font-size: 1.3rem !important;
+    }
+
+    transition: all .3s ease-in;
+
+    &:hover {
+      background: $accent !important;
+      color: $white !important;
+
+      & svg {
+        color: $white !important;
+      }
+
+      transition: all .3s ease-in;
+    }
+
+    & span {
+      font-size: 1rem !important;
+      text-wrap: nowrap;
+    }
+
+  }
+}
+
+.uploaded-files {
+  & .btn--delete {
+    display: flex;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: center;
+    background-color: $border;
+    border: none;
+    transition: all 0.3s ease-in;
+
+    &:hover {
+      @extend %gradient-bg;
+
+      & svg {
+        color: $white;
+      }
+
+      transition: all 0.3s ease-in;
+    }
+
+    & svg {
+      color: $second;
+      font-size: 1.2rem;
+    }
+  }
+
+  & .table {
+    width: 100%;
+  }
+}
+
+.upload-warnings {
+  text-align: center;
+}
+
+
+.export-data {
+
+  & a {
+    background: $green-light !important;
+    color: $accent;
+    border: 1px solid $accent !important;
+
+    padding: .67rem;
+    border-radius: .375rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+
+    & svg {
+      color: $accent !important;
+      font-size: 1.3rem !important;
+    }
+
+    transition: all .3s ease-in;
+
+    &:hover {
+      background: $accent !important;
+      color: $white !important;
+
+      & svg {
+        color: $white !important;
+      }
+
+      transition: all .3s ease-in;
+    }
+
+    & span {
+      font-size: 1rem !important;
+      text-wrap: nowrap;
+    }
+  }
+
+  & .export-data__btn {
+    font-size: 1rem !important;
+    background: $green-light !important;
+    color: $accent;
+    border: 1px solid $accent !important;
+
+    padding: .67rem;
+    border-radius: .375rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+
+    text-wrap: nowrap;
+
+    & svg {
+      color: $accent !important;
+      font-size: 1.3rem !important;
+    }
+
+    transition: all .3s ease-in;
+
+    &:hover {
+      background: $accent !important;
+      color: $white !important;
+
+      & svg {
+        color: $white !important;
+      }
+
+      transition: all .3s ease-in;
+    }
+
+    & span {
+      font-size: 1rem !important;
+      text-wrap: nowrap;
+    }
+  }
+
+}
+
+.modal-box.upload-box,
+.modal-box.export-data {
+  overflow-y: initial;
+}
+
+.modal-box.invalidEmailDetails {
+  overflow-y: auto;
+}

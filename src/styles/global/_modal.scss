@@ -1,0 +1,97 @@
+//import
+@use "./breakpoints" as b;
+@import "./variables";
+
+.modal--container {
+    margin: 0 !important;
+    width: auto;
+
+    & .modal-box {
+        width: auto;
+        max-width: 78.125rem;
+        height: auto;
+        padding: 2rem;
+    }
+
+    & .close-modal {
+        position: absolute;
+        top: clamp(.7rem, .7rem + 1vw, 1.9rem);
+        right: clamp(.7rem, .7rem + 1vw, 1.9rem);
+        padding: 0.3rem;
+        cursor: pointer;
+        background-color: $green-light;
+        border: $accent;
+        border-radius: 0.25rem;
+        transition: all 0.3s ease-in-out;
+        color: $gray;
+        font-size: clamp(0.6rem, 0.7rem + 0.6vw, 1rem);
+        text-transform: capitalize;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            @extend %gradient-bg;
+            color: $accent;
+
+            & svg {
+                color: $white;
+                transition: all 0.3s ease-in-out;
+            }
+
+            transition: all 0.3s ease-in-out;
+        }
+
+        & svg {
+            font-size: 2.5rem;
+            z-index: 4;
+            color: $accent;
+            transition: all 0.3s ease-in-out;
+        }
+    }
+
+    & .btn--default {
+        display: flex;
+        border-radius: 6px;
+        align-items: center;
+        justify-content: center;
+        background-color: #313641;
+        border: 2px solid #363b46;
+        transition: all 0.3s ease-in;
+
+        &:hover {
+            background-color: #a2abbe;
+            color: black;
+            transition: all 0.3s ease-in;
+        }
+    }
+
+    & .btn--action {
+        display: flex;
+        border-radius: 6px;
+        align-items: center;
+        justify-content: center;
+        background-color: $border;
+        border: 2px solid $accent;
+        transition: all 0.3s ease-in;
+        @extend %gradient-bg;
+
+        & svg {
+            color: $white;
+            font-size: 1.2rem;
+        }
+
+        &:hover {
+            background: $green-light;
+            color: $accent;
+            transition: all 0.3s ease-in;
+
+            & svg {
+                color: $accent;
+                transition: all 0.3s ease-in;
+            }
+        }
+    }
+}
+
+.modal-warnings {
+    text-align: center;
+}

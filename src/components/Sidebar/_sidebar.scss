@@ -1,0 +1,176 @@
+//imports
+@import "../../styles/global/variables";
+
+.sidebar {
+  position: relative;
+  background-color: $white;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  color: $second;
+  border-right: 2px solid $border;
+
+  .heading {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // flex-direction: column;
+    padding: 1.3rem 2.1rem;
+    margin-bottom: 1rem;
+
+    & .close-sidebar {
+      display: none;
+      background-color: transparent;
+      border-color: transparent;
+      position: relative;
+      right: -1.25rem;
+      min-height: 2.5rem;
+      padding-inline: 0.8rem;
+
+      &.activeBtn {
+        display: inline-flex;
+      }
+
+      &:hover {
+        border-color: $accent;
+        background-color: $green-light;
+      }
+      & svg {
+        color: $accent;
+        font-size: 1.4rem;
+      }
+    }
+    & img {
+      width: fit-content;
+      height: auto;
+      object-fit: contain;
+      position: relative;
+      left: -1.125rem;
+    }
+  }
+
+  & .menu-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    // user box
+    & .user-box {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      border-bottom: 2px solid $border;
+      padding: 0;
+      padding-bottom: 10px;
+      width: calc(100% - 4.2rem);
+      margin: 0 auto;
+      margin-bottom: 1rem;
+
+      & .user-img {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        & img {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          object-fit: cover;
+        }
+      }
+      & .user-details {
+        display: flex;
+        flex-direction: column;
+
+        h3 {
+          font-size: 14px;
+          font-weight: 500;
+        }
+        p {
+          font-size: 11px;
+          font-weight: 400;
+        }
+      }
+    }
+
+
+    // Upload files btn
+    & .new-sidebar {
+      @extend %gradient-bg;
+      padding: 0;
+      padding-bottom: 10px;
+      width: calc(100% - 4.2rem);
+      margin: 0 auto;
+      margin-bottom: 2rem;
+      margin-top: 2rem;
+      border-radius: 20px;
+
+      li {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        color: $white;
+        font-size: 30px;
+        margin-bottom: -10px;
+
+        p {
+          font-size: 15px;
+        }
+        svg {
+          color: $white;
+        }
+      }
+    }
+
+    li {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 1rem 2.1rem;
+      cursor: pointer;
+      font-size: 19px;
+      gap: 0.9rem;
+
+      p {
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      &.active-menu {
+        border-left: 5px solid $accent;
+        padding: 1rem calc(2.1rem - 5px);
+        color: $accent;
+
+        svg {
+          color: $accent;
+        }
+      }
+    }
+
+    svg {
+      color: #a5b4cb;
+    }
+  }
+}
+
+.seperator-element {
+  height: 2px;
+  margin: 2rem 1.5rem;
+  background-color: $border;
+}
+
+.logout {
+  position: absolute;
+  bottom: 1.5rem;
+  width: 82%;
+  // margin: 0 2.1rem;
+  p {
+    text-transform: capitalize !important;
+  }
+}

@@ -1,0 +1,30 @@
+$background: #fff;
+$white: #fff;
+$border: #e3eaf4;
+$second: #141736;
+$accent: rgba(94, 202, 195, 1);
+$dash: #141736;
+$gray: #263238;
+$green-light: #def4f1;
+
+%gradient-bg {
+  background: rgb(92, 197, 248);
+  background: linear-gradient(90deg,
+      rgba(92, 197, 248, 1) 0%,
+      rgba(94, 202, 195, 1) 67%,
+      rgb(96, 208, 180) 89%,
+      rgba(95, 205, 167, 1) 98%);
+}
+
+%input-style %select-style {
+  border: 2px solid $green-light;
+  outline: none;
+  color: #252733;
+
+  &:focus,
+  &:focus-within {
+    outline: none;
+    border: 1px solid $accent;
+    background-color: $green-light;
+  }
+}

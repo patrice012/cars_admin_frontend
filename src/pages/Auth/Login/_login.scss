@@ -1,0 +1,64 @@
+//imports
+@use '../../../styles/global/variables';
+@import "../../../styles/global/variables";
+
+.login-f {
+  @extend %gradient-bg;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.login-container {
+  background-color: $white;
+  width: 400px;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 2.5rem 1.8rem;
+  border-radius: 15px;
+
+  .heading {
+    margin-bottom: 2rem;
+    color: #252733;
+    text-align: center;
+
+    h1 {
+      font-size: 30px;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+
+    .inputs {
+      margin-bottom: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    input {
+      @extend %input-style;
+    }
+
+    button {
+      margin-top: 1rem;
+      border-color: $accent;
+      @extend %gradient-bg;
+
+      &:hover {
+        border-color: $accent;
+        background: $green-light;
+        color: $accent;
+        transition: all 0.3s ease-in;
+      }
+    }
+  }
+}
