@@ -7,7 +7,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 let REACT_APP_DOMAIN = import.meta.env.VITE_REACT_APP_DOMAIN;
 let VITE_ENV = import.meta.env.VITE_ENV;
 
-const Auth = ({ idx }) => {
+const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { login, changeLogin } = useContext(UserContext);

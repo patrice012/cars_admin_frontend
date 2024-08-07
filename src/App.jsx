@@ -15,6 +15,7 @@ import { UploadFiles } from "./components/Upload/UploadFiles";
 import SitesData from "./pages/Site";
 import SiteDetails from "./pages/Site/SiteDetails";
 import CreateNewAccount from "./pages/Account/CreateNew/CreateNewAccount";
+import { Characteristics } from "./pages/Characteristics/Index";
 import { UserProvider } from "./contexts/UserContext";
 import { UploadFilesProvider } from "./contexts/UploadFilesContext";
 import { useEffect } from "react";
@@ -22,6 +23,12 @@ import { toggleMobileView } from "./helpers/toggleMobileView";
 import BrandData from "./pages/Brand";
 import CarItemsData from "./pages/Item";
 import ItemDetails from "./pages/Item/itemDetails";
+import ColorsData from "./pages/Characteristics/Colors";
+import Cylinders from "./pages/Characteristics/Cylinders";
+import Drive from "./pages/Characteristics/Drive";
+import EngineType from "./pages/Characteristics/EngineType";
+import Fuel from "./pages/Characteristics/Fuel";
+import Transmission from "./pages/Characteristics/Transmission";
 
 const App = () => {
   // react query
@@ -68,6 +75,30 @@ const App = () => {
                     <Route path="/items" element={<CarItemsData />} />
                     <Route path="/items/:id" element={<ItemDetails />} />
                     <Route path="/brands" element={<BrandData />} />
+
+                    <Route
+                      path="/characteristics"
+                      element={<Characteristics />}
+                    />
+                    <Route
+                      path="/characteristics/colors"
+                      element={<ColorsData />}
+                    />
+                    <Route
+                      path="/characteristics/cylinders"
+                      element={<Cylinders />}
+                    />
+                    <Route
+                      path="/characteristics/engine_type"
+                      element={<EngineType />}
+                    />
+                    <Route path="/characteristics/drive" element={<Drive />} />
+                    <Route
+                      path="/characteristics/transmission"
+                      element={<Transmission />}
+                    />
+                    <Route path="/characteristics/fuel" element={<Fuel />} />
+
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </div>

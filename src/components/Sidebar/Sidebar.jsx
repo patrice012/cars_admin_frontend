@@ -7,6 +7,8 @@ import Auth from "../Auth/Auth";
 import { AiOutlineHome } from "react-icons/ai";
 ("react-icons/tb");
 import { IoMdAddCircle, IoMdAlbums, IoMdSettings } from "react-icons/io";
+import { RiSettingsLine } from "react-icons/ri";
+
 
 import { HiOutlineLogout } from "react-icons/hi";
 import { BsBoxArrowLeft } from "react-icons/bs";
@@ -82,6 +84,12 @@ const Sidebar = () => {
                 title="Items"
                 link="/items"
                 children={<IoMdAlbums />}
+              />
+
+              <SidebarItem
+                title="Characteristics"
+                link="/characteristics"
+                children={<RiSettingsLine />}
               />
 
               <SidebarItem
