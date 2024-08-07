@@ -5,7 +5,6 @@ import { PiCylinderDuotone } from "react-icons/pi";
 import { TbUserStar } from "react-icons/tb";
 import { BsFuelPump } from "react-icons/bs";
 
-
 import Auth from "../../components/Auth/Auth";
 import Header from "../../components/Header/Header";
 

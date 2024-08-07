@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Modal from "../../Modal";
 import postReq from "../../../helpers/postReq";
@@ -23,17 +23,38 @@ const UpdateData: React.FC<UpdateDataProps> = ({
 }) => {
   const [data, setData] = useState({
     name: "",
-    _id: "",
+    _id: updatedData["_id"] || "",
   });
   const [actionBtn, setActionBtn] = useState({
     text: "Save",
     isDisabled: false,
   });
+
+  const [canSave, setSave] = useState(false);
   const [warning, setWarning] = useState("");
+
+  useEffect(() => {
+    setSave(data.name.length > 0);
+  }, [data.name]);
+
+  useEffect(() => {
+    setData((prev) => {
+      return {
+        ...prev,
+        name: updatedData["name"] || "",
+        _id: updatedData["_id"] || "",
+      };
+    });
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (data["name"] === updatedData["name"]) {
+      setWarning("Nothing to update.");
+      return;
+    }
 
     data["_id"] = updatedData["_id"];
 
@@ -101,11 +122,14 @@ const UpdateData: React.FC<UpdateDataProps> = ({
           id="name"
           type="text"
           placeholder="Enter name"
-          value={data.name || updatedData.name}
+          value={data.name}
           onChange={(e) => setData({ ...data, name: e.target.value })}
         />
 
-        <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
+        <Button
+          onClick={handleSubmit}
+          disabled={actionBtn.isDisabled || !canSave}
+        >
           <span>{actionBtn.text}</span>
         </Button>
       </form>

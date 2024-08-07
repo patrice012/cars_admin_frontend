@@ -10,6 +10,7 @@ import postReq from "../../../helpers/postReq";
 import { useQuery } from "react-query";
 import AddNew from "./addNew";
 import UpdateData from "./updateItem";
+import DeletedData from "./deleteData";
 
 const META = {
   title: "Site Data",
@@ -25,9 +26,9 @@ interface ItemType {
 
 export const ItemList = ({ page }: { page: string }) => {
   const [pageNumber, setPageNumber] = useState(META.page);
-  const [removing, setRemoving] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   // toggle view data
@@ -38,6 +39,8 @@ export const ItemList = ({ page }: { page: string }) => {
       setIsCreating((prev) => !prev);
     } else if (action === "update") {
       setIsUpdating((prev) => !prev);
+    } else if (action === "delete") {
+      setIsDeleting((prev) => !prev);
     }
     if (state) {
       getPaginate();
@@ -106,12 +109,6 @@ export const ItemList = ({ page }: { page: string }) => {
     setPageNumber(tableData?.prevPage);
   };
 
-  const toggleDeleteData = (state: boolean) => {
-    setRemoving(!removing);
-    if (state) {
-      getPaginate();
-    }
-  };
 
   // update row data
   const UpdateRowData = (data: any) => {
@@ -127,7 +124,7 @@ export const ItemList = ({ page }: { page: string }) => {
     // get detail data
     setRowData({ _id: idx });
     // open modal
-    setRemoving(true);
+    setIsDeleting(true);
   };
 
   // view site data
@@ -258,6 +255,13 @@ export const ItemList = ({ page }: { page: string }) => {
         toggleModal={toggleModal}
         page={page}
         updatedData={rowData}
+      />
+
+      <DeletedData
+        isOpen={isDeleting}
+        toggleModal={toggleModal}
+        page={page}
+        deleteData={rowData}
       />
     </>
   );
