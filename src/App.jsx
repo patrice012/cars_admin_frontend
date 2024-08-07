@@ -1,6 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import "./styles/tailwind.css";
 import "./styles/index.min.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Login from "./pages/Auth/Login/Login";

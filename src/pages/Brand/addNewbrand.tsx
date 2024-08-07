@@ -27,7 +27,7 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!data.title || !data.description) {
+    if (!data.title) {
       setWarning("Please fill all fields");
       return;
     }
@@ -35,8 +35,8 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
     setActionBtn({ text: "Saving...", isDisabled: true });
 
     try {
-      console.log(data);
       const res = await postReq(data, "brand/create");
+      console.log(res);
       if (res) {
         notif(res?.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });
@@ -74,13 +74,13 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
           value={data.title}
           onChange={(e) => setData({ ...data, title: e.target.value })}
         />
-        <TextAreaField
+        {/* <TextAreaField
           label="Add description"
           id="description"
           placeholder="Enter description"
           value={data.description}
           onChange={(e) => setData({ ...data, description: e.target.value })}
-        />
+        /> */}
         <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>
         </Button>

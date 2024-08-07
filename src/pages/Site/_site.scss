@@ -109,7 +109,7 @@
 }
 
 .content-site {
-  display: grid;
+  display: flex;
   grid-template-columns: 1.2fr 1.2fr 0.8fr;
   grid-template-rows: 1fr;
   gap: 40px;

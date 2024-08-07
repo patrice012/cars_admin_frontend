@@ -8,12 +8,9 @@ import { MdDeleteOutline } from "react-icons/md";
 
 import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
-// import { DeleteSite } from "./DeleteSite";
-// import { CreateNewSite } from "./AddNew";
-// import { UpdateSite } from "./UpdateSite";
-// import { LoadingSkeleton } from "./Loading";
 import AddNewBrand from "./addNewbrand";
 import Brand from "../../models/brand.model";
+import { DeleteModal } from "../../components/Modal";
 
 const META = {
   title: "Site Data",
@@ -27,10 +24,8 @@ export const BrandList = () => {
   const [removing, setRemoving] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [selectedId, setSelectedId] = useState("");
   const location = useLocation();
-  const navigate = useNavigate();
-  // toggle view data
-  const [rowData, setRowData] = useState({});
 
   const toggleModal = ({ state = true, action = "create" }) => {
     if (action === "create") {
@@ -98,29 +93,6 @@ export const BrandList = () => {
     }
   };
 
-  // update row data
-  const UpdateRowData = (data: any) => {
-    // get detail data
-    // console.log(data);
-    setRowData({ ...data });
-    // open modal
-    toggleModal({ state: true, action: "update" });
-  };
-
-  // delete row data
-  const DeleteRowData = (idx: string) => {
-    // get detail data
-    setRowData({ _id: idx });
-    // open modal
-    setRemoving(true);
-  };
-
-  // view site data
-  const handleSiteKeywordDetail = async (brand: Brand) => {
-    if (!brand._id) return;
-    navigate(`/sites/${brand._id}`, { state: { ...brand } });
-  };
-
   return (
     <>
       <section className="table-container">
@@ -134,8 +106,8 @@ export const BrandList = () => {
               >
                 <BsPlusLg /> <p>Add new</p>
               </button>
-              {tableData?.docs ? (
-                <p>{tableData?.totalDocs || tableData?.docs?.length} items</p>
+              {tableData ? (
+                <p>{tableData?.length || tableData?.docs?.length} items</p>
               ) : null}
             </div>
           </div>
@@ -143,11 +115,10 @@ export const BrandList = () => {
           {/* table */}
           <table className="table table-zebra mt-6">
             {/* thead*/}
-            {tableData?.docs?.length || tableData ? (
+            {tableData?.length || tableData ? (
               <thead>
                 <tr>
                   <th>Title</th>
-                  <th>Description</th>
                   <th>Update</th>
                   <th>Delete</th>
                 </tr>
@@ -169,7 +140,7 @@ export const BrandList = () => {
                 })}
 
               {/* error on nothing found */}
-              {(error || tableData?.docs?.length === 0) && (
+              {(error || tableData?.length === 0) && (
                 <>
                   <div className="nodata">
                     <img src="/img/nodata.svg" alt="no data found" />
@@ -184,13 +155,13 @@ export const BrandList = () => {
                     return (
                       <tr key={idx} className="cursor-pointer">
                         <td>{brand?.title}</td>
-                        <td>{brand?.description}</td>
 
                         <th
                           className="view-data"
                           onClick={(e) => {
                             e.stopPropagation();
-                            UpdateRowData(brand);
+                            setSelectedId(brand._id);
+                            setIsUpdating(true);
                           }}
                         >
                           <RxUpdate />
@@ -199,7 +170,8 @@ export const BrandList = () => {
                           className="view-data"
                           onClick={(e) => {
                             e.stopPropagation();
-                            DeleteRowData(brand._id);
+                            setSelectedId(brand._id);
+                            setRemoving(true);
                           }}
                         >
                           <MdDeleteOutline />
@@ -212,7 +184,7 @@ export const BrandList = () => {
           </table>
         </div>
         {/* footer */}
-        {tableData?.totalDocs > META.perPage - 2 && (
+        {tableData?.length > META.perPage - 2 && (
           <div className="table-footer">
             <div className="elms">
               <button
@@ -239,16 +211,15 @@ export const BrandList = () => {
         )}
       </section>
       <AddNewBrand isOpen={isCreating} toggleModal={toggleModal} />
-      {/* <UpdateSite
-        updateData={rowData}
-        isOpen={isUpdating}
-        toggleModal={toggleModal}
-      />
-      <DeleteSite
-        data={rowData}
+      {/* <AddNewBrand isOpen={isUpdating} toggleModal={toggleModal} /> */}
+
+      <DeleteModal
+        deleteItem={toggleDeleteData}
+        _id={selectedId}
+        url="brand/delete"
         isOpen={removing}
-        toggleDeleteData={toggleDeleteData}
-      /> */}
+        closeModal={() => setRemoving(!removing)}
+      />
     </>
   );
 };

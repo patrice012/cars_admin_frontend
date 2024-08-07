@@ -1,36 +1,21 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-// icons
-import { BsPlusLg } from "react-icons/bs";
+import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { RxUpdate } from "react-icons/rx";
 import { MdDeleteOutline } from "react-icons/md";
-import { FaRegStopCircle } from "react-icons/fa";
-import { VscDebugStart } from "react-icons/vsc";
-import { MdOutlineDelete } from "react-icons/md";
-
-import postReq from "../../helpers/postReq";
-import { useQuery } from "react-query";
-// import { DeleteSite } from "./DeleteSite";
-// import { CreateNewKwargs } from "./AddNewKwargs";
-// import { UpdateSite } from "./UpdateSite";
-// import { SectionLoadingSkeleton } from "./Loading";
-// import Error from "./ReqError";
-import notif from "../../helpers/notif";
 import Header from "../../components/Header/Header";
 import Item from "../../models/item.model";
 import CarItemSlider from "../../components/CarItemSlider";
+import AddUpdateItem from "./addUpdateItem";
+import { DeleteModal } from "../../components/Modal";
 
 const ItemDetails = () => {
   const location = useLocation();
   const item = location.state;
-  const [headerStatus, setHeaderStatus] = useState("");
-
-  // console.log(info);
   return (
     <>
-      <Header page={item.title} headerStatus={headerStatus} />
+      <Header page={item.title} />
       <div className="searches-container centerer">
-        <ItemKeyword item={item} setHeaderStatus={setHeaderStatus} />
+        <ItemKeyword item={item} />
       </div>
     </>
   );
@@ -38,51 +23,86 @@ const ItemDetails = () => {
 
 type ItemKewordProps = {
   item: Item;
-  setHeaderStatus: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const ItemKeyword = ({ item, setHeaderStatus }: ItemKewordProps) => {
+const ItemKeyword = ({ item }: ItemKewordProps) => {
+  const navigate = useNavigate();
+  const items = item.photos;
+  const itemsLenght = items.length;
+  const [isOpen, setIsOpen] = useState(false);
   const [removing, setRemoving] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [actionData, setActionData] = useState({});
-  const location = useLocation();
 
-  const [siteData, setSiteData] = useState({});
-  const [status, setStatus] = useState("");
-
-  useEffect(() => {
-    setHeaderStatus(status);
-  }, [status]);
-
-  const [refechSite, setRefechSite] = useState(true);
-
-  // delete row data
-  const handleDeleteSite = (id: string) => {
-    // get detail data
-    setActionData({ _id: id });
-    // open modal
-    setRemoving(true);
+  const toggleDeleteData = (state: boolean) => {
+    setRemoving(!removing);
+    if (state) {
+      navigate(-1);
+    }
   };
-
-  const [visit, setVisite] = useState();
-  const [click, setClick] = useState();
 
   return (
     <>
       <div className="content-site">
-        <h3 className="text">Car Name: {item.title}</h3>
-        <h3>Car Brand: {item.brand.title}</h3>
-        <h3>Description: {item.description}</h3>
-      </div>
-      <div className="flex">
-        {item.photos.map((photo) => (
-          <div>
-            <img className="w-10" src={photo} />
+        <div className="flex-1 flex flex-col w-full">
+          <div className="flex">
+            {item.photos.map((photo, idx) => (
+              <div
+                onClick={() => setIsOpen(!isOpen)}
+                style={{ marginRight: idx != itemsLenght - 1 ? 25 : 0 }}
+              >
+                <img src={photo} />
+              </div>
+            ))}
           </div>
-        ))}
+          <div className="mt-5">
+            <h3 className="text">Car Name: {item.title}</h3>
+            <h3>Car Brand: {item.brand.title}</h3>
+            <h3>Description: {item.description}</h3>
+          </div>
+        </div>
+        <div className="border-l-2 border-[#e3eaf4] pl-5">
+          <div className="flex flex-col gap-10 bg-[#c6d3e5] rounded-lg items-center p-10">
+            <div className="wrapper-btn">
+              <div className="actions flex items-center justify-start">
+                <button
+                  onClick={() => setIsUpdating(true)}
+                  className="btn btn-info flex items-center justify-center"
+                >
+                  <RxUpdate color="white" />
+                  <span className="text-white"> Update</span>
+                </button>
+              </div>
+            </div>
+            <div className="wrapper-btn">
+              <div className="actions flex items-center justify-start">
+                <button
+                  onClick={() => setRemoving(true)}
+                  className="btn btn-error flex items-center justify-center"
+                >
+                  <MdDeleteOutline color="white" />
+                  <span className="text-white"> Remove</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <CarItemSlider isOpen={true} toggleModal={() => {}} />
+      <CarItemSlider
+        items={item.photos}
+        isOpen={isOpen}
+        toggleModal={() => setIsOpen(!isOpen)}
+      />
+      <AddUpdateItem
+        isOpen={isUpdating}
+        toggleModal={() => setIsUpdating(!isUpdating)}
+      />
+      <DeleteModal
+        deleteItem={toggleDeleteData}
+        _id={item._id}
+        url="item/delete"
+        isOpen={removing}
+        closeModal={() => setRemoving(!removing)}
+      />
     </>
   );
 };

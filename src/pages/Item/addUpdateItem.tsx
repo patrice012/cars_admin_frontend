@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import Selectable from "../../components/Selectable";
 import { useQuery } from "react-query";
 import Brand from "../../models/brand.model";
+import Item from "../../models/item.model";
 
 interface AddUpdateItemProps {
   isOpen: boolean;
@@ -74,10 +75,9 @@ const AddUpdateItem: React.FC<AddUpdateItemProps> = ({
       for (let i = 0; i < data.photos.length; i++) {
         formData.append("photos", data.photos[i]);
       }
-      // for (let i = 0; i < data.videos.length; i++) {
-      //   formData.append("videos", data.videos[i]);
-      // }
-      console.log(formData);
+      for (let i = 0; i < data.videos.length; i++) {
+        formData.append("videos", data.videos[i]);
+      }
       const res = await postReq(formData, "item/create", true);
       if (res) {
         notif(res?.message ?? "Success, Data has been added");
@@ -90,7 +90,6 @@ const AddUpdateItem: React.FC<AddUpdateItemProps> = ({
         setWarning("");
       }
     } catch (error) {
-      console.log(error);
       setActionBtn({ text: "Save", isDisabled: false });
     }
   };
@@ -128,20 +127,11 @@ const AddUpdateItem: React.FC<AddUpdateItemProps> = ({
           value={data.description}
           onChange={(e) => setData({ ...data, description: e.target.value })}
         />
-        {/* <InputField
-          label="Brand name"
-          id="brand"
-          type="text"
-          placeholder="Enter brand"
-          value={data.brand}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
-        /> */}
         <Selectable
           items={brands.map((brand: Brand) => ({
             label: brand.title,
             value: brand._id,
           }))}
-          // onChange={(e) => console.log(e.target.value)}
           onChange={(e) => setData({ ...data, brand: e.target.value })}
           title="Brand name"
         />
