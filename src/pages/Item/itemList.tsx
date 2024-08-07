@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-// icons
 import { BsPlusLg } from "react-icons/bs";
 import { RxUpdate } from "react-icons/rx";
 import { MdDeleteOutline } from "react-icons/md";
@@ -10,12 +9,7 @@ import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
 import AddUpdateItem from "./addUpdateItem";
 import Item from "../../models/item.model";
-import { DeleteSite } from "../Site/DeleteSite";
 import { DeleteModal } from "../../components/Modal";
-// import { DeleteSite } from "./DeleteSite";
-// import { CreateNewSite } from "./AddNew";
-// import { UpdateSite } from "./UpdateSite";
-// import { LoadingSkeleton } from "./Loading";
 
 const META = {
   title: "Site Data",
@@ -25,14 +19,14 @@ const META = {
 };
 
 export const ItemList = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [pageNumber, setPageNumber] = useState(META.page);
   const [removing, setRemoving] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
-  // toggle view data
-  const [rowData, setRowData] = useState({});
+  const [selectedId, setSelectedId] = useState("");
+  const [selectedITem, setSelectedItem] = useState<Item>();
 
   const toggleModal = ({ state = true, action = "create" }) => {
     if (action === "create") {
@@ -89,38 +83,20 @@ export const ItemList = () => {
     const tableHeaderScrollTo = document.querySelector("thead");
     tableHeaderScrollTo!.scrollIntoView();
 
-    // move page to next
     setPageNumber(tableData?.prevPage);
-  };
-
-  const handleColoseModa = (state: boolean) => {
-    setRemoving(!removing);
-    // if (state) {
-    //   getPaginate();
-    // }
-  };
-
-  // update row data
-  const UpdateRowData = (data: any) => {
-    // get detail data
-    // console.log(data);
-    setRowData({ ...data });
-    // open modal
-    toggleModal({ state: true, action: "update" });
-  };
-
-  // delete row data
-  const DeleteRowData = (idx: string) => {
-    // get detail data
-    setRowData({ _id: idx });
-    // open modal
-    setRemoving(true);
   };
 
   // view item data
   const handleSiteKeywordDetail = async (item: Item) => {
     if (!item._id) return;
     navigate(`/items/${item._id}`, { state: { ...item } });
+  };
+
+  const toggleDeleteData = (state: boolean) => {
+    setRemoving(!removing);
+    if (state) {
+      getPaginate();
+    }
   };
 
   return (
@@ -136,8 +112,8 @@ export const ItemList = () => {
               >
                 <BsPlusLg /> <p>Add new</p>
               </button>
-              {tableData?.docs ? (
-                <p>{tableData?.totalDocs || tableData?.docs?.length} items</p>
+              {tableData ? (
+                <p>{tableData?.length || tableData?.length} item(s)</p>
               ) : null}
             </div>
           </div>
@@ -145,7 +121,7 @@ export const ItemList = () => {
           {/* table */}
           <table className="table table-zebra mt-6">
             {/* thead*/}
-            {tableData?.docs?.length || tableData ? (
+            {tableData?.length || tableData ? (
               <thead>
                 <tr>
                   <th>Title</th>
@@ -200,19 +176,21 @@ export const ItemList = () => {
                           className="view-data"
                           onClick={(e) => {
                             e.stopPropagation();
-                            UpdateRowData(item);
+                            setSelectedItem(item);
+                            setIsUpdating(true);
                           }}
                         >
-                          <RxUpdate />
+                          <RxUpdate color="blue" />
                         </th>
                         <th
                           className="view-data"
                           onClick={(e) => {
                             e.stopPropagation();
-                            DeleteRowData(item._id);
+                            setSelectedId(item._id);
+                            setRemoving(true);
                           }}
                         >
-                          <MdDeleteOutline />
+                          <MdDeleteOutline color="red" />
                         </th>
                       </tr>
                     );
@@ -251,10 +229,12 @@ export const ItemList = () => {
       <AddUpdateItem isOpen={isCreating} toggleModal={toggleModal} />
       <AddUpdateItem
         isOpen={isUpdating}
-        toggleModal={() => toggleModal({ action: "update" })}
+        toggleModal={() => toggleModal({ state: false, action: "update" })}
       />
       <DeleteModal
-        data={rowData}
+        deleteItem={toggleDeleteData}
+        _id={selectedId}
+        url="item/delete"
         isOpen={removing}
         closeModal={() => setRemoving(!removing)}
       />

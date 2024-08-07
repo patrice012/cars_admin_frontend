@@ -6,11 +6,11 @@ import { BsPlusLg } from "react-icons/bs";
 import { RxUpdate } from "react-icons/rx";
 import { MdDeleteOutline } from "react-icons/md";
 
-import postReq from "../../helpers/postReq";
+import postReq from "../../../helpers/postReq";
 import { useQuery } from "react-query";
-import AddNewBrand from "./addNewbrand";
-import Brand from "../../models/brand.model";
-import { DeleteModal } from "../../components/Modal";
+import AddNew from "./addNew";
+import UpdateData from "./updateItem";
+import DeletedData from "./deleteData";
 
 const META = {
   title: "Site Data",
@@ -19,19 +19,28 @@ const META = {
   page: 1,
 };
 
-export const BrandList = () => {
+interface ItemType {
+  name: string;
+  _id: string;
+}
+
+export const ItemList = ({ page }: { page: string }) => {
   const [pageNumber, setPageNumber] = useState(META.page);
-  const [removing, setRemoving] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [selectedId, setSelectedId] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  // toggle view data
+  const [rowData, setRowData] = useState({});
 
   const toggleModal = ({ state = true, action = "create" }) => {
     if (action === "create") {
       setIsCreating((prev) => !prev);
     } else if (action === "update") {
       setIsUpdating((prev) => !prev);
+    } else if (action === "delete") {
+      setIsDeleting((prev) => !prev);
     }
     if (state) {
       getPaginate();
@@ -40,8 +49,22 @@ export const BrandList = () => {
 
   // get table data
   const handleTableData = async () => {
+    let uri = "";
+    if (page?.toLowerCase() === "colors") {
+      uri = "colors";
+    } else if (page?.toLowerCase() === "cylinders") {
+      uri = "cylinders";
+    } else if (page?.toLowerCase() === "enginetype") {
+      uri = "engine_type";
+    } else if (page?.toLowerCase() === "drive") {
+      uri = "drive";
+    } else if (page?.toLowerCase() === "transmission") {
+      uri = "transmission";
+    } else if (page?.toLowerCase() === "fuel") {
+      uri = "fuel";
+    }
     // send req
-    return await postReq({ page: pageNumber, perPage: META.perPage }, "brand");
+    return await postReq({ page: pageNumber, perPage: META.perPage }, uri);
   };
 
   let queryKey = [location.pathname, pageNumber, "sites-list"];
@@ -86,11 +109,28 @@ export const BrandList = () => {
     setPageNumber(tableData?.prevPage);
   };
 
-  const toggleDeleteData = (state: boolean) => {
-    setRemoving(!removing);
-    if (state) {
-      getPaginate();
-    }
+
+  // update row data
+  const UpdateRowData = (data: any) => {
+    // get detail data
+    // console.log(data);
+    setRowData({ ...data });
+    // open modal
+    toggleModal({ state: true, action: "update" });
+  };
+
+  // delete row data
+  const DeleteRowData = (idx: string) => {
+    // get detail data
+    setRowData({ _id: idx });
+    // open modal
+    setIsDeleting(true);
+  };
+
+  // view site data
+  const handleSiteKeywordDetail = async (brand: any) => {
+    if (!brand._id) return;
+    navigate(`/sites/${brand._id}`, { state: { ...brand } });
   };
 
   return (
@@ -106,8 +146,8 @@ export const BrandList = () => {
               >
                 <BsPlusLg /> <p>Add new</p>
               </button>
-              {tableData ? (
-                <p>{tableData?.length || tableData?.docs?.length} items</p>
+              {tableData?.docs ? (
+                <p>{tableData?.totalDocs || tableData?.docs?.length} items</p>
               ) : null}
             </div>
           </div>
@@ -115,10 +155,11 @@ export const BrandList = () => {
           {/* table */}
           <table className="table table-zebra mt-6">
             {/* thead*/}
-            {tableData?.length || tableData ? (
+            {tableData?.docs?.length || tableData ? (
               <thead>
                 <tr>
-                  <th>Title</th>
+                  <th>Name</th>
+
                   <th>Update</th>
                   <th>Delete</th>
                 </tr>
@@ -140,7 +181,7 @@ export const BrandList = () => {
                 })}
 
               {/* error on nothing found */}
-              {(error || tableData?.length === 0) && (
+              {(error || tableData?.docs?.length === 0) && (
                 <>
                   <div className="nodata">
                     <img src="/img/nodata.svg" alt="no data found" />
@@ -151,17 +192,15 @@ export const BrandList = () => {
 
               {/* user-data */}
               {tableData?.length
-                ? tableData?.map((brand: Brand, idx: number) => {
+                ? tableData?.map((item: ItemType, idx: number) => {
                     return (
                       <tr key={idx} className="cursor-pointer">
-                        <td>{brand?.title}</td>
-
+                        <td>{item?.name}</td>
                         <th
                           className="view-data"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setSelectedId(brand._id);
-                            setIsUpdating(true);
+                            UpdateRowData(item);
                           }}
                         >
                           <RxUpdate />
@@ -170,8 +209,7 @@ export const BrandList = () => {
                           className="view-data"
                           onClick={(e) => {
                             e.stopPropagation();
-                            setSelectedId(brand._id);
-                            setRemoving(true);
+                            DeleteRowData(item._id);
                           }}
                         >
                           <MdDeleteOutline />
@@ -184,7 +222,7 @@ export const BrandList = () => {
           </table>
         </div>
         {/* footer */}
-        {tableData?.length > META.perPage - 2 && (
+        {tableData?.totalDocs > META.perPage - 2 && (
           <div className="table-footer">
             <div className="elms">
               <button
@@ -210,15 +248,20 @@ export const BrandList = () => {
           </div>
         )}
       </section>
-      <AddNewBrand isOpen={isCreating} toggleModal={toggleModal} />
-      {/* <AddNewBrand isOpen={isUpdating} toggleModal={toggleModal} /> */}
+      <AddNew isOpen={isCreating} toggleModal={toggleModal} page={page} />
 
-      <DeleteModal
-        deleteItem={toggleDeleteData}
-        _id={selectedId}
-        url="brand/delete"
-        isOpen={removing}
-        closeModal={() => setRemoving(!removing)}
+      <UpdateData
+        isOpen={isUpdating}
+        toggleModal={toggleModal}
+        page={page}
+        updatedData={rowData}
+      />
+
+      <DeletedData
+        isOpen={isDeleting}
+        toggleModal={toggleModal}
+        page={page}
+        deleteData={rowData}
       />
     </>
   );

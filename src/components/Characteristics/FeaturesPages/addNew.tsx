@@ -1,21 +1,22 @@
 import { useState } from "react";
-import Modal from "../../components/Modal";
-import postReq from "../../helpers/postReq";
-import notif from "../../helpers/notif";
-import TextAreaField from "../../components/TextAreaField";
-import InputField from "../../components/InputField";
-import Button from "../../components/Button";
+
+import Modal from "../../Modal";
+import postReq from "../../../helpers/postReq";
+import notif from "../../../helpers/notif";
+import InputField from "../../InputField";
+import Button from "../../Button";
+
 import PropTypes from "prop-types";
 
-interface AddNewBrandProps {
+interface AddNewProps {
   isOpen: boolean;
+  page: string;
   toggleModal: ({ state, action }: { state: boolean; action: string }) => void;
 }
 
-const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
+const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
   const [data, setData] = useState({
-    title: "",
-    description: "",
+    name: "",
   });
   const [actionBtn, setActionBtn] = useState({
     text: "Save",
@@ -27,7 +28,7 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!data.title) {
+    if (!data.name) {
       setWarning("Please fill all fields");
       return;
     }
@@ -35,8 +36,22 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
     setActionBtn({ text: "Saving...", isDisabled: true });
 
     try {
-      const res = await postReq(data, "brand/create");
-      console.log(res);
+      let uri = "";
+      if (page?.toLowerCase() === "colors") {
+        uri = "colors/create";
+      } else if (page?.toLowerCase() === "cylinders") {
+        uri = "cylinders/create";
+      } else if (page?.toLowerCase() === "enginetype") {
+        uri = "engine_type/create";
+      } else if (page?.toLowerCase() === "drive") {
+        uri = "drive/create";
+      } else if (page?.toLowerCase() === "transmission") {
+        uri = "transmission/create";
+      } else if (page?.toLowerCase() === "fuel") {
+        uri = "fuel/create";
+      }
+
+      const res = await postReq(data, uri);
       if (res) {
         notif(res?.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });
@@ -54,7 +69,7 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
 
   const closeModal = (state: boolean) => {
     setWarning("");
-    setData({ title: "", description: "" });
+    setData({ name: "" });
     toggleModal({ state: state, action: "create" });
   };
 
@@ -67,20 +82,14 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
     >
       <form onSubmit={handleSubmit}>
         <InputField
-          label="Title"
-          id="title"
+          label="name"
+          id="name"
           type="text"
-          placeholder="Enter title"
-          value={data.title}
-          onChange={(e) => setData({ ...data, title: e.target.value })}
+          placeholder="Enter name"
+          value={data.name}
+          onChange={(e) => setData({ ...data, name: e.target.value })}
         />
-        {/* <TextAreaField
-          label="Add description"
-          id="description"
-          placeholder="Enter description"
-          value={data.description}
-          onChange={(e) => setData({ ...data, description: e.target.value })}
-        /> */}
+
         <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>
         </Button>
@@ -89,9 +98,9 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
   );
 };
 
-AddNewBrand.propTypes = {
+AddNew.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   toggleModal: PropTypes.func.isRequired,
 };
 
-export default AddNewBrand;
+export default AddNew;

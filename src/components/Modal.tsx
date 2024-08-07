@@ -1,5 +1,7 @@
 import React from "react";
 import { IoIosClose } from "react-icons/io";
+import postReq from "../helpers/postReq";
+import notif from "../helpers/notif";
 
 interface ModalProps {
   isOpen: boolean;
@@ -45,39 +47,34 @@ const Modal: React.FC<ModalProps> = ({
   );
 };
 
-// Modal.propTypes = {
-//   isOpen: PropTypes.bool.isRequired,
-//   title: PropTypes.string.isRequired,
-//   warning: PropTypes.string.isRequired,
-//   children: PropTypes.node.isRequired,
-//   closeModal: PropTypes.func.isRequired,
-// };
-
 export default Modal;
 
 interface DeleteModalProps {
-  data: object;
+  _id: string;
+  url: string;
   isOpen: boolean;
   closeModal: Function;
+  deleteItem: (isDeleted: boolean) => void;
 }
 
-export const DeleteModal = ({ data, isOpen, closeModal }: DeleteModalProps) => {
-  // const navigate = useNavigate();
-
-  // const handleRemove = async () => {
-  //   try {
-  //     const res = await postReq({ id: data._id }, "/api/site/delete");
-  //     if (res.code === "ok") {
-  //       notif("success", "Data has been deleted");
-  //       toggleDeleteData(true);
-  //       navigate("/sites");
-  //     } else {
-  //       notif("error", "Failed to delete data");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+export const DeleteModal = ({
+  _id,
+  url,
+  isOpen,
+  closeModal,
+  deleteItem,
+}: DeleteModalProps) => {
+  const handleRemove = async () => {
+    try {
+      const res = await postReq({ _id: _id }, url);
+      if (res) {
+        deleteItem(true);
+      } else {
+        notif("Failed to delete data");
+        deleteItem(false);
+      }
+    } catch (error) {}
+  };
 
   const handleCloseModal = () => {
     closeModal(isOpen);
@@ -102,7 +99,7 @@ export const DeleteModal = ({ data, isOpen, closeModal }: DeleteModalProps) => {
           </button>
 
           <button
-            // onClick={handleRemove}
+            onClick={handleRemove}
             className="btn btn--action flex items-center justify-center gap-2"
           >
             <span>Confirm</span>

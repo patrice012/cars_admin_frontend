@@ -1,74 +1,45 @@
+import React from "react";
+import { IoIosClose } from "react-icons/io";
+import Slider from "react-slick";
+import { slideAutoPlaySettings } from "../helpers/constants";
+import { BsArrow90DegRight } from "react-icons/bs";
+import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
+
 interface CarItemSliderProps {
+  items: string[];
   isOpen: boolean;
-  toggleModal: ({ state, action }: { state: boolean; action: string }) => void;
+  toggleModal: Function;
 }
 
-const CarItemSlider = ({ isOpen, toggleModal }: CarItemSliderProps) => {
+const CarItemSlider = ({ isOpen, toggleModal, items }: CarItemSliderProps) => {
   return (
     <>
       <input
         type="checkbox"
-        checked={false}
+        checked={isOpen}
         readOnly
         id="upload-modal"
         className="modal-toggle"
       />
-      <div className="carousel w-full">
-        <div id="slide1" className="carousel-item relative w-full">
-          <img
-            src="https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp"
-            className="w-full"
-          />
-          <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <a href="#slide4" className="btn btn-circle">
-              ❮
-            </a>
-            <a href="#slide2" className="btn btn-circle">
-              ❯
-            </a>
+      <div className="modal modal--container carousel w-full">
+        <div className="modal-box flex flex-col items-center gap-8">
+          <div style={{ width: 800 }} className="carousel w-full">
+            <Slider
+              nextArrow={<FaArrowAltCircleRight color="#6E8DAB" />}
+              prevArrow={<FaArrowAltCircleLeft color="#6E8DAB" />}
+              className="flex"
+              {...slideAutoPlaySettings}
+            >
+              {items.map((source, idx) => (
+                <SlideItem imageSource={source} slideId={`slide${idx + 1}`} />
+              ))}
+            </Slider>
           </div>
         </div>
-        <div id="slide2" className="carousel-item relative w-full">
-          <img
-            src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp"
-            className="w-full"
-          />
-          <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <a href="#slide1" className="btn btn-circle">
-              ❮
-            </a>
-            <a href="#slide3" className="btn btn-circle">
-              ❯
-            </a>
-          </div>
-        </div>
-        <div id="slide3" className="carousel-item relative w-full">
-          <img
-            src="https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp"
-            className="w-full"
-          />
-          <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <a href="#slide2" className="btn btn-circle">
-              ❮
-            </a>
-            <a href="#slide4" className="btn btn-circle">
-              ❯
-            </a>
-          </div>
-        </div>
-        <div id="slide4" className="carousel-item relative w-full">
-          <img
-            src="https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp"
-            className="w-full"
-          />
-          <div className="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
-            <a href="#slide3" className="btn btn-circle">
-              ❮
-            </a>
-            <a href="#slide1" className="btn btn-circle">
-              ❯
-            </a>
-          </div>
+        <div className="wrapper z-40">
+          <label className="modal-backdrop close-modal" htmlFor="upload-modal">
+            <IoIosClose onClick={() => toggleModal()} />
+          </label>
         </div>
       </div>
     </>
@@ -76,3 +47,16 @@ const CarItemSlider = ({ isOpen, toggleModal }: CarItemSliderProps) => {
 };
 
 export default CarItemSlider;
+
+interface SlideItemProps {
+  imageSource: string;
+  slideId: string;
+}
+
+const SlideItem = ({ imageSource, slideId }: SlideItemProps) => {
+  return (
+    <div id={slideId}>
+      <img src={imageSource} className="w-full" />
+    </div>
+  );
+};
