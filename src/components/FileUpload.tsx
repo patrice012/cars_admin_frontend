@@ -9,9 +9,7 @@ interface FileUploadProps {
 const FileUpload: React.FC<FileUploadProps> = ({ id, label, onChange }) => {
   return (
     <div className="form-group mb-4">
-      <label className="label" htmlFor={id}>
-        {label}
-      </label>
+      <span>{label}</span>
       <input
         type="file"
         id={id}

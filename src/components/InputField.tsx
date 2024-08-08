@@ -19,9 +19,7 @@ const InputField: React.FC<InputFieldProps> = ({
 }) => {
   return (
     <div className="form-group mb-4">
-      <label className="label" htmlFor={id}>
-        {label}
-      </label>
+      <span>{label}</span>
       <input
         type={type}
         id={id}
