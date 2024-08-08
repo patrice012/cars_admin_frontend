@@ -9,9 +9,7 @@ interface SelectableProps {
 const Selectable = ({ title, items, onChange }: SelectableProps) => {
   return (
     <div className="form-group mb-4">
-      <label className="label" htmlFor={"id"}>
-        {title}
-      </label>
+      <span>{title}</span>
       <select onChange={onChange} className="select select-bordered w-full">
         <option disabled selected>
           Select a brand
