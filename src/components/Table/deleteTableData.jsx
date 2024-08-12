@@ -7,7 +7,10 @@ import PropTypes from "prop-types";
 export const DeleteTableData = ({ data, isOpen, toggleDeleteData }) => {
   const handleRemove = async () => {
     try {
-      const res = await postReq({ id: data._id }, "/api/proxy/delete");
+      const res = await postReq({
+        data: { id: data._id },
+        url: "/api/proxy/delete",
+      });
       if (res.code === "ok") {
         notif("success, Data has been deleted");
         toggleDeleteData(true);

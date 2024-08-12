@@ -39,14 +39,14 @@ const Table = () => {
   // get table data
   const handleTableData = async () => {
     // send req
-    return await postReq(
-      {
+    return await postReq({
+      data: {
         page: metaField.page,
         perPage: metaField.perPage,
         filter: filter,
       },
-      "/api/proxies"
-    );
+      url: "/api/proxies",
+    });
   };
 
   let queryKey = [location.pathname, metaField.page, filter.search, "proxies"];

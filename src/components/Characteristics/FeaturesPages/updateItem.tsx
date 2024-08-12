@@ -85,15 +85,14 @@ const UpdateData: React.FC<UpdateDataProps> = ({
       } else if (page?.toLowerCase() === "fuel") {
         uri = "fuel/update";
       }
-      console.log(data, page, uri);
 
-      const res = await postReq(data, uri);
-      if (res) {
-        notif(res?.message ?? "Success, Data has been added");
+      const response = await postReq({ data, url: uri });
+      if (response.status == 200) {
+        notif(response?.data.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });
         closeModal(true);
       } else {
-        notif(res?.message ?? "Failed to add data");
+        notif(response?.data.message ?? "Failed to add data");
         setActionBtn({ text: "Save", isDisabled: false });
         setWarning("");
       }

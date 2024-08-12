@@ -7,7 +7,5 @@ export const slideAutoPlaySettings = {
   slidesToScroll: 1,
   waitForAnimate: false,
   arrows: true,
-  autoplay: true,
-  autoplaySpeed: 2000,
   cssEase: "linear",
 };

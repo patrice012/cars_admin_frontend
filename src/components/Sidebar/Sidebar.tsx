@@ -1,14 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import { useLocation, Link } from "react-router-dom";
-// component
-import Auth from "../Auth/Auth";
 
 // icons
 import { AiOutlineHome } from "react-icons/ai";
 ("react-icons/tb");
 import { IoMdAddCircle, IoMdAlbums, IoMdSettings } from "react-icons/io";
 import { RiSettingsLine } from "react-icons/ri";
-
 
 import { HiOutlineLogout } from "react-icons/hi";
 import { BsBoxArrowLeft } from "react-icons/bs";
@@ -30,7 +27,7 @@ const Sidebar = () => {
   const [allowed, setAllowed] = useState(false);
 
   useEffect(() => {
-    if (location.pathname === "/" || location.pathname.includes("/404")) {
+    if (location.pathname === "/auth" || location.pathname.includes("/404")) {
       setAllowed(false);
     } else {
       setAllowed(true);
@@ -39,13 +36,12 @@ const Sidebar = () => {
 
   return (
     <>
-      <Auth />
       {allowed && (
         <>
           <div className="sidebar">
             {/* heading */}
             <div className="heading">
-              <Link to={"/home"}>ADS APP</Link>
+              <Link to={"/"}>ADMIN</Link>
               <button onClick={closeSideBar} className="btn close-sidebar">
                 <BsBoxArrowLeft />
               </button>
@@ -61,7 +57,7 @@ const Sidebar = () => {
                   </div>
                   <div className="user-details">
                     <h3 className="truncate max-w-[170px]">
-                      {login?.user.name || login?.user.email}
+                      {login?.username || login?.email}
                     </h3>
                     <p>Admin</p>
                   </div>
@@ -70,14 +66,8 @@ const Sidebar = () => {
 
               <SidebarItem
                 title="Dashboard"
-                link="/home"
+                link="/"
                 children={<AiOutlineHome />}
-              />
-
-              <SidebarItem
-                title="Brands"
-                link="/brands"
-                children={<IoMdAddCircle />}
               />
 
               <SidebarItem
@@ -90,6 +80,12 @@ const Sidebar = () => {
                 title="Characteristics"
                 link="/characteristics"
                 children={<RiSettingsLine />}
+              />
+
+              <SidebarItem
+                title="Settings"
+                link="/account"
+                children={<IoMdSettings />}
               />
 
               <SidebarItem

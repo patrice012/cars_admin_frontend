@@ -1,10 +1,11 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import { Link } from "react-router-dom";
 
 interface SideBarItemProps {
   title: string;
   link: string;
   children: React.ReactNode;
+  onClick?: Function;
 }
 
 const SidebarItem = ({ title, link, children }: SideBarItemProps) => {

@@ -11,6 +11,8 @@ import { useQuery } from "react-query";
 import AddNewBrand from "./addNewbrand";
 import Brand from "../../models/brand.model";
 import { DeleteModal } from "../../components/Modal";
+import { useSession } from "../../contexts/authContext";
+import UpdateBrand from "./updateBrand";
 
 const META = {
   title: "Site Data",
@@ -20,11 +22,13 @@ const META = {
 };
 
 export const BrandList = () => {
+  const { session } = useSession();
   const [pageNumber, setPageNumber] = useState(META.page);
   const [removing, setRemoving] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [selectedId, setSelectedId] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState<Brand>();
   const location = useLocation();
 
   const toggleModal = ({ state = true, action = "create" }) => {
@@ -41,7 +45,12 @@ export const BrandList = () => {
   // get table data
   const handleTableData = async () => {
     // send req
-    return await postReq({ page: pageNumber, perPage: META.perPage }, "brand");
+    const result = await postReq({
+      data: { page: pageNumber, perPage: META.perPage },
+      url: "brand",
+      extras: [{ key: "authorization", value: `Bearer ${session}` }],
+    });
+    if (result.status == 200) return result.data;
   };
 
   let queryKey = [location.pathname, pageNumber, "sites-list"];
@@ -161,6 +170,7 @@ export const BrandList = () => {
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedId(brand._id);
+                            setSelectedBrand(brand);
                             setIsUpdating(true);
                           }}
                         >
@@ -210,16 +220,26 @@ export const BrandList = () => {
           </div>
         )}
       </section>
-      <AddNewBrand isOpen={isCreating} toggleModal={toggleModal} />
-      {/* <AddNewBrand isOpen={isUpdating} toggleModal={toggleModal} /> */}
+      {isCreating && (
+        <AddNewBrand isOpen={isCreating} toggleModal={toggleModal} />
+      )}
+      {isUpdating && (
+        <UpdateBrand
+          brand={selectedBrand!}
+          isOpen={isUpdating}
+          toggleModal={() => toggleModal({ state: true, action: "update" })}
+        />
+      )}
 
-      <DeleteModal
-        deleteItem={toggleDeleteData}
-        _id={selectedId}
-        url="brand/delete"
-        isOpen={removing}
-        closeModal={() => setRemoving(!removing)}
-      />
+      {removing && (
+        <DeleteModal
+          deleteItem={toggleDeleteData}
+          _id={selectedId}
+          url="brand/delete"
+          isOpen={removing}
+          closeModal={() => setRemoving(!removing)}
+        />
+      )}
     </>
   );
 };

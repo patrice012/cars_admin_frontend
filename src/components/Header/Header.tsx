@@ -1,9 +1,5 @@
 import { Link } from "react-router-dom";
-
-// toggle upload file modal
 import { useEffect } from "react";
-
-// icons
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import {
@@ -11,15 +7,19 @@ import {
   toggleSideBar,
 } from "../../helpers/toggleMobileView";
 
-const Header = ({ page, headerStatus = "" }) => {
+const Header = ({
+  page,
+  headerStatus = "",
+}: {
+  page: string;
+  headerStatus: string;
+}) => {
   const handleClick = () => {
     toggleSideBar();
   };
 
   window.addEventListener("resize", toggleMobileViewBtn);
   useEffect(toggleMobileViewBtn, []);
-
-  console.log(headerStatus, "headerStatus");
 
   return (
     <div className="header-container">
@@ -35,7 +35,9 @@ const Header = ({ page, headerStatus = "" }) => {
           </label>
           <h2 className="title">{page} </h2>
         </div>
-          <span className="text-lg ml-4">{headerStatus == "start" ? "Running" : ""}</span>
+        <span className="text-lg ml-4">
+          {headerStatus == "start" ? "Running" : ""}
+        </span>
         {/* new btn */}
         <div className="right-side">
           <div className="dropdown dropdown-bottom dropdown-end">
@@ -51,7 +53,7 @@ const Header = ({ page, headerStatus = "" }) => {
               className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
-                <Link to={"/account"}>My Account</Link>
+                <Link to={"/account"}>Settings</Link>
               </li>
               <li>
                 <a href="/auth/logout">Logout</a>

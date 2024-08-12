@@ -7,9 +7,10 @@ import { MdDeleteOutline } from "react-icons/md";
 
 import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
-import AddUpdateItem from "./addUpdateItem";
+import AddItem from "./addItem";
 import Item from "../../models/item.model";
 import { DeleteModal } from "../../components/Modal";
+import UpdateItem from "./updateItem";
 
 const META = {
   title: "Site Data",
@@ -41,8 +42,11 @@ export const ItemList = () => {
 
   // get table data
   const handleTableData = async () => {
-    // send req
-    return await postReq({ page: pageNumber, perPage: META.perPage }, "item");
+    const result = await postReq({
+      data: { page: pageNumber, perPage: META.perPage },
+      url: "item",
+    });
+    if (result.status == 200) return result.data;
   };
 
   let queryKey = [location.pathname, pageNumber, "sites-list"];
@@ -150,7 +154,7 @@ export const ItemList = () => {
               {/* error on nothing found */}
               {(error || tableData?.length === 0) && (
                 <>
-                  <div className="nodata">
+                  <div className="nodata ">
                     <img src="/img/nodata.svg" alt="no data found" />
                     <h3>No record found</h3>
                   </div>
@@ -226,18 +230,23 @@ export const ItemList = () => {
           </div>
         )}
       </section>
-      <AddUpdateItem isOpen={isCreating} toggleModal={toggleModal} />
-      <AddUpdateItem
-        isOpen={isUpdating}
-        toggleModal={() => toggleModal({ state: false, action: "update" })}
-      />
-      <DeleteModal
-        deleteItem={toggleDeleteData}
-        _id={selectedId}
-        url="item/delete"
-        isOpen={removing}
-        closeModal={() => setRemoving(!removing)}
-      />
+      {isCreating && <AddItem isOpen={isCreating} toggleModal={toggleModal} />}
+      {isUpdating && selectedITem && (
+        <UpdateItem
+          item={selectedITem}
+          isOpen={isUpdating}
+          toggleModal={() => toggleModal({ state: false, action: "update" })}
+        />
+      )}
+      {removing && (
+        <DeleteModal
+          deleteItem={toggleDeleteData}
+          _id={selectedId}
+          url="item/delete"
+          isOpen={removing}
+          closeModal={() => setRemoving(!removing)}
+        />
+      )}
     </>
   );
 };

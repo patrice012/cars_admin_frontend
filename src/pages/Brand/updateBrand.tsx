@@ -6,17 +6,23 @@ import InputField from "../../components/InputField";
 import Button from "../../components/Button";
 import PropTypes from "prop-types";
 import { useSession } from "../../contexts/authContext";
+import Brand from "../../models/brand.model";
 
-interface AddNewBrandProps {
+interface UpdateBrandProps {
+  brand: Brand;
   isOpen: boolean;
   toggleModal: ({ state, action }: { state: boolean; action: string }) => void;
 }
 
-const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
+const UpdateBrand: React.FC<UpdateBrandProps> = ({
+  isOpen,
+  toggleModal,
+  brand,
+}) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [data, setData] = useState({
-    title: "",
+    title: brand.title,
     description: "",
   });
   const [actionBtn, setActionBtn] = useState({
@@ -37,8 +43,12 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
     setActionBtn({ text: "Saving...", isDisabled: true });
 
     try {
-      const response = await postReq({ data, url: "brand/create", extras });
-      if (response.status == 201) {
+      const response = await postReq({
+        data: { ...data, _id: brand._id },
+        url: "brand/update",
+        extras,
+      });
+      if (response.status == 200) {
         notif(response.data?.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });
         closeModal(true);
@@ -75,6 +85,13 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
           value={data.title}
           onChange={(e) => setData({ ...data, title: e.target.value })}
         />
+        {/* <TextAreaField
+          label="Add description"
+          id="description"
+          placeholder="Enter description"
+          value={data.description}
+          onChange={(e) => setData({ ...data, description: e.target.value })}
+        /> */}
         <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>
         </Button>
@@ -83,9 +100,9 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
   );
 };
 
-AddNewBrand.propTypes = {
+UpdateBrand.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   toggleModal: PropTypes.func.isRequired,
 };
 
-export default AddNewBrand;
+export default UpdateBrand;
