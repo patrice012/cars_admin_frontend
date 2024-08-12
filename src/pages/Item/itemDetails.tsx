@@ -87,11 +87,11 @@ const ItemKeyword = ({ item }: ItemKewordProps) => {
                     key={photo}
                     onClick={() => setIsOpen(!isOpen)}
                     style={{
-                      marginRight: idx != itemsLenght - 1 ? 25 : 0,
-                      width: 250,
+                      marginRight: idx != itemsLenght - 1 ? 20 : 0,
+                      width: 240,
                     }}
                   >
-                    <img style={{ width: 250 }} src={photo} />
+                    <img style={{ width: 240 }} src={photo} />
                   </div>
                 ))}
               </div>
