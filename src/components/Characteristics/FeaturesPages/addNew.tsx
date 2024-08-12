@@ -36,28 +36,28 @@ const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
     setActionBtn({ text: "Saving...", isDisabled: true });
 
     try {
-      let uri = "";
+      let url = "";
       if (page?.toLowerCase() === "colors") {
-        uri = "colors/create";
+        url = "colors/create";
       } else if (page?.toLowerCase() === "cylinders") {
-        uri = "cylinders/create";
+        url = "cylinders/create";
       } else if (page?.toLowerCase() === "enginetype") {
-        uri = "engine_type/create";
+        url = "engine_type/create";
       } else if (page?.toLowerCase() === "drive") {
-        uri = "drive/create";
+        url = "drive/create";
       } else if (page?.toLowerCase() === "transmission") {
-        uri = "transmission/create";
+        url = "transmission/create";
       } else if (page?.toLowerCase() === "fuel") {
-        uri = "fuel/create";
+        url = "fuel/create";
       }
 
-      const res = await postReq(data, uri);
-      if (res) {
-        notif(res?.message ?? "Success, Data has been added");
+      const response = await postReq({ data, url });
+      if (response.status == 201) {
+        notif(response?.data.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });
         closeModal(true);
       } else {
-        notif(res?.message ?? "Failed to add data");
+        notif(response?.data.message ?? "Failed to add data");
         setActionBtn({ text: "Save", isDisabled: false });
         setWarning("");
       }

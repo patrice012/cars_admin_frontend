@@ -2,6 +2,7 @@ import React from "react";
 import { IoIosClose } from "react-icons/io";
 import postReq from "../helpers/postReq";
 import notif from "../helpers/notif";
+import { useSession } from "../contexts/authContext";
 
 interface ModalProps {
   isOpen: boolean;
@@ -64,9 +65,11 @@ export const DeleteModal = ({
   closeModal,
   deleteItem,
 }: DeleteModalProps) => {
+  const { session } = useSession();
+  const extras = [{ key: "authorization", value: "Bearer " + session }];
   const handleRemove = async () => {
     try {
-      const res = await postReq({ _id: _id }, url);
+      const res = await postReq({ data: { _id: _id }, url, extras });
       if (res) {
         deleteItem(true);
       } else {

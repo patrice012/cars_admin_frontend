@@ -2,20 +2,29 @@ import React from "react";
 
 interface SelectableProps {
   title: string;
+  selected?: { label: string; value: string | any };
   items: { label: string; value: string | any }[];
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
-const Selectable = ({ title, items, onChange }: SelectableProps) => {
+const Selectable = ({ title, items, onChange, selected }: SelectableProps) => {
   return (
     <div className="form-group mb-4">
-      <span>{title}</span>
-      <select onChange={onChange} className="select select-bordered w-full">
-        <option disabled selected>
+      <label className="label" htmlFor={"id"}>
+        {title}
+      </label>
+      <select
+        value={selected?.value ?? ""}
+        onChange={onChange}
+        className="select select-bordered w-full"
+      >
+        <option disabled selected={!selected}>
           Select a brand
         </option>
         {items.map((item) => (
-          <option value={item.value}>{item.label}</option>
+          <option selected={selected?.value == item.value} value={item.value}>
+            {selected?.label ?? item.label}
+          </option>
         ))}
       </select>
     </div>

@@ -53,13 +53,13 @@ const DeletedData: React.FC<DeletedDataProps> = ({
         uri = "fuel/delete";
       }
 
-      const res = await postReq(deleteData, uri);
-      if (res) {
-        notif(res?.message ?? "Success, Data has been deleted");
+      const response = await postReq({ data: deleteData, url: uri });
+      if (response.status == 200) {
+        notif(response?.data.message ?? "Success, Data has been deleted");
         setActionBtn({ text: "Delete", isDisabled: false });
         closeModal(true);
       } else {
-        notif(res?.message ?? "Failed to delete data");
+        notif(response?.data.message ?? "Failed to delete data");
         setActionBtn({ text: "Delete", isDisabled: false });
         setWarning("");
       }

@@ -64,7 +64,10 @@ export const ItemList = ({ page }: { page: string }) => {
       uri = "fuel";
     }
     // send req
-    return await postReq({ page: pageNumber, perPage: META.perPage }, uri);
+    return await postReq({
+      data: { page: pageNumber, perPage: META.perPage },
+      url: uri,
+    });
   };
 
   let queryKey = [location.pathname, pageNumber, "sites-list"];
@@ -81,7 +84,7 @@ export const ItemList = ({ page }: { page: string }) => {
   //  handle next and prev
   const handleNext = () => {
     // check if page available
-    if (!tableData?.hasNextPage) {
+    if (!tableData?.data.hasNextPage) {
       // notif page end
       return;
     }
@@ -91,12 +94,12 @@ export const ItemList = ({ page }: { page: string }) => {
     tableHeaderScrollTo!.scrollIntoView();
 
     // move page to next
-    setPageNumber(tableData?.nextPage);
+    setPageNumber(tableData?.data.nextPage);
   };
 
   const handlePrev = () => {
     // check if page available
-    if (!tableData?.hasPrevPage) {
+    if (!tableData?.data.hasPrevPage) {
       // notif page end
       return;
     }
@@ -106,9 +109,8 @@ export const ItemList = ({ page }: { page: string }) => {
     tableHeaderScrollTo!.scrollIntoView();
 
     // move page to next
-    setPageNumber(tableData?.prevPage);
+    setPageNumber(tableData?.data.prevPage);
   };
-
 
   // update row data
   const UpdateRowData = (data: any) => {
@@ -146,8 +148,11 @@ export const ItemList = ({ page }: { page: string }) => {
               >
                 <BsPlusLg /> <p>Add new</p>
               </button>
-              {tableData?.docs ? (
-                <p>{tableData?.totalDocs || tableData?.docs?.length} items</p>
+              {tableData?.data.docs ? (
+                <p>
+                  {tableData?.data.totalDocs || tableData?.data.docs?.length}{" "}
+                  items
+                </p>
               ) : null}
             </div>
           </div>
@@ -155,7 +160,7 @@ export const ItemList = ({ page }: { page: string }) => {
           {/* table */}
           <table className="table table-zebra mt-6">
             {/* thead*/}
-            {tableData?.docs?.length || tableData ? (
+            {tableData?.data.docs?.length || tableData ? (
               <thead>
                 <tr>
                   <th>Name</th>
@@ -181,7 +186,7 @@ export const ItemList = ({ page }: { page: string }) => {
                 })}
 
               {/* error on nothing found */}
-              {(error || tableData?.docs?.length === 0) && (
+              {(error || tableData?.data.docs?.length === 0) && (
                 <>
                   <div className="nodata">
                     <img src="/img/nodata.svg" alt="no data found" />
@@ -191,8 +196,8 @@ export const ItemList = ({ page }: { page: string }) => {
               )}
 
               {/* user-data */}
-              {tableData?.length
-                ? tableData?.map((item: ItemType, idx: number) => {
+              {tableData?.data.length
+                ? tableData?.data.map((item: ItemType, idx: number) => {
                     return (
                       <tr key={idx} className="cursor-pointer">
                         <td>{item?.name}</td>
@@ -222,11 +227,11 @@ export const ItemList = ({ page }: { page: string }) => {
           </table>
         </div>
         {/* footer */}
-        {tableData?.totalDocs > META.perPage - 2 && (
+        {tableData?.data.totalDocs > META.perPage - 2 && (
           <div className="table-footer">
             <div className="elms">
               <button
-                disabled={!tableData?.hasPrevPage}
+                disabled={!tableData?.data.hasPrevPage}
                 className="btn"
                 onClick={handlePrev}
               >
@@ -234,11 +239,11 @@ export const ItemList = ({ page }: { page: string }) => {
               </button>
 
               <p>
-                Page {tableData?.page} of {tableData?.totalPages}
+                Page {tableData?.data.page} of {tableData?.data.totalPages}
               </p>
 
               <button
-                disabled={!tableData?.hasNextPage}
+                disabled={!tableData?.data.hasNextPage}
                 className="btn"
                 onClick={handleNext}
               >

@@ -25,8 +25,10 @@ const CarItemSlider = ({ isOpen, toggleModal, items }: CarItemSliderProps) => {
         <div className="modal-box flex flex-col items-center gap-8">
           <div style={{ width: 800 }} className="carousel w-full">
             <Slider
-              nextArrow={<FaArrowAltCircleRight color="#6E8DAB" />}
-              prevArrow={<FaArrowAltCircleLeft color="#6E8DAB" />}
+              nextArrow={
+                <FaArrowAltCircleRight fontSize="50px" color="#6E8DAB" />
+              }
+              prevArrow={<FaArrowAltCircleLeft size="50px" color="#6E8DAB" />}
               className="flex"
               {...slideAutoPlaySettings}
             >
