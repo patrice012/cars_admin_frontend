@@ -66,7 +66,9 @@ const Account = () => {
                 </li>
                 <li>
                   <span>Registration Date:</span>{" "}
-                  {new Date(login?.user?.date).toLocaleString() || "01/01/2023"}
+                  {login?.createdAt
+                    ? new Date(login?.createdAt!).toLocaleString()
+                    : "01/01/2023"}
                 </li>
               </ul>
               {/* )} */}

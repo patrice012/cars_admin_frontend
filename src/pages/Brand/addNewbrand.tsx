@@ -6,6 +6,7 @@ import InputField from "../../components/InputField";
 import Button from "../../components/Button";
 import PropTypes from "prop-types";
 import { useSession } from "../../contexts/authContext";
+import FileUpload from "../../components/FileUpload";
 
 interface AddNewBrandProps {
   isOpen: boolean;
@@ -15,9 +16,9 @@ interface AddNewBrandProps {
 const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
-  const [data, setData] = useState({
+  const [data, setData] = useState<{ title: string; image: File[] }>({
     title: "",
-    description: "",
+    image: [],
   });
   const [actionBtn, setActionBtn] = useState({
     text: "Save",
@@ -25,11 +26,21 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
   });
   const [warning, setWarning] = useState("");
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files && files.length == 1) {
+      const files = Array.from(e.target.files || []);
+      setData({ ...data, image: files });
+    } else {
+      notif("Only one file could be upload");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!data.title) {
+    if (!data.title || !(data.image.length > 0)) {
       setWarning("Please fill all fields");
       return;
     }
@@ -37,7 +48,15 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
     setActionBtn({ text: "Saving...", isDisabled: true });
 
     try {
-      const response = await postReq({ data, url: "brand/create", extras });
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("image", data.image[0]);
+      const response = await postReq({
+        data: formData,
+        url: "brand/create",
+        extras,
+        isFileUpload: true,
+      });
       if (response.status == 201) {
         notif(response.data?.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });
@@ -55,7 +74,7 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
 
   const closeModal = (state: boolean) => {
     setWarning("");
-    setData({ title: "", description: "" });
+    setData({ title: "", image: [] });
     toggleModal({ state: state, action: "create" });
   };
 
@@ -74,6 +93,11 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
           placeholder="Enter title"
           value={data.title}
           onChange={(e) => setData({ ...data, title: e.target.value })}
+        />
+        <FileUpload
+          id="photos"
+          label="Upload photos"
+          onChange={handleFileChange}
         />
         <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>

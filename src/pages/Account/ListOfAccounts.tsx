@@ -6,6 +6,7 @@ import postReq from "../../helpers/postReq";
 import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
 import { BsPlusLg, BsTrash } from "react-icons/bs";
 import { useSession } from "../../contexts/authContext";
+import { IUser } from "../../helpers/types";
 
 const AccountList = () => {
   const { session } = useSession();
@@ -167,14 +168,18 @@ const AccountList = () => {
 
               {/* user-data */}
               {tableData?.length && tableConf.target === "user-data"
-                ? tableData?.map((user: any, idx: number) => {
+                ? tableData?.map((user: IUser, idx: number) => {
                     return (
                       <tr key={idx}>
                         <td>{idx + 1}</td>
                         <td>{user?.username}</td>
                         <td>{user?.email}</td>
 
-                        <td>{new Date(user?.createdAt).toLocaleString()}</td>
+                        <td>
+                          {user.createdAt
+                            ? new Date(user?.createdAt!).toLocaleString()
+                            : "Not defined"}
+                        </td>
                         <td>
                           <button
                             className="btn btn--delete"

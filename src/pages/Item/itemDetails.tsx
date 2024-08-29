@@ -97,7 +97,14 @@ const ItemKeyword = ({ item }: ItemKewordProps) => {
               </div>
               <div className="mt-5">
                 <h3 className="text">Car Name: {itemDetails.title}</h3>
-                <h3>Car Brand: {itemDetails.brand.title}</h3>
+                <div className="flex items-center">
+                  <h3>Car Brand: {itemDetails.brand.title}</h3>
+                  <img
+                    className="mr-4"
+                    width={30}
+                    src={itemDetails.brand.image}
+                  />
+                </div>
                 <h3>Description: {itemDetails.description}</h3>
               </div>
             </div>

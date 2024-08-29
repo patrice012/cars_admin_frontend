@@ -28,15 +28,17 @@ import Fuel from "./pages/Characteristics/Fuel";
 import Transmission from "./pages/Characteristics/Transmission";
 import { useSession } from "./contexts/authContext";
 import CreateNewAccount from "./pages/Account/CreateNewAccount";
+import useNetworkStatus from "./hooks/useNetworkStatus";
+import NoConnection from "./pages/404/NoConnection";
 
 const App = () => {
+  const { isOnline } = useNetworkStatus();
   const { session, checkConnection, isLoading } = useSession();
   const client = new QueryClient();
 
   // hide sidebar on mobile
   window.addEventListener("resize", toggleMobileView);
   useEffect(toggleMobileView, []);
-  // checkConnection();
 
   useEffect(() => {
     checkConnection();
@@ -56,57 +58,72 @@ const App = () => {
   }
 
   return (
-    <QueryClientProvider client={client}>
-      <div className="main-container">
-        <div className="notif"></div>
-        <UploadFilesProvider>
-          <Sidebar />
-          <div className="main">
-            <Routes>
-              <Route path="/" element={<Home />} />
+    <>
+      {isOnline ? (
+        <QueryClientProvider client={client}>
+          <div className="main-container">
+            <div className="notif"></div>
+            <UploadFilesProvider>
+              <Sidebar />
+              <div className="main">
+                <Routes>
+                  <Route path="/" element={<Home />} />
 
-              <Route path="/auth" element={<Login />} />
-              <Route path="/account" element={<Account />}>
-                <Route
-                  path="/account/new-account"
-                  element={<CreateNewAccount />}
-                />
-                <Route
-                  path="/account/list-of-accounts"
-                  element={<AccountList />}
-                />
-              </Route>
-              <Route path="/change-password" element={<ChangePassword />} />
-              <Route path="/auth/logout" element={<Logout />} />
-              <Route path="/items" element={<CarItemsData />} />
-              <Route path="/items/:id" element={<ItemDetails />} />
+                  <Route path="/auth" element={<Login />} />
+                  <Route path="/account" element={<Account />}>
+                    <Route
+                      path="/account/new-account"
+                      element={<CreateNewAccount />}
+                    />
+                    <Route
+                      path="/account/list-of-accounts"
+                      element={<AccountList />}
+                    />
+                  </Route>
+                  <Route path="/change-password" element={<ChangePassword />} />
+                  <Route path="/auth/logout" element={<Logout />} />
+                  <Route path="/items" element={<CarItemsData />} />
+                  <Route path="/items/:id" element={<ItemDetails />} />
 
-              <Route path="/characteristics" element={<Characteristics />} />
-              <Route path="/characteristics/colors" element={<ColorsData />} />
-              <Route
-                path="/characteristics/cylinders"
-                element={<Cylinders />}
-              />
-              <Route
-                path="/characteristics/engine_type"
-                element={<EngineType />}
-              />
-              <Route path="/characteristics/drive" element={<Drive />} />
-              <Route
-                path="/characteristics/transmission"
-                element={<Transmission />}
-              />
-              <Route path="/characteristics/fuel" element={<Fuel />} />
+                  <Route
+                    path="/characteristics"
+                    element={<Characteristics />}
+                  />
+                  <Route
+                    path="/characteristics/colors"
+                    element={<ColorsData />}
+                  />
+                  <Route
+                    path="/characteristics/cylinders"
+                    element={<Cylinders />}
+                  />
+                  <Route
+                    path="/characteristics/engine_type"
+                    element={<EngineType />}
+                  />
+                  <Route path="/characteristics/drive" element={<Drive />} />
+                  <Route
+                    path="/characteristics/transmission"
+                    element={<Transmission />}
+                  />
+                  <Route path="/characteristics/fuel" element={<Fuel />} />
 
-              <Route path="/characteristics/brands" element={<BrandData />} />
+                  <Route
+                    path="/characteristics/brands"
+                    element={<BrandData />}
+                  />
 
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </div>
+              <UploadFiles />
+            </UploadFilesProvider>
           </div>
-          <UploadFiles />
-        </UploadFilesProvider>
-      </div>
-    </QueryClientProvider>
+        </QueryClientProvider>
+      ) : (
+        <NoConnection />
+      )}
+    </>
   );
 };
 

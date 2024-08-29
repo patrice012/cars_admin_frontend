@@ -30,14 +30,11 @@ const CreateNewAccount = () => {
 
     if (data.username && data.email) {
       setIsloading(true);
-      // send req
       const result = await postReq({
-        data,
+        data: { ...data, createdAt: new Date() },
         url: "user/create/admin",
         extras: [{ key: "authorization", value: `Bearer ${session}` }],
       });
-      console.log(data);
-      console.log(result);
       setIsloading(false);
       if (result.status == 201) {
         navigate(-1);

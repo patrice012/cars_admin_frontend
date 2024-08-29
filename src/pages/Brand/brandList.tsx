@@ -127,6 +127,7 @@ export const BrandList = () => {
             {tableData?.length || tableData ? (
               <thead>
                 <tr>
+                  <th>Logo</th>
                   <th>Title</th>
                   <th>Update</th>
                   <th>Delete</th>
@@ -163,8 +164,13 @@ export const BrandList = () => {
                 ? tableData?.map((brand: Brand, idx: number) => {
                     return (
                       <tr key={idx} className="cursor-pointer">
+                        <img
+                          className="pl-3"
+                          width={40}
+                          height={40}
+                          src={brand.image}
+                        />
                         <td>{brand?.title}</td>
-
                         <th
                           className="view-data"
                           onClick={(e) => {
