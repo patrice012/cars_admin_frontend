@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Modal from "../../Modal";
 import postReq from "../../../helpers/postReq";
@@ -33,7 +33,6 @@ const AddNew: React.FC<AddNewProps> = ({
 }) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
-  const [selectedSubItem, setSeletedSubItem] = useState<string>();
   const [data, setData] = useState({
     name: "",
     subItem: "",
@@ -43,6 +42,13 @@ const AddNew: React.FC<AddNewProps> = ({
     isDisabled: false,
   });
   const [warning, setWarning] = useState("");
+
+  useEffect(() => {
+    if (hasRelation?.relationData) {
+      const item = hasRelation.relationData as { _id: string }[];
+      setData({ ...data, subItem: item[0]._id });
+    }
+  }, [hasRelation?.relationData]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -94,7 +100,6 @@ const AddNew: React.FC<AddNewProps> = ({
   };
 
   const handleSelectSubItem = (itemId: string) => {
-    setSeletedSubItem(itemId);
     setData({ ...data, subItem: itemId });
   };
 
@@ -121,7 +126,7 @@ const AddNew: React.FC<AddNewProps> = ({
           onChange={(e) => setData({ ...data, name: e.target.value })}
         />
 
-        {hasRelation && (
+        {hasRelation && hasRelation.relationData && (
           <Selectable
             items={hasRelation.relationData!.map((item: characsItemProps) => ({
               label: item.name,

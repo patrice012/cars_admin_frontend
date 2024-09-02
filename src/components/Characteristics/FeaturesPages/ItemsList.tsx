@@ -277,30 +277,36 @@ export const ItemList = ({ page }: { page: string }) => {
           </div>
         )}
       </section>
-      <AddNew
-        hasRelation={{
-          hasRelation,
-          relationName,
-          relationData: subTableData ?? [],
-        }}
-        isOpen={isCreating}
-        toggleModal={toggleModal}
-        page={page}
-      />
+      {isCreating && (
+        <AddNew
+          hasRelation={{
+            hasRelation,
+            relationName,
+            relationData: subTableData ?? [],
+          }}
+          isOpen={isCreating}
+          toggleModal={toggleModal}
+          page={page}
+        />
+      )}
 
-      <UpdateData
-        isOpen={isUpdating}
-        toggleModal={toggleModal}
-        page={page}
-        updatedData={rowData}
-      />
+      {isUpdating && (
+        <UpdateData
+          isOpen={isUpdating}
+          toggleModal={toggleModal}
+          page={page}
+          updatedData={rowData}
+        />
+      )}
 
-      <DeletedData
-        isOpen={isDeleting}
-        toggleModal={toggleModal}
-        page={page}
-        deleteData={rowData}
-      />
+      {isDeleting && (
+        <DeletedData
+          isOpen={isDeleting}
+          toggleModal={toggleModal}
+          page={page}
+          deleteData={rowData}
+        />
+      )}
     </>
   );
 };
