@@ -49,7 +49,10 @@ export const BrandList = () => {
       url: "brand",
       extras: [{ key: "authorization", value: `Bearer ${session}` }],
     });
-    if (result.status == 200) return result.data;
+    if (result.status == 200) {
+      const data = (result.data as { data: any }).data;
+      return data;
+    }
   };
 
   let queryKey = [location.pathname, pageNumber, "sites-list"];

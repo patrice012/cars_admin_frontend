@@ -27,7 +27,14 @@ export function Characteristics() {
             link="engine_type"
             children={<MdOutlineTypeSpecimen />}
           />
-          <Feature name="Model" link="model" children={<IoLogoModelS />} />
+          <Feature
+            hasRelation
+            relationName="Select Brand"
+            relationUri="brand"
+            name="Model"
+            link="model"
+            children={<IoLogoModelS />}
+          />
           <Feature
             name="Cylinders"
             link="cylinders"
