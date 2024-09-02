@@ -4,7 +4,7 @@ import { ItemList } from "../../components/Characteristics/FeaturesPages/ItemsLi
 export default function Cylinders() {
   return (
     <>
-      <Header page={"Cylinders"} />
+      <Header page={"Cylinders"} headerStatus={""} />
       <div className="searches-container centerer">
         <ItemList page={"Cylinders"} />
       </div>

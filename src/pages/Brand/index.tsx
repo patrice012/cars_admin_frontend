@@ -4,7 +4,7 @@ import { BrandList } from "./brandList";
 export default function BrandData() {
   return (
     <>
-      <Header page={"Brands"} />
+      <Header page={"Brands"} headerStatus={""} />
 
       <div className="searches-container centerer">
         <BrandList />

@@ -4,7 +4,7 @@ import { ItemList } from "../../components/Characteristics/FeaturesPages/ItemsLi
 export default function EngineType() {
   return (
     <>
-      <Header page={"Engine Type"} />
+      <Header page={"Engine Type"} headerStatus={""} />
       <div className="searches-container centerer">
         <ItemList page={"EngineType"} />
       </div>

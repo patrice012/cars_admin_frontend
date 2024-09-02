@@ -4,7 +4,7 @@ import { ItemList } from "../../components/Characteristics/FeaturesPages/ItemsLi
 export default function ColorsData() {
   return (
     <>
-      <Header page={"Colors"} />
+      <Header page={"Colors"} headerStatus={""} />
       <div className="searches-container centerer">
         <ItemList page={"Colors"} />
       </div>
