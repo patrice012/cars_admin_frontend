@@ -84,6 +84,8 @@ const UpdateData: React.FC<UpdateDataProps> = ({
         uri = "transmission/update";
       } else if (page?.toLowerCase() === "fuel") {
         uri = "fuel/update";
+      } else if (page?.toLowerCase() === "title") {
+        uri = "title/update";
       }
 
       const response = await postReq({ data, url: uri });
@@ -113,8 +115,7 @@ const UpdateData: React.FC<UpdateDataProps> = ({
       isOpen={isOpen}
       title="Add New Item"
       warning={warning}
-      closeModal={() => closeModal(false)}
-    >
+      closeModal={() => closeModal(false)}>
       <form onSubmit={handleSubmit}>
         <InputField
           label="name"
@@ -127,8 +128,7 @@ const UpdateData: React.FC<UpdateDataProps> = ({
 
         <Button
           onClick={handleSubmit}
-          disabled={actionBtn.isDisabled || !canSave}
-        >
+          disabled={actionBtn.isDisabled || !canSave}>
           <span>{actionBtn.text}</span>
         </Button>
       </form>

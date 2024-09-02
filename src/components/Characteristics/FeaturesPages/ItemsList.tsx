@@ -62,6 +62,8 @@ export const ItemList = ({ page }: { page: string }) => {
       uri = "transmission";
     } else if (page?.toLowerCase() === "fuel") {
       uri = "fuel_type";
+    } else if (page?.toLowerCase() === "title") {
+      uri = "title";
     }
     console.log(uri);
     // send req
@@ -147,8 +149,7 @@ export const ItemList = ({ page }: { page: string }) => {
             <div className="actions flex items-center justify-start gap-8">
               <button
                 onClick={() => toggleModal({ state: true, action: "create" })}
-                className="btn btn-primary flex items-center justify-center gap-2"
-              >
+                className="btn btn-primary flex items-center justify-center gap-2">
                 <BsPlusLg /> <p>Add new</p>
               </button>
               {tableData?.data.docs ? (
@@ -209,8 +210,7 @@ export const ItemList = ({ page }: { page: string }) => {
                           onClick={(e) => {
                             e.stopPropagation();
                             UpdateRowData(item);
-                          }}
-                        >
+                          }}>
                           <RxUpdate />
                         </th>
                         <th
@@ -218,8 +218,7 @@ export const ItemList = ({ page }: { page: string }) => {
                           onClick={(e) => {
                             e.stopPropagation();
                             DeleteRowData(item._id);
-                          }}
-                        >
+                          }}>
                           <MdDeleteOutline />
                         </th>
                       </tr>
@@ -236,8 +235,7 @@ export const ItemList = ({ page }: { page: string }) => {
               <button
                 disabled={!tableData?.data.hasPrevPage}
                 className="btn"
-                onClick={handlePrev}
-              >
+                onClick={handlePrev}>
                 Previous
               </button>
 
@@ -248,8 +246,7 @@ export const ItemList = ({ page }: { page: string }) => {
               <button
                 disabled={!tableData?.data.hasNextPage}
                 className="btn"
-                onClick={handleNext}
-              >
+                onClick={handleNext}>
                 Next
               </button>
             </div>

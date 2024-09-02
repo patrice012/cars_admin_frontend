@@ -28,11 +28,11 @@ export function Characteristics() {
             children={<MdOutlineTypeSpecimen />}
           />
           <Feature name="Model" link="model" children={<IoLogoModelS />} />
-          <Feature
+          {/* <Feature
             name="Cylinders"
             link="cylinders"
             children={<PiCylinderDuotone />}
-          />
+          /> */}
           <Feature
             name="Transmission"
             link="transmission"

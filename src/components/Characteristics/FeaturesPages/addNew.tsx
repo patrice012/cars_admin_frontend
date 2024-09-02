@@ -52,6 +52,8 @@ const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
         url = "transmission/create";
       } else if (page?.toLowerCase() === "fuel") {
         url = "fuel_type/create";
+      } else if (page?.toLowerCase() === "title") {
+        url = "title/create";
       }
 
       const response = await postReq({ data, url, extras });
@@ -81,8 +83,7 @@ const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
       isOpen={isOpen}
       title="Add New Item"
       warning={warning}
-      closeModal={() => closeModal(false)}
-    >
+      closeModal={() => closeModal(false)}>
       <form onSubmit={handleSubmit}>
         <InputField
           label="name"
