@@ -7,6 +7,7 @@ import InputField from "../../InputField";
 import Button from "../../Button";
 
 import PropTypes from "prop-types";
+import { useSession } from "../../../contexts/authContext";
 
 interface AddNewProps {
   isOpen: boolean;
@@ -15,6 +16,8 @@ interface AddNewProps {
 }
 
 const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
+  const { session } = useSession();
+  const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [data, setData] = useState({
     name: "",
   });
@@ -48,10 +51,10 @@ const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
       } else if (page?.toLowerCase() === "transmission") {
         url = "transmission/create";
       } else if (page?.toLowerCase() === "fuel") {
-        url = "fuel/create";
+        url = "fuel_type/create";
       }
 
-      const response = await postReq({ data, url });
+      const response = await postReq({ data, url, extras });
       if (response.status == 201) {
         notif(response?.data.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });

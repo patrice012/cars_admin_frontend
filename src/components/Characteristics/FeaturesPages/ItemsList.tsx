@@ -61,13 +61,16 @@ export const ItemList = ({ page }: { page: string }) => {
     } else if (page?.toLowerCase() === "transmission") {
       uri = "transmission";
     } else if (page?.toLowerCase() === "fuel") {
-      uri = "fuel";
+      uri = "fuel_type";
     }
+    console.log(uri);
     // send req
-    return await postReq({
+    const result = await postReq({
       data: { page: pageNumber, perPage: META.perPage },
       url: uri,
     });
+    console.log(result.data);
+    if (result.status == 200) return result.data;
   };
 
   let queryKey = [location.pathname, pageNumber, "sites-list"];
