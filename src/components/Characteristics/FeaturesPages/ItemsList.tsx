@@ -11,6 +11,7 @@ import { useQuery } from "react-query";
 import AddNew from "./addNew";
 import UpdateData from "./updateItem";
 import DeletedData from "./deleteData";
+import { useSession } from "../../../contexts/authContext";
 
 const META = {
   title: "Site Data",
@@ -25,12 +26,14 @@ interface ItemType {
 }
 
 export const ItemList = ({ page }: { page: string }) => {
+  const { session } = useSession();
+  const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [pageNumber, setPageNumber] = useState(META.page);
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const location = useLocation();
-  const navigate = useNavigate();
+  const { hasRelation, relationName, relationUri } = location.state;
   // toggle view data
   const [rowData, setRowData] = useState({});
 
@@ -69,11 +72,12 @@ export const ItemList = ({ page }: { page: string }) => {
     } else if (page?.toLowerCase() === "city") {
       uri = "city";
     }
-    console.log(uri);
+    console.log(relationUri);
     // send req
     const result = await postReq({
       data: { page: pageNumber, perPage: META.perPage },
       url: uri,
+      extras,
     });
     console.log(result.data);
     if (result.status == 200) return result.data;
@@ -86,6 +90,29 @@ export const ItemList = ({ page }: { page: string }) => {
     error,
     refetch: getPaginate,
   } = useQuery(queryKey, handleTableData, {
+    refetchOnWindowFocus: false,
+    enabled: true,
+  });
+
+  const getSubData = async () => {
+    const result = await postReq({
+      data: {},
+      url: relationUri,
+      extras: [{ key: "authorization", value: "Bearer " + session }],
+    });
+    console.log(result.data);
+    if (result.status == 200) {
+      const data = (result.data as { data: any }).data;
+      return data;
+    }
+  };
+
+  const {
+    data: subTableData,
+    isLoading: subTableloading,
+    error: subtableError,
+    refetch: subTableGetPaginate,
+  } = useQuery(["queryKey"], getSubData, {
     refetchOnWindowFocus: false,
     enabled: true,
   });
@@ -136,12 +163,6 @@ export const ItemList = ({ page }: { page: string }) => {
     setRowData({ _id: idx });
     // open modal
     setIsDeleting(true);
-  };
-
-  // view site data
-  const handleSiteKeywordDetail = async (brand: any) => {
-    if (!brand._id) return;
-    navigate(`/sites/${brand._id}`, { state: { ...brand } });
   };
 
   return (
@@ -257,7 +278,16 @@ export const ItemList = ({ page }: { page: string }) => {
           </div>
         )}
       </section>
-      <AddNew isOpen={isCreating} toggleModal={toggleModal} page={page} />
+      <AddNew
+        hasRelation={{
+          hasRelation,
+          relationName,
+          relationData: subTableData ?? [],
+        }}
+        isOpen={isCreating}
+        toggleModal={toggleModal}
+        page={page}
+      />
 
       <UpdateData
         isOpen={isUpdating}

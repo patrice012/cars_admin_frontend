@@ -8,18 +8,35 @@ import Button from "../../Button";
 
 import PropTypes from "prop-types";
 import { useSession } from "../../../contexts/authContext";
+import Selectable from "../../Selectable";
+import { mockItemList } from "../../../helpers/mockData";
+import { characsItemProps } from "../../../helpers/types";
+
+interface hasRelationProps {
+  hasRelation?: boolean;
+  relationName: string;
+  relationData?: any[];
+}
 
 interface AddNewProps {
   isOpen: boolean;
   page: string;
   toggleModal: ({ state, action }: { state: boolean; action: string }) => void;
+  hasRelation?: hasRelationProps;
 }
 
-const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
+const AddNew: React.FC<AddNewProps> = ({
+  isOpen,
+  toggleModal,
+  page,
+  hasRelation,
+}) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
+  const [selectedSubItem, setSeletedSubItem] = useState<string>();
   const [data, setData] = useState({
     name: "",
+    subItem: "",
   });
   const [actionBtn, setActionBtn] = useState({
     text: "Save",
@@ -40,6 +57,7 @@ const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
 
     try {
       let url = "";
+      let subItemTitle = "";
       if (page?.toLowerCase() === "colors") {
         url = "colors/create";
       } else if (page?.toLowerCase() === "cylinders") {
@@ -48,6 +66,7 @@ const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
         url = "engine_type/create";
       } else if (page?.toLowerCase() === "model") {
         url = "model/create";
+        subItemTitle = "brandId";
       } else if (page?.toLowerCase() === "transmission") {
         url = "transmission/create";
       } else if (page?.toLowerCase() === "fuel") {
@@ -60,7 +79,11 @@ const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
         url = "city/create";
       }
 
-      const response = await postReq({ data, url, extras });
+      const response = await postReq({
+        data: { ...data, [subItemTitle]: data.subItem },
+        url,
+        extras,
+      });
       if (response.status == 201) {
         notif(response?.data.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });
@@ -76,9 +99,14 @@ const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
     }
   };
 
+  const handleSelectSubItem = (itemId: string) => {
+    setSeletedSubItem(itemId);
+    setData({ ...data, subItem: itemId });
+  };
+
   const closeModal = (state: boolean) => {
     setWarning("");
-    setData({ name: "" });
+    setData({ ...data, name: "" });
     toggleModal({ state: state, action: "create" });
   };
 
@@ -97,6 +125,18 @@ const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
           value={data.name}
           onChange={(e) => setData({ ...data, name: e.target.value })}
         />
+
+        {hasRelation && (
+          <Selectable
+            items={hasRelation.relationData!.map((item: characsItemProps) => ({
+              label: item.name,
+              value: item._id,
+            }))}
+            onChange={(e) => handleSelectSubItem(e.target.value)}
+            selected={data.subItem}
+            title={hasRelation.relationName}
+          />
+        )}
 
         <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>
