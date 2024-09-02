@@ -2,8 +2,10 @@ import { IoMdAddCircle, IoMdColorPalette } from "react-icons/io";
 import { MdOutlineTypeSpecimen } from "react-icons/md";
 import { MdEmojiTransportation } from "react-icons/md";
 import { PiCylinderDuotone } from "react-icons/pi";
-import { TbUserStar } from "react-icons/tb";
 import { BsFuelPump } from "react-icons/bs";
+import { IoLogoModelS } from "react-icons/io";
+import { FaCity } from "react-icons/fa";
+import { MdOutlineTitle } from "react-icons/md";
 
 import Header from "../../components/Header/Header";
 
@@ -25,7 +27,7 @@ export function Characteristics() {
             link="engine_type"
             children={<MdOutlineTypeSpecimen />}
           />
-          <Feature name="Drive" link="drive" children={<TbUserStar />} />
+          <Feature name="Model" link="model" children={<IoLogoModelS />} />
           <Feature
             name="Cylinders"
             link="cylinders"
@@ -39,6 +41,9 @@ export function Characteristics() {
           <Feature name="Fuel" link="fuel" children={<BsFuelPump />} />
 
           <Feature name="Brand" link="brands" children={<IoMdAddCircle />} />
+          <Feature name="Title" link="title" children={<MdOutlineTitle />} />
+          <Feature name="Country" link="country" children={<FaCity />} />
+          <Feature name="City" link="city" children={<FaCity />} />
         </div>
       </div>
     </>

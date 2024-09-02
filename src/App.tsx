@@ -22,9 +22,11 @@ import CarItemsData from "./pages/Item";
 import ItemDetails from "./pages/Item/itemDetails";
 import ColorsData from "./pages/Characteristics/Colors";
 import Cylinders from "./pages/Characteristics/Cylinders";
-import Drive from "./pages/Characteristics/Drive";
+import Model from "./pages/Characteristics/Model";
 import EngineType from "./pages/Characteristics/EngineType";
 import Fuel from "./pages/Characteristics/Fuel";
+import Country from "./pages/Characteristics/Country";
+import Title from "./pages/Characteristics/Title";
 import Transmission from "./pages/Characteristics/Transmission";
 import { useSession } from "./contexts/authContext";
 import CreateNewAccount from "./pages/Account/CreateNewAccount";
@@ -103,11 +105,16 @@ const App = () => {
                     path="/characteristics/engine_type"
                     element={<EngineType />}
                   />
-                  <Route path="/characteristics/drive" element={<Drive />} />
+                  <Route path="/characteristics/model" element={<Model />} />
+                  <Route
+                    path="/characteristics/country"
+                    element={<Country />}
+                  />
                   <Route
                     path="/characteristics/transmission"
                     element={<Transmission />}
                   />
+                  <Route path="/characteristics/title" element={<Title />} />
                   <Route path="/characteristics/fuel" element={<Fuel />} />
 
                   <Route
