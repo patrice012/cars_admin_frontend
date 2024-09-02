@@ -6,6 +6,7 @@ import { BsFuelPump } from "react-icons/bs";
 import { IoLogoModelS } from "react-icons/io";
 import { FaCity } from "react-icons/fa";
 import { MdOutlineTitle } from "react-icons/md";
+import { FaSellsy } from "react-icons/fa";
 
 import Header from "../../components/Header/Header";
 
@@ -35,11 +36,11 @@ export function Characteristics() {
             link="model"
             children={<IoLogoModelS />}
           />
-          <Feature
+          {/* <Feature
             name="Cylinders"
             link="cylinders"
             children={<PiCylinderDuotone />}
-          /> 
+          />  */}
           <Feature
             name="Transmission"
             link="transmission"
@@ -49,6 +50,7 @@ export function Characteristics() {
 
           <Feature name="Brand" link="brands" children={<IoMdAddCircle />} />
           <Feature name="Title" link="title" children={<MdOutlineTitle />} />
+          <Feature name="Seller Type" link="seller_type" children={<FaSellsy />} />
           <Feature name="Country" hasRelation={false} link="country" children={<FaCity />} />
           <Feature hasRelation={true}  relationName="Select Country" relationUri="country" name="City" link="city" children={<FaCity />} />
         </div>

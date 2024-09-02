@@ -6,10 +6,15 @@ import InputField from "../../components/InputField";
 import Button from "../../components/Button";
 import PropTypes from "prop-types";
 import { useSession } from "../../contexts/authContext";
-import Brand from "../../models/brand.model";
+import { Seller } from "../../models/brand.model";
+import PhoneInput from "react-phone-input-2";
+import Selectable from "../../components/Selectable";
+import { mockItemList } from "../../helpers/mockData";
+import { characsItemProps } from "../../helpers/types";
+import { useQuery } from "react-query";
 
 interface UpdateSellerProps {
-  brand: Brand;
+  Seller: Seller;
   isOpen: boolean;
   toggleModal: ({ state, action }: { state: boolean; action: string }) => void;
 }
@@ -17,13 +22,16 @@ interface UpdateSellerProps {
 const UpdateSeller: React.FC<UpdateSellerProps> = ({
   isOpen,
   toggleModal,
-  brand,
+  Seller,
 }) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [data, setData] = useState({
-    name: brand.name,
-    description: "",
+    firstname: Seller.firstname,
+    whatsapp: Seller.whatsapp,
+    phone: Seller.phone,
+    sellerTypeId: Seller.sellerTypeId,
+    lastname: Seller.lastname,
   });
   const [actionBtn, setActionBtn] = useState({
     text: "Save",
@@ -35,7 +43,7 @@ const UpdateSeller: React.FC<UpdateSellerProps> = ({
     e.preventDefault();
     e.stopPropagation();
 
-    if (!data.name) {
+    if (!data.lastname || !data.firstname) {
       setWarning("Please fill all fields");
       return;
     }
@@ -44,8 +52,8 @@ const UpdateSeller: React.FC<UpdateSellerProps> = ({
 
     try {
       const response = await postReq({
-        data: { ...data, _id: brand._id },
-        url: "brand/update",
+        data: { ...data, _id: Seller._id },
+        url: "seller/update",
         extras,
       });
       if (response.status == 200) {
@@ -63,9 +71,37 @@ const UpdateSeller: React.FC<UpdateSellerProps> = ({
     }
   };
 
+  const getSellerType = async () => {
+    const result = await postReq({
+      data: {},
+      url: "seller_type",
+      extras: [{ key: "authorization", value: "Bearer " + session }],
+    });
+    if (result.status == 200) {
+      console.log(result.data);
+      return result.data;
+    }
+  };
+
+  const {
+    data: sellerType,
+    isLoading: loading,
+    error,
+    refetch: getPaginate,
+  } = useQuery(["queryKey"], getSellerType, {
+    refetchOnWindowFocus: false,
+    enabled: true,
+  });
+
   const closeModal = (state: boolean) => {
     setWarning("");
-    setData({ name: "", description: "" });
+    setData({
+      firstname: "",
+      whatsapp: "",
+      phone: "",
+      sellerTypeId: "",
+      lastname: "",
+    });
     toggleModal({ state: state, action: "create" });
   };
 
@@ -74,24 +110,68 @@ const UpdateSeller: React.FC<UpdateSellerProps> = ({
       isOpen={isOpen}
       title="Add New Item"
       warning={warning}
-      closeModal={() => closeModal(false)}
-    >
+      closeModal={() => closeModal(false)}>
       <form onSubmit={handleSubmit}>
         <InputField
-          label="name"
-          id="name"
+          label="First name"
+          id="firstname"
           type="text"
-          placeholder="Enter name"
-          value={data.name}
-          onChange={(e) => setData({ ...data, name: e.target.value })}
+          placeholder="Enter firstname"
+          value={data.firstname}
+          onChange={(e) => setData({ ...data, firstname: e.target.value })}
         />
-        {/* <TextAreaField
-          label="Add description"
-          id="description"
-          placeholder="Enter description"
-          value={data.description}
-          onChange={(e) => setData({ ...data, description: e.target.value })}
-        /> */}
+        <InputField
+          label="Last name"
+          id="lastname"
+          type="text"
+          placeholder="Enter lastname"
+          value={data.lastname}
+          onChange={(e) => setData({ ...data, lastname: e.target.value })}
+        />
+        <Selectable
+          items={
+            sellerType?.data.length
+              ? sellerType?.data.map((item: characsItemProps) => ({
+                  label: item.name,
+                  value: item._id,
+                }))
+              : mockItemList.map((item: characsItemProps) => ({
+                  label: item.name,
+                  value: item._id,
+                }))
+          }
+          selected={data.sellerTypeId._id}
+          onChange={(e) => setData({ ...data, sellerTypeId: e.target.value })}
+          title="Seller type"
+        />
+        <span>Phone number</span>
+        <PhoneInput
+          country={"tg"}
+          value={data.phone}
+          onChange={(e) => setData({ ...data, phone: e })}
+          inputStyle={{
+            width: "100%",
+            height: 48,
+            borderRadius: 8,
+            paddingLeft: 70,
+          }}
+          copyNumbersOnly
+          buttonStyle={{ paddingInline: 8 }}
+        />
+        <span>Whatsapp number</span>
+        <PhoneInput
+          country={"tg"}
+          value={data.whatsapp}
+          onChange={(e) => setData({ ...data, whatsapp: e })}
+          inputStyle={{
+            width: "100%",
+            height: 48,
+            borderRadius: 8,
+            paddingLeft: 70,
+          }}
+          copyNumbersOnly
+          buttonStyle={{ paddingInline: 8 }}
+        />
         <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>
         </Button>

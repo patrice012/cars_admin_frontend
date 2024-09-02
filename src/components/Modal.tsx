@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { IoIosClose } from "react-icons/io";
 import postReq from "../helpers/postReq";
 import notif from "../helpers/notif";
@@ -67,10 +67,18 @@ export const DeleteModal = ({
 }: DeleteModalProps) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
+  const [actionBtn, setActionBtn] = useState({
+    text: "Delete",
+    isDisabled: false,
+  });
   const handleRemove = async () => {
+    setActionBtn({ text: "Deleting...", isDisabled: true });
+
     try {
       const res = await postReq({ data: { _id: _id }, url, extras });
       if (res) {
+        notif(res?.data.message ?? "Success, Data has been deleted");
+        setActionBtn({ text: "Delete", isDisabled: false });
         deleteItem(true);
       } else {
         notif("Failed to delete data");
@@ -93,19 +101,18 @@ export const DeleteModal = ({
         className="modal-toggle"
       />
       <div className="modal modal--container" role="dialog">
-        <div className="modal-box flex items-center gap-8">
+        <div className="modal-box flex items-center  gap-8">
           <button
             onClick={handleCloseModal}
-            className="btn btn--default flex items-center justify-center gap-2"
-          >
+            className="btn btn--action  flex items-center justify-center gap-2">
             <span>Cancel</span>
           </button>
 
           <button
             onClick={handleRemove}
-            className="btn btn--action flex items-center justify-center gap-2"
-          >
-            <span>Confirm</span>
+            style={{ background: "red", color: "#FFF" }}
+            className="btn flex items-center justify-center gap-2">
+            <span>{actionBtn.text}</span>
           </button>
         </div>
         <div className="wrapper">

@@ -62,6 +62,8 @@ const DeletedData: React.FC<DeletedDataProps> = ({
         uri = "city/delete";
       } else if (page?.toLowerCase() === "model") {
         uri = "model/delete";
+      } else if (page?.toLowerCase() === "sellertype") {
+        uri = "seller_type/delete";
       }
 
       const response = await postReq({ data: deleteData, url: uri, extras });

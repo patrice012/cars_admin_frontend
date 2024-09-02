@@ -9,40 +9,72 @@ import { useSession } from "../../contexts/authContext";
 import Selectable from "../../components/Selectable";
 import { mockItemList } from "../../helpers/mockData";
 import { characsItemProps } from "../../helpers/types";
+import { defaultQuestion } from "../../helpers/constants";
+import { useQuery } from "react-query";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 interface AddNewSellerProps {
   isOpen: boolean;
   toggleModal: ({ state, action }: { state: boolean; action: string }) => void;
 }
 
+interface ItemType {
+  name: string;
+  _id: string;
+}
+
 const AddNewSeller: React.FC<AddNewSellerProps> = ({ isOpen, toggleModal }) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
-  const [data, setData] = useState<{ name: string; logo: File[] }>({
-    name: "",
-    logo: [],
+
+  const [data, setData] = useState<{
+    firstname: string;
+    lastname: string;
+    whatsapp: string;
+    phone: string;
+    sellerTypeId: string;
+  }>({
+    firstname: "",
+    whatsapp: "",
+    phone: "",
+    sellerTypeId: "",
+    lastname: "",
   });
+
+  const getSellerType = async () => {
+    const result = await postReq({
+      data: {},
+      url: "seller_type",
+      extras: [{ key: "authorization", value: "Bearer " + session }],
+    });
+    if (result.status == 200) {
+      console.log(result.data);
+      return result.data;
+    }
+  };
+
+  const {
+    data: sellerType,
+    isLoading: loading,
+    error,
+    refetch: getPaginate,
+  } = useQuery(["queryKey"], getSellerType, {
+    refetchOnWindowFocus: false,
+    enabled: true,
+  });
+
   const [actionBtn, setActionBtn] = useState({
     text: "Save",
     isDisabled: false,
   });
   const [warning, setWarning] = useState("");
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files && files.length == 1) {
-      const files = Array.from(e.target.files || []);
-      setData({ ...data, logo: files });
-    } else {
-      notif("Only one file could be upload");
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!data.name || !(data.logo.length > 0)) {
+    if (!data.firstname || !data.lastname) {
       setWarning("Please fill all fields");
       return;
     }
@@ -50,14 +82,11 @@ const AddNewSeller: React.FC<AddNewSellerProps> = ({ isOpen, toggleModal }) => {
     setActionBtn({ text: "Saving...", isDisabled: true });
 
     try {
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("logo", data.logo[0]);
+      console.log(data);
       const response = await postReq({
-        data: formData,
-        url: "brand/create",
+        data: data,
+        url: "seller/create",
         extras,
-        isFileUpload: true,
       });
       if (response.status == 201) {
         notif(response.data?.message ?? "Success, Data has been added");
@@ -76,7 +105,13 @@ const AddNewSeller: React.FC<AddNewSellerProps> = ({ isOpen, toggleModal }) => {
 
   const closeModal = (state: boolean) => {
     setWarning("");
-    setData({ name: "", logo: [] });
+    setData({
+      firstname: "",
+      whatsapp: "",
+      phone: "",
+      sellerTypeId: "",
+      lastname: "",
+    });
     toggleModal({ state: state, action: "create" });
   };
 
@@ -85,49 +120,69 @@ const AddNewSeller: React.FC<AddNewSellerProps> = ({ isOpen, toggleModal }) => {
       isOpen={isOpen}
       title="Add Seller"
       warning={warning}
-      closeModal={() => closeModal(false)}
-    >
+      closeModal={() => closeModal(false)}>
       <form onSubmit={handleSubmit}>
         <InputField
-          label="Last name"
-          id="name"
+          label="First name"
+          id="firstname"
           type="text"
-          placeholder="Enter name"
-          value={data.name}
-          onChange={(e) => setData({ ...data, name: e.target.value })}
+          placeholder="Enter firstname"
+          value={data.firstname}
+          onChange={(e) => setData({ ...data, firstname: e.target.value })}
         />
         <InputField
-          label="First name"
-          id="name"
+          label="Last name"
+          id="lastname"
           type="text"
-          placeholder="Enter name"
-          value={data.name}
-          onChange={(e) => setData({ ...data, name: e.target.value })}
+          placeholder="Enter lastname"
+          value={data.lastname}
+          onChange={(e) => setData({ ...data, lastname: e.target.value })}
         />
         <Selectable
-          items={mockItemList.map((item: characsItemProps) => ({
-            label: item.name,
-            value: item._id,
-          }))}
-          onChange={(e) => {}}
+          items={
+            sellerType?.data.length
+              ? sellerType?.data.map((item: characsItemProps) => ({
+                  label: item.name,
+                  value: item._id,
+                }))
+              : mockItemList.map((item: characsItemProps) => ({
+                  label: item.name,
+                  value: item._id,
+                }))
+          }
+          selected={data.sellerTypeId}
+          onChange={(e) => setData({ ...data, sellerTypeId: e.target.value })}
           title="Seller type"
         />
-        <InputField
-          label="Phone number"
-          id="name"
-          type="text"
-          placeholder="Enter name"
-          value={data.name}
-          onChange={(e) => setData({ ...data, name: e.target.value })}
+        <span>Phone number</span>
+        <PhoneInput
+          country={"tg"}
+          value={data.phone}
+          onChange={(e) => setData({ ...data, phone: e })}
+          inputStyle={{
+            width: "100%",
+            height: 48,
+            borderRadius: 8,
+            paddingLeft: 70,
+          }}
+          copyNumbersOnly
+          buttonStyle={{ paddingInline: 8 }}
         />
-        <InputField
-          label="Whatsapp"
-          id="name"
-          type="text"
-          placeholder="Enter name"
-          value={data.name}
-          onChange={(e) => setData({ ...data, name: e.target.value })}
+        <span>Whatsapp number</span>
+        <PhoneInput
+          country={"tg"}
+          value={data.whatsapp}
+          onChange={(e) => setData({ ...data, whatsapp: e })}
+          inputStyle={{
+            width: "100%",
+            height: 48,
+            borderRadius: 8,
+            paddingLeft: 70,
+          }}
+          copyNumbersOnly
+          buttonStyle={{ paddingInline: 8 }}
         />
+
         <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>
         </Button>

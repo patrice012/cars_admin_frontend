@@ -71,6 +71,8 @@ export const ItemList = ({ page }: { page: string }) => {
       uri = "country";
     } else if (page?.toLowerCase() === "city") {
       uri = "city";
+    } else if (page?.toLowerCase() === "sellertype") {
+      uri = "seller_type";
     }
     console.log(relationUri);
     // send req

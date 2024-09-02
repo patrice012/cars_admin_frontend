@@ -100,6 +100,8 @@ const UpdateData: React.FC<UpdateDataProps> = ({
         uri = "title/update";
       } else if (page?.toLowerCase() === "countries") {
         uri = "country/update";
+      } else if (page?.toLowerCase() === "sellertype") {
+        uri = "seller_type/update";
       } else if (page?.toLowerCase() === "city") {
         uri = "city/update";
         subItemTitle = "countryId";

@@ -8,7 +8,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
 import AddNewSeller from "./addNewSeller";
-import Brand from "../../models/brand.model";
+import {Seller }from "../../models/brand.model";
 import { DeleteModal } from "../../components/Modal";
 import { useSession } from "../../contexts/authContext";
 import UpdateSeller from "./updateSeller";
@@ -28,7 +28,7 @@ export const SellerList = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [selectedId, setSelectedId] = useState("");
-  const [selectedBrand, setSelectedBrand] = useState<Brand>();
+  const [selectedSeller, setSelectedSeller] = useState<Seller>();
   const location = useLocation();
 
   const toggleModal = ({ state = true, action = "create" }) => {
@@ -47,10 +47,14 @@ export const SellerList = () => {
     // send req
     const result = await postReq({
       data: { page: pageNumber, perPage: META.perPage },
-      url: "brand",
+      url: "seller",
       extras: [{ key: "authorization", value: `Bearer ${session}` }],
     });
-    if (result.status == 200) return result.data;
+    if (result.status == 200) {
+      const data =  result.data;
+      console.log(data);
+      return data.data;
+    }
   };
 
   let queryKey = [location.pathname, pageNumber, "sites-list"];
@@ -129,8 +133,10 @@ export const SellerList = () => {
               {tableData?.length || tableData ? (
                 <thead>
                   <tr>
-                    <th>Logo</th>
-                    <th>Title</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>phone</th>
+                    <th>whatsapp</th>
                     <th>Update</th>
                     <th>Delete</th>
                   </tr>
@@ -163,22 +169,19 @@ export const SellerList = () => {
 
                 {/* user-data */}
                 {tableData?.length
-                  ? tableData?.map((brand: Brand, idx: number) => {
+                  ? tableData?.map((Seller: Seller, idx: number) => {
                       return (
                         <tr key={idx} className="cursor-pointer">
-                          <img
-                            className="pl-3"
-                            width={40}
-                            height={40}
-                            src={brand.logo}
-                          />
-                          <td>{brand?.name}</td>
+                          <td>{Seller.firstname}</td>
+                          <td>{Seller.lastname}</td>
+                          <td>{Seller.phone}</td>
+                          <td>{Seller.whatsapp}</td>
                           <th
                             className="view-data"
                             onClick={(e) => {
                               e.stopPropagation();
-                              setSelectedId(brand._id);
-                              setSelectedBrand(brand);
+                              setSelectedId(Seller._id);
+                              setSelectedSeller(Seller);
                               setIsUpdating(true);
                             }}
                           >
@@ -188,7 +191,7 @@ export const SellerList = () => {
                             className="view-data"
                             onClick={(e) => {
                               e.stopPropagation();
-                              setSelectedId(brand._id);
+                              setSelectedId(Seller._id);
                               setRemoving(true);
                             }}
                           >
@@ -233,7 +236,7 @@ export const SellerList = () => {
         )}
         {isUpdating && (
           <UpdateSeller
-            brand={selectedBrand!}
+            Seller={selectedSeller!}
             isOpen={isUpdating}
             toggleModal={() => toggleModal({ state: true, action: "update" })}
           />
@@ -243,7 +246,7 @@ export const SellerList = () => {
           <DeleteModal
             deleteItem={toggleDeleteData}
             _id={selectedId}
-            url="brand/delete"
+            url="seller/delete"
             isOpen={removing}
             closeModal={() => setRemoving(!removing)}
           />

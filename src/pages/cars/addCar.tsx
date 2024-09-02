@@ -31,11 +31,29 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
     { name: "Item 2", _id: "item2" },
   ]);
   const [data, setData] = useState({
-    title: "",
-    description: "",
+    name: "",
     brand: "",
-    photos: [],
-    videos: [],
+    modelId: "",
+    colorId: "",
+    engineTypeId: "",
+    transmissionId: "",
+    fuelTypeId: "",
+    titleId: "",
+    countryId: "",
+    cityId: "",
+    sellerId: "",
+    cylinders: 0,
+    year: 2023,
+    doorsCount: 4,
+    odometer: 0,
+    salesPrice: 0,
+    minPrice: 0,
+    imagesUrls: [],
+    keywords: [],
+    isElectric: false,
+    isHybrid: false,
+    isActive: true,
+    note: "",
   });
   const [actionBtn, setActionBtn] = useState({
     text: "Save",
@@ -76,22 +94,22 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!data.title || !data.description || !data.brand) {
+    if (!data.name || !data.note || !data.brand) {
       setWarning("Please fill all fields");
       return;
     }
     setActionBtn({ text: "Saving...", isDisabled: true });
     try {
       const formData = new FormData();
-      formData.append("title", data.title);
-      formData.append("description", data.description);
+      formData.append("title", data.name);
+      formData.append("note", data.note);
       formData.append("brand", data.brand);
-      for (let i = 0; i < data.photos.length; i++) {
-        formData.append("photos", data.photos[i]);
+      for (let i = 0; i < data.imagesUrls.length; i++) {
+        formData.append("photos", data.imagesUrls[i]);
       }
-      for (let i = 0; i < data.videos.length; i++) {
+      /* for (let i = 0; i < data.videos.length; i++) {
         formData.append("videos", data.videos[i]);
-      }
+      } */
       const res = await postReq({
         data: formData,
         url: "item/create",
@@ -116,7 +134,31 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
 
   const closeModal = (state: boolean) => {
     setWarning("");
-    setData({ title: "", description: "", brand: "", photos: [], videos: [] });
+    setData({
+      name: "",
+      brand: "",
+      modelId: "",
+      colorId: "",
+      engineTypeId: "",
+      transmissionId: "",
+      fuelTypeId: "",
+      titleId: "",
+      countryId: "",
+      cityId: "",
+      sellerId: "",
+      cylinders: 0,
+      year: 2023,
+      doorsCount: 4,
+      odometer: 0,
+      salesPrice: 0,
+      minPrice: 0,
+      imagesUrls: [],
+      keywords: [],
+      isElectric: false,
+      isHybrid: false,
+      isActive: true,
+      note: "",
+    });
     toggleModal({ state: state, action: "create" });
   };
 
@@ -129,8 +171,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
       isOpen={isOpen}
       title="Add New Item"
       warning={warning}
-      closeModal={() => closeModal(false)}
-    >
+      closeModal={() => closeModal(false)}>
       <form onSubmit={handleSubmit}>
         <InputField
           required
@@ -138,15 +179,15 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           id="name"
           type="text"
           placeholder="Enter name"
-          value={data.title}
-          onChange={(e) => setData({ ...data, title: e.target.value })}
+          value={data.name}
+          onChange={(e) => setData({ ...data, name: e.target.value })}
         />
         <TextAreaField
           label="Add note"
           id="note"
-          placeholder="Enter description"
-          value={data.description}
-          onChange={(e) => setData({ ...data, description: e.target.value })}
+          placeholder="Enter note"
+          value={data.note}
+          onChange={(e) => setData({ ...data, note: e.target.value })}
         />
         <Selectable
           items={mockItemList.map((item: characsItemProps) => ({
@@ -161,7 +202,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.name,
             value: item._id,
           }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          onChange={(e) => setData({ ...data, modelId: e.target.value })}
           title="Model name"
         />
         <Selectable
@@ -169,7 +210,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.toString(),
             value: item.toString(),
           }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          onChange={(e) => setData({ ...data, doorsCount: e.target.value })}
           title="Car doors"
         />
         <InputField
@@ -177,8 +218,8 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           id="title"
           type="text"
           placeholder="Ex: 100000"
-          value={data.title}
-          onChange={(e) => setData({ ...data, title: e.target.value })}
+          value={data.salesPrice}
+          onChange={(e) => setData({ ...data, salesPrice: e.target.value })}
         />
         <InputField
           label="Minimum price"
@@ -193,7 +234,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.name,
             value: item._id,
           }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          onChange={(e) => setData({ ...data, colorId: e.target.value })}
           title="Car color"
         />
         <Selectable
@@ -201,7 +242,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.name,
             value: item._id,
           }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          onChange={(e) => setData({ ...data, sellerId: e.target.value })}
           title="Seller"
         />
         <Selectable
@@ -209,7 +250,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.name,
             value: item._id,
           }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          onChange={(e) => setData({ ...data, titleId: e.target.value })}
           title="Car title"
         />
         <Selectable
@@ -217,7 +258,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.name,
             value: item._id,
           }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          onChange={(e) => setData({ ...data, countryId: e.target.value })}
           title="Country"
         />
         <Selectable
@@ -225,7 +266,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.name,
             value: item._id,
           }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          onChange={(e) => setData({ ...data, cityId: e.target.value })}
           title="City"
         />
         <Selectable
@@ -233,7 +274,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item,
             value: item,
           }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          onChange={(e) => setData({ ...data, year: e.target.value })}
           title="Car year"
         />
         <Selectable
@@ -257,7 +298,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item,
             value: item,
           }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          onChange={(e) => setData({ ...data, engineTypeId: e.target.value })}
           title="Engine type"
         />
         <Selectable
@@ -265,7 +306,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item,
             value: item,
           }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          onChange={(e) => setData({ ...data, fuelTypeId: e.target.value })}
           title="Fuel type"
         />
         <Selectable
@@ -273,7 +314,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.label,
             value: item.value,
           }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          onChange={(e) => setData({ ...data, isHybrid: e.target.value })}
           title="Hybrid car"
         />
         <Selectable

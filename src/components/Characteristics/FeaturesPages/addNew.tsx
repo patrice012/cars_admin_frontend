@@ -75,6 +75,8 @@ const AddNew: React.FC<AddNewProps> = ({
         url = "title/create";
       } else if (page?.toLowerCase() === "countries") {
         url = "country/create";
+      } else if (page?.toLowerCase() === "sellertype") {
+        url = "seller_type/create";
       } else if (page?.toLowerCase() === "city") {
         url = "city/create";
         subItemTitle = "countryId";

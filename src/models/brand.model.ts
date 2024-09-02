@@ -1,8 +1,16 @@
-type Brand = {
+export type Brand = {
   _id: string;
   name: string;
   logo: string;
   active: boolean;
 };
 
-export default Brand;
+export type Seller = {
+  _id: string;
+  firstname: string;
+  lastname: string;
+  phone: string;
+  whatsapp: string;
+  isActive:boolean;
+  sellerTypeId:string;
+};
