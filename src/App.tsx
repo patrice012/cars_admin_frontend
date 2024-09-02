@@ -27,6 +27,7 @@ import EngineType from "./pages/Characteristics/EngineType";
 import Fuel from "./pages/Characteristics/Fuel";
 import Country from "./pages/Characteristics/Country";
 import Title from "./pages/Characteristics/Title";
+import City from "./pages/Characteristics/City";
 import Transmission from "./pages/Characteristics/Transmission";
 import { useSession } from "./contexts/authContext";
 import CreateNewAccount from "./pages/Account/CreateNewAccount";
@@ -110,6 +111,7 @@ const App = () => {
                     path="/characteristics/country"
                     element={<Country />}
                   />
+                  <Route path="/characteristics/city" element={<City />} />
                   <Route
                     path="/characteristics/transmission"
                     element={<Transmission />}
