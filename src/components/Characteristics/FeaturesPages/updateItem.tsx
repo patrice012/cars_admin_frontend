@@ -43,6 +43,13 @@ const UpdateData: React.FC<UpdateDataProps> = ({
   const [warning, setWarning] = useState("");
 
   useEffect(() => {
+    if (hasRelation?.relationData) {
+      const item = hasRelation.relationData as { _id: string }[];
+      setData({ ...data, subItem: item[0]._id });
+    }
+  }, [hasRelation?.relationData]);
+
+  useEffect(() => {
     setSave(data.name.length > 0);
   }, [data.name]);
 
@@ -105,6 +112,8 @@ const UpdateData: React.FC<UpdateDataProps> = ({
         subItemTitle = "countryId";
       }
 
+      console.log(data);
+
       const response = await postReq({
         data: { ...data, [subItemTitle]: data.subItem },
         url: uri,
@@ -140,7 +149,8 @@ const UpdateData: React.FC<UpdateDataProps> = ({
       isOpen={isOpen}
       title="Add New Item"
       warning={warning}
-      closeModal={() => closeModal(false)}>
+      closeModal={() => closeModal(false)}
+    >
       <form onSubmit={handleSubmit}>
         <InputField
           label="name"
@@ -165,7 +175,8 @@ const UpdateData: React.FC<UpdateDataProps> = ({
 
         <Button
           onClick={handleSubmit}
-          disabled={actionBtn.isDisabled || !canSave}>
+          disabled={actionBtn.isDisabled || !canSave}
+        >
           <span>{actionBtn.text}</span>
         </Button>
       </form>
