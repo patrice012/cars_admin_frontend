@@ -4,7 +4,14 @@ import { useLocation, Link } from "react-router-dom";
 // icons
 import { AiOutlineHome } from "react-icons/ai";
 ("react-icons/tb");
-import { IoMdAddCircle, IoMdAlbums, IoMdSettings } from "react-icons/io";
+import {
+  IoMdAddCircle,
+  IoMdAlbums,
+  IoMdPeople,
+  IoMdPerson,
+  IoMdSettings,
+} from "react-icons/io";
+import { IoCarSport } from "react-icons/io5";
 import { RiSettingsLine } from "react-icons/ri";
 
 import { HiOutlineLogout } from "react-icons/hi";
@@ -71,9 +78,15 @@ const Sidebar = () => {
               />
 
               <SidebarItem
-                title="Items"
+                title="Cars"
                 link="/items"
-                children={<IoMdAlbums />}
+                children={<IoCarSport />}
+              />
+
+              <SidebarItem
+                title="Sellers"
+                link="/sellers"
+                children={<IoMdPeople />}
               />
 
               <SidebarItem

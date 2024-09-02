@@ -1,7 +1,7 @@
 type Brand = {
   _id: string;
-  title: string;
-  image: string;
+  name: string;
+  logo: string;
   active: boolean;
 };
 

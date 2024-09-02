@@ -30,6 +30,7 @@ import { useSession } from "./contexts/authContext";
 import CreateNewAccount from "./pages/Account/CreateNewAccount";
 import useNetworkStatus from "./hooks/useNetworkStatus";
 import NoConnection from "./pages/404/NoConnection";
+import { SellerList } from "./pages/sellers/sellerList";
 
 const App = () => {
   const { isOnline } = useNetworkStatus();
@@ -84,6 +85,7 @@ const App = () => {
                   <Route path="/auth/logout" element={<Logout />} />
                   <Route path="/items" element={<CarItemsData />} />
                   <Route path="/items/:id" element={<ItemDetails />} />
+                  <Route path="/sellers" element={<SellerList />} />
 
                   <Route
                     path="/characteristics"

@@ -6,19 +6,24 @@ import InputField from "../../components/InputField";
 import Button from "../../components/Button";
 import PropTypes from "prop-types";
 import { useSession } from "../../contexts/authContext";
-import FileUpload from "../../components/FileUpload";
+import Brand from "../../models/brand.model";
 
-interface AddNewBrandProps {
+interface UpdateSellerProps {
+  brand: Brand;
   isOpen: boolean;
   toggleModal: ({ state, action }: { state: boolean; action: string }) => void;
 }
 
-const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
+const UpdateSeller: React.FC<UpdateSellerProps> = ({
+  isOpen,
+  toggleModal,
+  brand,
+}) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
-  const [data, setData] = useState<{ name: string; logo: File[] }>({
-    name: "",
-    logo: [],
+  const [data, setData] = useState({
+    name: brand.name,
+    description: "",
   });
   const [actionBtn, setActionBtn] = useState({
     text: "Save",
@@ -26,21 +31,11 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
   });
   const [warning, setWarning] = useState("");
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files && files.length == 1) {
-      const files = Array.from(e.target.files || []);
-      setData({ ...data, logo: files });
-    } else {
-      notif("Only one file could be upload");
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!data.name || !(data.logo.length > 0)) {
+    if (!data.name) {
       setWarning("Please fill all fields");
       return;
     }
@@ -48,16 +43,12 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
     setActionBtn({ text: "Saving...", isDisabled: true });
 
     try {
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("logo", data.logo[0]);
       const response = await postReq({
-        data: formData,
-        url: "brand/create",
+        data: { ...data, _id: brand._id },
+        url: "brand/update",
         extras,
-        isFileUpload: true,
       });
-      if (response.status == 201) {
+      if (response.status == 200) {
         notif(response.data?.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });
         closeModal(true);
@@ -74,7 +65,7 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
 
   const closeModal = (state: boolean) => {
     setWarning("");
-    setData({ name: "", logo: [] });
+    setData({ name: "", description: "" });
     toggleModal({ state: state, action: "create" });
   };
 
@@ -87,18 +78,20 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
     >
       <form onSubmit={handleSubmit}>
         <InputField
-          label="Brand name"
+          label="name"
           id="name"
           type="text"
           placeholder="Enter name"
           value={data.name}
           onChange={(e) => setData({ ...data, name: e.target.value })}
         />
-        <FileUpload
-          id="photos"
-          label="Brand logo"
-          onChange={handleFileChange}
-        />
+        {/* <TextAreaField
+          label="Add description"
+          id="description"
+          placeholder="Enter description"
+          value={data.description}
+          onChange={(e) => setData({ ...data, description: e.target.value })}
+        /> */}
         <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>
         </Button>
@@ -107,9 +100,9 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
   );
 };
 
-AddNewBrand.propTypes = {
+UpdateSeller.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   toggleModal: PropTypes.func.isRequired,
 };
 
-export default AddNewBrand;
+export default UpdateSeller;

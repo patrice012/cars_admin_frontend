@@ -6,14 +6,16 @@ import InputField from "../../components/InputField";
 import Button from "../../components/Button";
 import PropTypes from "prop-types";
 import { useSession } from "../../contexts/authContext";
-import FileUpload from "../../components/FileUpload";
+import Selectable from "../../components/Selectable";
+import { mockItemList } from "../../helpers/mockData";
+import { characsItemProps } from "../../helpers/types";
 
-interface AddNewBrandProps {
+interface AddNewSellerProps {
   isOpen: boolean;
   toggleModal: ({ state, action }: { state: boolean; action: string }) => void;
 }
 
-const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
+const AddNewSeller: React.FC<AddNewSellerProps> = ({ isOpen, toggleModal }) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [data, setData] = useState<{ name: string; logo: File[] }>({
@@ -81,23 +83,50 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
   return (
     <Modal
       isOpen={isOpen}
-      title="Add New Item"
+      title="Add Seller"
       warning={warning}
       closeModal={() => closeModal(false)}
     >
       <form onSubmit={handleSubmit}>
         <InputField
-          label="Brand name"
+          label="Last name"
           id="name"
           type="text"
           placeholder="Enter name"
           value={data.name}
           onChange={(e) => setData({ ...data, name: e.target.value })}
         />
-        <FileUpload
-          id="photos"
-          label="Brand logo"
-          onChange={handleFileChange}
+        <InputField
+          label="First name"
+          id="name"
+          type="text"
+          placeholder="Enter name"
+          value={data.name}
+          onChange={(e) => setData({ ...data, name: e.target.value })}
+        />
+        <Selectable
+          items={mockItemList.map((item: characsItemProps) => ({
+            label: item.name,
+            value: item._id,
+          }))}
+          onChange={(e) => {}}
+          title="Seller type"
+        />
+        <InputField
+          label="Phone number"
+          id="name"
+          type="text"
+          placeholder="Enter name"
+          value={data.name}
+          onChange={(e) => setData({ ...data, name: e.target.value })}
+        />
+        <InputField
+          label="Whatsapp"
+          id="name"
+          type="text"
+          placeholder="Enter name"
+          value={data.name}
+          onChange={(e) => setData({ ...data, name: e.target.value })}
         />
         <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>
@@ -107,9 +136,9 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
   );
 };
 
-AddNewBrand.propTypes = {
+AddNewSeller.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   toggleModal: PropTypes.func.isRequired,
 };
 
-export default AddNewBrand;
+export default AddNewSeller;

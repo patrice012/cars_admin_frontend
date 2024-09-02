@@ -9,8 +9,14 @@ import Button from "../../components/Button";
 import PropTypes from "prop-types";
 import Selectable from "../../components/Selectable";
 import { useQuery } from "react-query";
-import Brand from "../../models/brand.model";
 import { useSession } from "../../contexts/authContext";
+import {
+  defaultCarDoorsCount,
+  defaultCarsYear,
+  defaultQuestion,
+} from "../../helpers/constants";
+import { mockItemList } from "../../helpers/mockData";
+import { characsItemProps } from "../../helpers/types";
 
 interface AddItemProps {
   isOpen: boolean;
@@ -20,6 +26,10 @@ interface AddItemProps {
 const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
+  const [itemList, setItemList] = useState<any[]>([
+    { name: "Item 1", _id: "item1" },
+    { name: "Item 2", _id: "item2" },
+  ]);
   const [data, setData] = useState({
     title: "",
     description: "",
@@ -123,39 +133,161 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
     >
       <form onSubmit={handleSubmit}>
         <InputField
-          label="Title"
-          id="title"
+          required
+          label="Car name"
+          id="name"
           type="text"
-          placeholder="Enter title"
+          placeholder="Enter name"
           value={data.title}
           onChange={(e) => setData({ ...data, title: e.target.value })}
         />
         <TextAreaField
-          label="Add description"
-          id="description"
+          label="Add note"
+          id="note"
           placeholder="Enter description"
           value={data.description}
           onChange={(e) => setData({ ...data, description: e.target.value })}
         />
-        {brands && (
-          <Selectable
-            items={brands.map((brand: Brand) => ({
-              label: brand.title,
-              value: brand._id,
-            }))}
-            onChange={(e) => setData({ ...data, brand: e.target.value })}
-            title="Brand name"
-          />
-        )}
+        <Selectable
+          items={mockItemList.map((item: characsItemProps) => ({
+            label: item.name,
+            value: item._id,
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Brand name"
+        />
+        <Selectable
+          items={mockItemList.map((item: characsItemProps) => ({
+            label: item.name,
+            value: item._id,
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Model name"
+        />
+        <Selectable
+          items={defaultCarDoorsCount.map((item) => ({
+            label: item.toString(),
+            value: item.toString(),
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Car doors"
+        />
+        <InputField
+          label="Sales price"
+          id="title"
+          type="text"
+          placeholder="Ex: 100000"
+          value={data.title}
+          onChange={(e) => setData({ ...data, title: e.target.value })}
+        />
+        <InputField
+          label="Minimum price"
+          id="title"
+          type="text"
+          placeholder="Ex: 100000"
+          value={data.title}
+          onChange={(e) => setData({ ...data, title: e.target.value })}
+        />
+        <Selectable
+          items={mockItemList.map((item: characsItemProps) => ({
+            label: item.name,
+            value: item._id,
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Car color"
+        />
+        <Selectable
+          items={mockItemList.map((item: characsItemProps) => ({
+            label: item.name,
+            value: item._id,
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Seller"
+        />
+        <Selectable
+          items={mockItemList.map((item: characsItemProps) => ({
+            label: item.name,
+            value: item._id,
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Car title"
+        />
+        <Selectable
+          items={mockItemList.map((item: characsItemProps) => ({
+            label: item.name,
+            value: item._id,
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Country"
+        />
+        <Selectable
+          items={mockItemList.map((item: characsItemProps) => ({
+            label: item.name,
+            value: item._id,
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="City"
+        />
+        <Selectable
+          items={defaultCarsYear.map((item: number) => ({
+            label: item,
+            value: item,
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Car year"
+        />
+        <Selectable
+          items={defaultCarsYear.map((item: number) => ({
+            label: item,
+            value: item,
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Transmission"
+        />
+        <InputField
+          label="Cylinders"
+          id="title"
+          type="number"
+          placeholder="Ex: 3"
+          value={data.title}
+          onChange={(e) => setData({ ...data, title: e.target.value })}
+        />
+        <Selectable
+          items={defaultCarsYear.map((item: number) => ({
+            label: item,
+            value: item,
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Engine type"
+        />
+        <Selectable
+          items={defaultCarsYear.map((item: number) => ({
+            label: item,
+            value: item,
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Fuel type"
+        />
+        <Selectable
+          items={defaultQuestion.map((item) => ({
+            label: item.label,
+            value: item.value,
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Hybrid car"
+        />
+        <Selectable
+          items={defaultQuestion.map((item) => ({
+            label: item.label,
+            value: item.value,
+          }))}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Electric car"
+        />
         <FileUpload
           id="photos"
           label="Upload photos"
           onChange={(e) => handleFileChange(e, "photos")}
-        />
-        <FileUpload
-          id="videos"
-          label="Upload videos"
-          onChange={(e) => handleFileChange(e, "videos")}
         />
         <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>

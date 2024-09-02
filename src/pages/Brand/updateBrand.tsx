@@ -22,7 +22,7 @@ const UpdateBrand: React.FC<UpdateBrandProps> = ({
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [data, setData] = useState({
-    title: brand.title,
+    name: brand.name,
     description: "",
   });
   const [actionBtn, setActionBtn] = useState({
@@ -35,7 +35,7 @@ const UpdateBrand: React.FC<UpdateBrandProps> = ({
     e.preventDefault();
     e.stopPropagation();
 
-    if (!data.title) {
+    if (!data.name) {
       setWarning("Please fill all fields");
       return;
     }
@@ -65,7 +65,7 @@ const UpdateBrand: React.FC<UpdateBrandProps> = ({
 
   const closeModal = (state: boolean) => {
     setWarning("");
-    setData({ title: "", description: "" });
+    setData({ name: "", description: "" });
     toggleModal({ state: state, action: "create" });
   };
 
@@ -78,12 +78,12 @@ const UpdateBrand: React.FC<UpdateBrandProps> = ({
     >
       <form onSubmit={handleSubmit}>
         <InputField
-          label="Title"
-          id="title"
+          label="name"
+          id="name"
           type="text"
-          placeholder="Enter title"
-          value={data.title}
-          onChange={(e) => setData({ ...data, title: e.target.value })}
+          placeholder="Enter name"
+          value={data.name}
+          onChange={(e) => setData({ ...data, name: e.target.value })}
         />
         {/* <TextAreaField
           label="Add description"
