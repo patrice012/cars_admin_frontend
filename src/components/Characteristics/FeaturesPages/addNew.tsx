@@ -12,7 +12,7 @@ import Selectable from "../../Selectable";
 import { mockItemList } from "../../../helpers/mockData";
 import { characsItemProps } from "../../../helpers/types";
 
-interface hasRelationProps {
+export interface hasRelationProps {
   hasRelation?: boolean;
   relationName: string;
   relationData?: any[];
@@ -77,6 +77,13 @@ const AddNew: React.FC<AddNewProps> = ({
         url = "transmission/create";
       } else if (page?.toLowerCase() === "fuel") {
         url = "fuel_type/create";
+      } else if (page?.toLowerCase() === "title") {
+        url = "title/create";
+      } else if (page?.toLowerCase() === "countries") {
+        url = "country/create";
+      } else if (page?.toLowerCase() === "city") {
+        url = "city/create";
+        subItemTitle = "countryId";
       }
 
       const response = await postReq({
@@ -126,7 +133,7 @@ const AddNew: React.FC<AddNewProps> = ({
           onChange={(e) => setData({ ...data, name: e.target.value })}
         />
 
-        {hasRelation && hasRelation.relationData && (
+        {hasRelation?.hasRelation && (
           <Selectable
             items={hasRelation.relationData!.map((item: characsItemProps) => ({
               label: item.name,

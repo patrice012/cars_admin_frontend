@@ -65,6 +65,12 @@ export const ItemList = ({ page }: { page: string }) => {
       uri = "transmission";
     } else if (page?.toLowerCase() === "fuel") {
       uri = "fuel_type";
+    } else if (page?.toLowerCase() === "title") {
+      uri = "title";
+    } else if (page?.toLowerCase() === "countries") {
+      uri = "country";
+    } else if (page?.toLowerCase() === "city") {
+      uri = "city";
     }
     console.log(relationUri);
     // send req
@@ -292,6 +298,11 @@ export const ItemList = ({ page }: { page: string }) => {
 
       {isUpdating && (
         <UpdateData
+          hasRelation={{
+            hasRelation,
+            relationName,
+            relationData: subTableData ?? [],
+          }}
           isOpen={isUpdating}
           toggleModal={toggleModal}
           page={page}
