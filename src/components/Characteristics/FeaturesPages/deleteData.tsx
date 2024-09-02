@@ -51,6 +51,12 @@ const DeletedData: React.FC<DeletedDataProps> = ({
         uri = "transmission/delete";
       } else if (page?.toLowerCase() === "fuel") {
         uri = "fuel/delete";
+      } else if (page?.toLowerCase() === "title") {
+        uri = "title/delete";
+      } else if (page?.toLowerCase() === "countries") {
+        uri = "country/delete";
+      } else if (page?.toLowerCase() === "city") {
+        uri = "city/delete";
       }
 
       const response = await postReq({ data: deleteData, url: uri });
@@ -79,21 +85,18 @@ const DeletedData: React.FC<DeletedDataProps> = ({
       isOpen={isOpen}
       title="Delete  Item"
       warning={warning}
-      closeModal={() => closeModal(false)}
-    >
+      closeModal={() => closeModal(false)}>
       <div className=" flex items-center gap-8">
         <button
           onClick={() => closeModal(false)}
-          className="btn btn--action  flex items-center justify-center gap-2"
-        >
+          className="btn btn--action  flex items-center justify-center gap-2">
           <span>Cancel</span>
         </button>
 
         <button
           onClick={handleRemove}
           style={{ background: "red", color: "#FFF" }}
-          className="btn flex items-center justify-center gap-2"
-        >
+          className="btn flex items-center justify-center gap-2">
           <span>{actionBtn.text}</span>
         </button>
       </div>

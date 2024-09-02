@@ -64,6 +64,10 @@ export const ItemList = ({ page }: { page: string }) => {
       uri = "fuel_type";
     } else if (page?.toLowerCase() === "title") {
       uri = "title";
+    } else if (page?.toLowerCase() === "countries") {
+      uri = "country";
+    } else if (page?.toLowerCase() === "city") {
+      uri = "city";
     }
     console.log(uri);
     // send req

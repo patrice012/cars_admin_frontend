@@ -54,6 +54,10 @@ const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
         url = "fuel_type/create";
       } else if (page?.toLowerCase() === "title") {
         url = "title/create";
+      } else if (page?.toLowerCase() === "countries") {
+        url = "country/create";
+      } else if (page?.toLowerCase() === "city") {
+        url = "city/create";
       }
 
       const response = await postReq({ data, url, extras });

@@ -89,6 +89,10 @@ const UpdateData: React.FC<UpdateDataProps> = ({
         uri = "fuel/update";
       } else if (page?.toLowerCase() === "title") {
         uri = "title/update";
+      } else if (page?.toLowerCase() === "countries") {
+        uri = "country/update";
+      } else if (page?.toLowerCase() === "city") {
+        uri = "city/update";
       }
 
       const response = await postReq({ data, url: uri, extras });
