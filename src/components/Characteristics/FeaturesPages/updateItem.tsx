@@ -7,6 +7,7 @@ import InputField from "../../InputField";
 import Button from "../../Button";
 
 import PropTypes from "prop-types";
+import { useSession } from "../../../contexts/authContext";
 
 interface UpdateDataProps {
   isOpen: boolean;
@@ -21,6 +22,8 @@ const UpdateData: React.FC<UpdateDataProps> = ({
   page,
   updatedData,
 }) => {
+  const { session } = useSession();
+  const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [data, setData] = useState({
     name: "",
     _id: updatedData["_id"] || "",
@@ -88,7 +91,7 @@ const UpdateData: React.FC<UpdateDataProps> = ({
         uri = "title/update";
       }
 
-      const response = await postReq({ data, url: uri });
+      const response = await postReq({ data, url: uri, extras });
       if (response.status == 200) {
         notif(response?.data.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });

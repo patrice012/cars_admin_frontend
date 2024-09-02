@@ -56,8 +56,8 @@ export const ItemList = ({ page }: { page: string }) => {
       uri = "cylinders";
     } else if (page?.toLowerCase() === "enginetype") {
       uri = "engine_type";
-    } else if (page?.toLowerCase() === "drive") {
-      uri = "drive";
+    } else if (page?.toLowerCase() === "model") {
+      uri = "model";
     } else if (page?.toLowerCase() === "transmission") {
       uri = "transmission";
     } else if (page?.toLowerCase() === "fuel") {
