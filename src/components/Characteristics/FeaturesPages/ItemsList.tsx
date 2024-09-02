@@ -290,6 +290,11 @@ export const ItemList = ({ page }: { page: string }) => {
       />
 
       <UpdateData
+        hasRelation={{
+          hasRelation,
+          relationName,
+          relationData: subTableData ?? [],
+        }}
         isOpen={isUpdating}
         toggleModal={toggleModal}
         page={page}

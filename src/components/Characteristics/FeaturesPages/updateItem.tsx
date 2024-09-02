@@ -8,12 +8,16 @@ import Button from "../../Button";
 
 import PropTypes from "prop-types";
 import { useSession } from "../../../contexts/authContext";
+import { hasRelationProps } from "./addNew";
+import Selectable from "../../Selectable";
+import { characsItemProps } from "../../../helpers/types";
 
 interface UpdateDataProps {
   isOpen: boolean;
   page: string;
   updatedData: any;
   toggleModal: ({ state, action }: { state: boolean; action: string }) => void;
+  hasRelation?: hasRelationProps;
 }
 
 const UpdateData: React.FC<UpdateDataProps> = ({
@@ -21,11 +25,13 @@ const UpdateData: React.FC<UpdateDataProps> = ({
   toggleModal,
   page,
   updatedData,
+  hasRelation,
 }) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [data, setData] = useState({
     name: "",
+    subItem: "",
     _id: updatedData["_id"] || "",
   });
   const [actionBtn, setActionBtn] = useState({
@@ -45,6 +51,7 @@ const UpdateData: React.FC<UpdateDataProps> = ({
       return {
         ...prev,
         name: updatedData["name"] || "",
+
         _id: updatedData["_id"] || "",
       };
     });
@@ -75,14 +82,16 @@ const UpdateData: React.FC<UpdateDataProps> = ({
 
     try {
       let uri = "";
+      let subItemTitle = "";
       if (page?.toLowerCase() === "colors") {
         uri = "colors/update";
       } else if (page?.toLowerCase() === "cylinders") {
         uri = "cylinders/update";
       } else if (page?.toLowerCase() === "enginetype") {
         uri = "engine_type/update";
-      } else if (page?.toLowerCase() === "drive") {
-        uri = "drive/update";
+      } else if (page?.toLowerCase() === "model") {
+        uri = "model/update";
+        subItemTitle = "brandId";
       } else if (page?.toLowerCase() === "transmission") {
         uri = "transmission/update";
       } else if (page?.toLowerCase() === "fuel") {
@@ -93,9 +102,14 @@ const UpdateData: React.FC<UpdateDataProps> = ({
         uri = "country/update";
       } else if (page?.toLowerCase() === "city") {
         uri = "city/update";
+        subItemTitle = "countryId";
       }
 
-      const response = await postReq({ data, url: uri, extras });
+      const response = await postReq({
+        data: { ...data, [subItemTitle]: data.subItem },
+        url: uri,
+        extras,
+      });
       if (response.status == 200) {
         notif(response?.data.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });
@@ -111,9 +125,13 @@ const UpdateData: React.FC<UpdateDataProps> = ({
     }
   };
 
+  const handleSelectSubItem = (itemId: string) => {
+    setData({ ...data, subItem: itemId });
+  };
+
   const closeModal = (state: boolean) => {
     setWarning("");
-    setData({ name: "", _id: "" });
+    setData({ ...data, name: "" });
     toggleModal({ state: state, action: "update" });
   };
 
@@ -132,6 +150,18 @@ const UpdateData: React.FC<UpdateDataProps> = ({
           value={data.name}
           onChange={(e) => setData({ ...data, name: e.target.value })}
         />
+
+        {hasRelation?.hasRelation && (
+          <Selectable
+            items={hasRelation.relationData!.map((item: characsItemProps) => ({
+              label: item.name,
+              value: item._id,
+            }))}
+            onChange={(e) => handleSelectSubItem(e.target.value)}
+            selected={data.subItem}
+            title={hasRelation.relationName}
+          />
+        )}
 
         <Button
           onClick={handleSubmit}

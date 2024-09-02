@@ -39,7 +39,7 @@ export function Characteristics() {
             name="Cylinders"
             link="cylinders"
             children={<PiCylinderDuotone />}
-          /> */}
+          /> 
           <Feature
             name="Transmission"
             link="transmission"
@@ -49,8 +49,8 @@ export function Characteristics() {
 
           <Feature name="Brand" link="brands" children={<IoMdAddCircle />} />
           <Feature name="Title" link="title" children={<MdOutlineTitle />} />
-          <Feature name="Country" link="country" children={<FaCity />} />
-          <Feature name="City" link="city" children={<FaCity />} />
+          <Feature name="Country" hasRelation={false} link="country" children={<FaCity />} />
+          <Feature hasRelation={true}  relationName="Select Country" relationUri="country" name="City" link="city" children={<FaCity />} />
         </div>
       </div>
     </>
