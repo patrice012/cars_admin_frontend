@@ -4,7 +4,7 @@ import { ItemList } from "../../components/Characteristics/FeaturesPages/ItemsLi
 export default function Transmission() {
   return (
     <>
-      <Header page={"Transmission"} />
+      <Header page={"Transmission"} headerStatus={""} />
       <div className="searches-container centerer">
         <ItemList page={"Transmission"} />
       </div>

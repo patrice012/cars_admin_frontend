@@ -4,7 +4,7 @@ import { ItemList } from "../../components/Characteristics/FeaturesPages/ItemsLi
 export default function Fuel() {
   return (
     <>
-      <Header page={"Fuel"} />
+      <Header page={"Fuel"} headerStatus={""} />
       <div className="searches-container centerer">
         <ItemList page={"Fuel"} />
       </div>

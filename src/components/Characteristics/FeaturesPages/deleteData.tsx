@@ -5,6 +5,7 @@ import postReq from "../../../helpers/postReq";
 import notif from "../../../helpers/notif";
 
 import PropTypes from "prop-types";
+import { useSession } from "../../../contexts/authContext";
 
 interface DeletedDataProps {
   isOpen: boolean;
@@ -20,6 +21,8 @@ const DeletedData: React.FC<DeletedDataProps> = ({
   page,
   deleteData,
 }) => {
+  const { session } = useSession();
+  const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [actionBtn, setActionBtn] = useState({
     text: "Delete",
     isDisabled: false,
@@ -59,7 +62,7 @@ const DeletedData: React.FC<DeletedDataProps> = ({
         uri = "city/delete";
       }
 
-      const response = await postReq({ data: deleteData, url: uri });
+      const response = await postReq({ data: deleteData, url: uri, extras });
       if (response.status == 200) {
         notif(response?.data.message ?? "Success, Data has been deleted");
         setActionBtn({ text: "Delete", isDisabled: false });

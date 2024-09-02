@@ -7,10 +7,10 @@ import { MdDeleteOutline } from "react-icons/md";
 
 import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
-import AddItem from "./addItem";
+import AddItem from "./addCar";
 import Item from "../../models/item.model";
 import { DeleteModal } from "../../components/Modal";
-import UpdateItem from "./updateItem";
+import UpdateItem from "./updateCar";
 
 const META = {
   title: "Site Data",
@@ -174,7 +174,7 @@ export const ItemList = () => {
                       >
                         <td>{item.title}</td>
                         <td>{item?.description}</td>
-                        <td>{item.brand.title}</td>
+                        <td>{item.brand.name}</td>
 
                         <th
                           className="view-data"

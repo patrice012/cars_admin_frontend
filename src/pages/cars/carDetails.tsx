@@ -6,7 +6,7 @@ import Header from "../../components/Header/Header";
 import Item from "../../models/item.model";
 import CarItemSlider from "../../components/CarItemSlider";
 import { DeleteModal } from "../../components/Modal";
-import UpdateItem from "./updateItem";
+import UpdateItem from "./updateCar";
 import { useQuery } from "react-query";
 import postReq from "../../helpers/postReq";
 import { useSession } from "../../contexts/authContext";
