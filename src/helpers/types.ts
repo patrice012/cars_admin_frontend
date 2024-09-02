@@ -8,6 +8,11 @@ export interface extrasProps {
   value: string;
 }
 
+export interface characsItemProps {
+  _id: string;
+  name: string;
+}
+
 export interface requestProps {
   data: any;
   url: string;

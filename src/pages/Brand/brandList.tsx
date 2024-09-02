@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 // icons
 import { BsPlusLg } from "react-icons/bs";
 import { RxUpdate } from "react-icons/rx";
@@ -168,9 +167,9 @@ export const BrandList = () => {
                           className="pl-3"
                           width={40}
                           height={40}
-                          src={brand.image}
+                          src={brand.logo}
                         />
-                        <td>{brand?.title}</td>
+                        <td>{brand?.name}</td>
                         <th
                           className="view-data"
                           onClick={(e) => {

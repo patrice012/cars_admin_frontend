@@ -6,7 +6,7 @@ import { ItemList } from "./itemList";
 export default function CarItemsData() {
   return (
     <>
-      <Header page={"Car Items"} />
+      <Header page={"Car Items"} headerStatus={""} />
 
       <div className="searches-container centerer">
         <ItemList />

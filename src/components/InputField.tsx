@@ -6,6 +6,7 @@ interface InputFieldProps {
   placeholder: string;
   label?: string;
   value: string;
+  required?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -16,10 +17,14 @@ const InputField: React.FC<InputFieldProps> = ({
   value,
   label,
   onChange,
+  required,
 }) => {
   return (
     <div className="form-group mb-4">
-      <span>{label}</span>
+      <div className="flex items-center">
+        <span>{label} </span>
+        {required && <span className="text-red-600 text-[22px]">*</span>}
+      </div>
       <input
         type={type}
         id={id}
