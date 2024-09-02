@@ -47,7 +47,7 @@ const AddNew: React.FC<AddNewProps> = ({ isOpen, toggleModal, page }) => {
       } else if (page?.toLowerCase() === "enginetype") {
         url = "engine_type/create";
       } else if (page?.toLowerCase() === "model") {
-        url = "drive/create";
+        url = "model/create";
       } else if (page?.toLowerCase() === "transmission") {
         url = "transmission/create";
       } else if (page?.toLowerCase() === "fuel") {
