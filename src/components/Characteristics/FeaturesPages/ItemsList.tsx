@@ -176,7 +176,8 @@ export const ItemList = ({ page }: { page: string }) => {
             <div className="actions flex items-center justify-start gap-8">
               <button
                 onClick={() => toggleModal({ state: true, action: "create" })}
-                className="btn btn-primary flex items-center justify-center gap-2">
+                className="btn btn-primary flex items-center justify-center gap-2"
+              >
                 <BsPlusLg /> <p>Add new</p>
               </button>
               {tableData?.data.docs ? (
@@ -237,7 +238,8 @@ export const ItemList = ({ page }: { page: string }) => {
                           onClick={(e) => {
                             e.stopPropagation();
                             UpdateRowData(item);
-                          }}>
+                          }}
+                        >
                           <RxUpdate />
                         </th>
                         <th
@@ -245,7 +247,8 @@ export const ItemList = ({ page }: { page: string }) => {
                           onClick={(e) => {
                             e.stopPropagation();
                             DeleteRowData(item._id);
-                          }}>
+                          }}
+                        >
                           <MdDeleteOutline />
                         </th>
                       </tr>
@@ -262,7 +265,8 @@ export const ItemList = ({ page }: { page: string }) => {
               <button
                 disabled={!tableData?.data.hasPrevPage}
                 className="btn"
-                onClick={handlePrev}>
+                onClick={handlePrev}
+              >
                 Previous
               </button>
 
@@ -273,42 +277,49 @@ export const ItemList = ({ page }: { page: string }) => {
               <button
                 disabled={!tableData?.data.hasNextPage}
                 className="btn"
-                onClick={handleNext}>
+                onClick={handleNext}
+              >
                 Next
               </button>
             </div>
           </div>
         )}
       </section>
-      <AddNew
-        hasRelation={{
-          hasRelation,
-          relationName,
-          relationData: subTableData ?? [],
-        }}
-        isOpen={isCreating}
-        toggleModal={toggleModal}
-        page={page}
-      />
+      {isCreating && (
+        <AddNew
+          hasRelation={{
+            hasRelation,
+            relationName,
+            relationData: subTableData ?? [],
+          }}
+          isOpen={isCreating}
+          toggleModal={toggleModal}
+          page={page}
+        />
+      )}
 
-      <UpdateData
-        hasRelation={{
-          hasRelation,
-          relationName,
-          relationData: subTableData ?? [],
-        }}
-        isOpen={isUpdating}
-        toggleModal={toggleModal}
-        page={page}
-        updatedData={rowData}
-      />
+      {isUpdating && (
+        <UpdateData
+          hasRelation={{
+            hasRelation,
+            relationName,
+            relationData: subTableData ?? [],
+          }}
+          isOpen={isUpdating}
+          toggleModal={toggleModal}
+          page={page}
+          updatedData={rowData}
+        />
+      )}
 
-      <DeletedData
-        isOpen={isDeleting}
-        toggleModal={toggleModal}
-        page={page}
-        deleteData={rowData}
-      />
+      {isDeleting && (
+        <DeletedData
+          isOpen={isDeleting}
+          toggleModal={toggleModal}
+          page={page}
+          deleteData={rowData}
+        />
+      )}
     </>
   );
 };
