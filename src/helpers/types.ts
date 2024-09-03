@@ -11,6 +11,9 @@ export interface extrasProps {
 export interface characsItemProps {
   _id: string;
   name: string;
+  firstname: string;
+  lastname: string;
+
 }
 
 export interface requestProps {

@@ -15,7 +15,7 @@ import UpdateItem from "./updateCar";
 const META = {
   title: "Site Data",
   description: "Site Data",
-  perPage: 10,
+  perPage: 20,
   page: 1,
 };
 
@@ -38,15 +38,20 @@ export const ItemList = () => {
     if (state) {
       getPaginate();
     }
+    getPaginate();
   };
 
   // get table data
   const handleTableData = async () => {
     const result = await postReq({
       data: { page: pageNumber, perPage: META.perPage },
-      url: "item",
+      url: "car",
     });
-    if (result.status == 200) return result.data;
+    if (result.status == 200) {
+      const data =  result.data;
+      console.log(data);
+      return data.data;
+    }
   };
 
   let queryKey = [location.pathname, pageNumber, "sites-list"];
@@ -112,8 +117,7 @@ export const ItemList = () => {
             <div className="actions flex items-center justify-start gap-8">
               <button
                 onClick={() => toggleModal({ state: true, action: "create" })}
-                className="btn btn-primary flex items-center justify-center gap-2"
-              >
+                className="btn btn-primary flex items-center justify-center gap-2">
                 <BsPlusLg /> <p>Add new</p>
               </button>
               {tableData ? (
@@ -128,9 +132,12 @@ export const ItemList = () => {
             {tableData?.length || tableData ? (
               <thead>
                 <tr>
-                  <th>Title</th>
-                  <th>Description</th>
+                  <th>Name</th>
                   <th>Brand</th>
+                  <th>Model</th>
+                  <th>Seller</th>
+                  <th>Sales Price</th>
+                  <th>Min Price</th>
                   <th>Update</th>
                   <th>Delete</th>
                 </tr>
@@ -170,20 +177,22 @@ export const ItemList = () => {
                         onClick={() => {
                           handleSiteKeywordDetail(item);
                         }}
-                        className="cursor-pointer"
-                      >
-                        <td>{item.title}</td>
-                        <td>{item?.description}</td>
-                        <td>{item.brand.name}</td>
-
+                        className="cursor-pointer">
+                        <td>{item.name}</td>
+                        <td>{item.brandId.name}</td>
+                        <td>{item.modelId.name}</td>
+                        <td>
+                          {item.sellerId.firstname }
+                        </td>
+                        <td>{item.salesPrice}</td>
+                        <td>{item.minPrice}</td>
                         <th
                           className="view-data"
                           onClick={(e) => {
                             e.stopPropagation();
                             setSelectedItem(item);
                             setIsUpdating(true);
-                          }}
-                        >
+                          }}>
                           <RxUpdate color="blue" />
                         </th>
                         <th
@@ -192,8 +201,7 @@ export const ItemList = () => {
                             e.stopPropagation();
                             setSelectedId(item._id);
                             setRemoving(true);
-                          }}
-                        >
+                          }}>
                           <MdDeleteOutline color="red" />
                         </th>
                       </tr>
@@ -210,8 +218,7 @@ export const ItemList = () => {
               <button
                 disabled={!tableData?.hasPrevPage}
                 className="btn"
-                onClick={handlePrev}
-              >
+                onClick={handlePrev}>
                 Previous
               </button>
 
@@ -222,8 +229,7 @@ export const ItemList = () => {
               <button
                 disabled={!tableData?.hasNextPage}
                 className="btn"
-                onClick={handleNext}
-              >
+                onClick={handleNext}>
                 Next
               </button>
             </div>
@@ -242,7 +248,7 @@ export const ItemList = () => {
         <DeleteModal
           deleteItem={toggleDeleteData}
           _id={selectedId}
-          url="item/delete"
+          url="car/delete"
           isOpen={removing}
           closeModal={() => setRemoving(!removing)}
         />

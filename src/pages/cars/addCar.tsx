@@ -32,14 +32,12 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
   ]);
   const [data, setData] = useState({
     name: "",
-    brand: "",
     modelId: "",
     colorId: "",
     engineTypeId: "",
     transmissionId: "",
     fuelTypeId: "",
     titleId: "",
-    countryId: "",
     cityId: "",
     sellerId: "",
     cylinders: 0,
@@ -52,7 +50,6 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
     keywords: [],
     isElectric: false,
     isHybrid: false,
-    isActive: true,
     note: "",
   });
   const [actionBtn, setActionBtn] = useState({
@@ -61,24 +58,29 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
   });
   const [warning, setWarning] = useState("");
 
-  const getBrands = async () => {
+  const [models, setModels] = useState([]);
+  const [sellers, setSellers] = useState([]);
+  const [colors, setColors] = useState([]);
+  const [titles, setTitles] = useState([]);
+  const [transmissions, setTransmissions] = useState([]);
+  const [engines, setEngines] = useState([]);
+  const [cities, setCities] = useState([]);
+  const [fuels, setFuels] = useState([]);
+
+  const fetchData = async (
+    url: string,
+    setState: React.Dispatch<React.SetStateAction<any[]>>
+  ) => {
     const result = await postReq({
       data: {},
-      url: "brand",
-      extras: [{ key: "authorization", value: "Bearer " + session }],
+      url,
+      extras,
     });
-    if (result.status == 200) return result.data;
+    if (result.status === 200) {
+      console.log(result.data.data);
+      setState(result.data.data);
+    }
   };
-
-  const {
-    data: brands,
-    isLoading: loading,
-    error,
-    refetch: getPaginate,
-  } = useQuery(["queryKey"], getBrands, {
-    refetchOnWindowFocus: false,
-    enabled: true,
-  });
 
   const handleFileChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -94,26 +96,30 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!data.name || !data.note || !data.brand) {
+
+    console.log(data);
+
+    if (
+      !data.name ||
+      !data.cityId ||
+      !data.colorId ||
+      !data.modelId ||
+      !data.engineTypeId ||
+      !data.minPrice ||
+      !data.fuelTypeId ||
+      !data.salesPrice ||
+      !data.sellerId
+    ) {
       setWarning("Please fill all fields");
       return;
     }
     setActionBtn({ text: "Saving...", isDisabled: true });
     try {
       const formData = new FormData();
-      formData.append("title", data.name);
-      formData.append("note", data.note);
-      formData.append("brand", data.brand);
-      for (let i = 0; i < data.imagesUrls.length; i++) {
-        formData.append("photos", data.imagesUrls[i]);
-      }
-      /* for (let i = 0; i < data.videos.length; i++) {
-        formData.append("videos", data.videos[i]);
-      } */
+
       const res = await postReq({
-        data: formData,
-        url: "item/create",
-        isFileUpload: true,
+        data: { ...data, imagesUrls: [""] },
+        url: "car/create",
         extras,
       });
       console.log(res.status);
@@ -136,14 +142,12 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
     setWarning("");
     setData({
       name: "",
-      brand: "",
       modelId: "",
       colorId: "",
       engineTypeId: "",
       transmissionId: "",
       fuelTypeId: "",
       titleId: "",
-      countryId: "",
       cityId: "",
       sellerId: "",
       cylinders: 0,
@@ -156,15 +160,14 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
       keywords: [],
       isElectric: false,
       isHybrid: false,
-      isActive: true,
       note: "",
     });
     toggleModal({ state: state, action: "create" });
   };
 
-  if (loading) {
+  /* if (loading) {
     return;
-  }
+  } */
 
   return (
     <Modal
@@ -189,28 +192,25 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           value={data.note}
           onChange={(e) => setData({ ...data, note: e.target.value })}
         />
+
         <Selectable
-          items={mockItemList.map((item: characsItemProps) => ({
+          items={models.map((item: characsItemProps) => ({
             label: item.name,
             value: item._id,
           }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
-          title="Brand name"
-        />
-        <Selectable
-          items={mockItemList.map((item: characsItemProps) => ({
-            label: item.name,
-            value: item._id,
-          }))}
+          onOpen={() => !models.length && fetchData("model", setModels)}
           onChange={(e) => setData({ ...data, modelId: e.target.value })}
           title="Model name"
         />
+
         <Selectable
           items={defaultCarDoorsCount.map((item) => ({
             label: item.toString(),
-            value: item.toString(),
+            value: item,
           }))}
-          onChange={(e) => setData({ ...data, doorsCount: e.target.value })}
+          onChange={(e) =>
+            setData({ ...data, doorsCount: e.target.value })
+          }
           title="Car doors"
         />
         <InputField
@@ -218,56 +218,47 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           id="title"
           type="text"
           placeholder="Ex: 100000"
-          value={data.salesPrice}
-          onChange={(e) => setData({ ...data, salesPrice: e.target.value })}
+          value={data.salesPrice === 0 ? "" : data.salesPrice}
+          onChange={(e) =>
+            setData({ ...data, salesPrice: e.target.value })
+          }
         />
         <InputField
           label="Minimum price"
           id="title"
           type="text"
           placeholder="Ex: 100000"
-          value={data.title}
-          onChange={(e) => setData({ ...data, title: e.target.value })}
+          value={data.minPrice === 0 ? "" : data.minPrice }
+          onChange={(e) =>
+            setData({ ...data, minPrice: e.target.value })
+          }
         />
         <Selectable
-          items={mockItemList.map((item: characsItemProps) => ({
+          items={colors.map((item: characsItemProps) => ({
             label: item.name,
             value: item._id,
           }))}
+          onOpen={() => !colors.length && fetchData("colors", setColors)}
           onChange={(e) => setData({ ...data, colorId: e.target.value })}
-          title="Car color"
+          title="Color "
         />
         <Selectable
-          items={mockItemList.map((item: characsItemProps) => ({
-            label: item.name,
+          items={sellers.map((item: characsItemProps) => ({
+            label: item.firstname + " " + item.lastname,
             value: item._id,
           }))}
+          onOpen={() => !sellers.length && fetchData("seller", setSellers)}
           onChange={(e) => setData({ ...data, sellerId: e.target.value })}
           title="Seller"
         />
         <Selectable
-          items={mockItemList.map((item: characsItemProps) => ({
+          items={titles.map((item: characsItemProps) => ({
             label: item.name,
             value: item._id,
           }))}
+          onOpen={() => !titles.length && fetchData("title", setTitles)}
           onChange={(e) => setData({ ...data, titleId: e.target.value })}
-          title="Car title"
-        />
-        <Selectable
-          items={mockItemList.map((item: characsItemProps) => ({
-            label: item.name,
-            value: item._id,
-          }))}
-          onChange={(e) => setData({ ...data, countryId: e.target.value })}
-          title="Country"
-        />
-        <Selectable
-          items={mockItemList.map((item: characsItemProps) => ({
-            label: item.name,
-            value: item._id,
-          }))}
-          onChange={(e) => setData({ ...data, cityId: e.target.value })}
-          title="City"
+          title="Title"
         />
         <Selectable
           items={defaultCarsYear.map((item: number) => ({
@@ -278,57 +269,85 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           title="Car year"
         />
         <Selectable
-          items={defaultCarsYear.map((item: number) => ({
-            label: item,
-            value: item,
+          items={cities.map((item: characsItemProps) => ({
+            label: item.name,
+            value: item._id,
           }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
-          title="Transmission"
+          onOpen={() => !cities.length && fetchData("city", setCities)}
+          onChange={(e) => setData({ ...data, cityId: e.target.value })}
+          title="City"
         />
         <InputField
           label="Cylinders"
           id="title"
-          type="number"
+          type="text"
           placeholder="Ex: 3"
-          value={data.title}
-          onChange={(e) => setData({ ...data, title: e.target.value })}
+          value={data.cylinders}
+          onChange={(e) =>
+            setData({ ...data, cylinders: e.target.value })
+          }
+        />
+        <InputField
+          label="Odometre"
+          id="title"
+          type="text"
+          placeholder="Ex: 3"
+          value={data.odometer}
+          onChange={(e) =>
+            setData({ ...data, odometer: e.target.value })
+          }
         />
         <Selectable
-          items={defaultCarsYear.map((item: number) => ({
-            label: item,
-            value: item,
+          items={transmissions.map((item: characsItemProps) => ({
+            label: item.name,
+            value: item._id,
           }))}
+          onOpen={() =>
+            !transmissions.length && fetchData("transmission", setTransmissions)
+          }
+          onChange={(e) => setData({ ...data, transmissionId: e.target.value })}
+          title="Transmission"
+        />
+        <Selectable
+          items={engines.map((item: characsItemProps) => ({
+            label: item.name,
+            value: item._id,
+          }))}
+          onOpen={() => !engines.length && fetchData("engine_type", setEngines)}
           onChange={(e) => setData({ ...data, engineTypeId: e.target.value })}
-          title="Engine type"
+          title="Engine"
         />
+
         <Selectable
-          items={defaultCarsYear.map((item: number) => ({
-            label: item,
-            value: item,
+          items={fuels.map((item: characsItemProps) => ({
+            label: item.name,
+            value: item._id,
           }))}
+          onOpen={() => !fuels.length && fetchData("fuel_type", setFuels)}
           onChange={(e) => setData({ ...data, fuelTypeId: e.target.value })}
-          title="Fuel type"
+          title="Fuels"
         />
-        <Selectable
-          items={defaultQuestion.map((item) => ({
-            label: item.label,
-            value: item.value,
-          }))}
-          onChange={(e) => setData({ ...data, isHybrid: e.target.value })}
-          title="Hybrid car"
-        />
-        <Selectable
-          items={defaultQuestion.map((item) => ({
-            label: item.label,
-            value: item.value,
-          }))}
-          onChange={(e) => setData({ ...data, brand: e.target.value })}
-          title="Electric car"
-        />
+        <div className=" flex justify-start items-center" style={{ gap: 20 }}>
+          <span>Hybrid car</span>
+          <input
+            type="checkbox"
+            className=""
+            onChange={(e) => setData({ ...data, isHybrid: e.target.checked })}
+          />
+        </div>
+        <div className=" flex justify-start items-center" style={{ gap: 20 }}>
+          <span>Electric car</span>
+          <input
+            type="checkbox"
+            className=" items-start justify-start flex"
+            onChange={(e) => setData({ ...data, isElectric: e.target.checked })}
+          />
+        </div>
+
         <FileUpload
           id="photos"
           label="Upload photos"
-          onChange={(e) => handleFileChange(e, "photos")}
+          onChange={(e) => handleFileChange(e, "imagesUrls")}
         />
         <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>

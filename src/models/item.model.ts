@@ -1,13 +1,33 @@
-import Brand from "./brand.model";
+import {Brand, Seller}from "./brand.model";
+
+interface ItemType {
+  name: string;
+  _id: string;
+}
 
 type Item = {
   _id: string;
-  title: string;
-  description?: string;
-  brand: Brand;
-  photos: string[];
-  videos?: string[];
-  active: boolean;
+  name: string,
+  modelId: ItemType,
+  colorId: ItemType,
+  engineTypeId: ItemType,
+  transmissionId: ItemType,
+  fuelTypeId: ItemType,
+  titleId: ItemType,
+  cityId: ItemType,
+  sellerId: Seller,
+  cylinders: number,
+  year: number,
+  brandId: Brand,
+  doorsCount: number,
+  odometer: number,
+  salesPrice: number,
+  minPrice: number,
+  imagesUrls: string[],
+  keywords: string[],
+  isElectric: boolean,
+  isHybrid: boolean,
+  note: string,
 };
 
 export interface ItemData {

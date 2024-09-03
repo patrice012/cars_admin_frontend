@@ -13,8 +13,8 @@ export const slideAutoPlaySettings = {
 export const defaultCarDoorsCount = [2, 4, 6, 8];
 
 export const defaultQuestion = [
-  { label: "Yes", value: true },
-  { label: "No", value: false },
+  { label: "Yes", value: true},
+  { label: "No", value: false  },
 ];
 
 export const defaultCarsYear = [

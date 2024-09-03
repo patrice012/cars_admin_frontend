@@ -140,7 +140,7 @@ const UpdateSeller: React.FC<UpdateSellerProps> = ({
                   value: item._id,
                 }))
           }
-          selected={data.sellerTypeId._id}
+          selected={data.sellerTypeId.name}
           onChange={(e) => setData({ ...data, sellerTypeId: e.target.value })}
           title="Seller type"
         />
