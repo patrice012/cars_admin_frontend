@@ -37,6 +37,8 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+
+    console.log(data)
     e.preventDefault();
     e.stopPropagation();
 
@@ -51,12 +53,15 @@ const AddNewBrand: React.FC<AddNewBrandProps> = ({ isOpen, toggleModal }) => {
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("logo", data.logo[0]);
+      
       const response = await postReq({
         data: formData,
         url: "brand/create",
         extras,
         isFileUpload: true,
       });
+      console.log(response);
+      
       if (response.status == 201) {
         notif(response.data?.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });

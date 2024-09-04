@@ -23,7 +23,7 @@ const CarItemSlider = ({ isOpen, toggleModal, items }: CarItemSliderProps) => {
       />
       <div className="modal modal--container carousel w-full">
         <div className="modal-box flex flex-col items-center gap-8">
-          <div style={{ width: 800 }} className="carousel w-full">
+          <div style={{ width: 500, height:500 }} className="carousel w-full">
             <Slider
               nextArrow={
                 <FaArrowAltCircleRight fontSize="50px" color="#6E8DAB" />

@@ -70,8 +70,8 @@ const ItemKeyword = ({ item }: ItemKewordProps) => {
   return (
     <>
       <>
-        <div className="content-site">
-          <div className="flex-1 flex flex-col w-full">
+        <div className="content-site " style={{ marginBottom:50}}>
+          <div className="flex-1 flex flex-col w-full " >
             <div
               style={{
                 display: "flex",
@@ -90,7 +90,7 @@ const ItemKeyword = ({ item }: ItemKewordProps) => {
                         marginRight: idx != itemsLenght - 1 ? 20 : 0,
                         width: 240,
                       }}>
-                      <img style={{ width: 240 }} src={photo} />
+                      <img style={{ width: 240 , height:220}} src={photo} />
                     </div>
                   ))
                 : ""}
@@ -144,7 +144,7 @@ const ItemKeyword = ({ item }: ItemKewordProps) => {
         </div>
         {isOpen && (
           <CarItemSlider
-            items={itemDetails.photos}
+            items={item.imagesUrls}
             isOpen={isOpen}
             toggleModal={() => setIsOpen(!isOpen)}
           />

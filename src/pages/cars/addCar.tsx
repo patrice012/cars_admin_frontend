@@ -82,15 +82,16 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
     }
   };
 
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: string
-  ) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setData((prevData) => ({
-      ...prevData,
-      [type]: files,
-    }));
+    console.log(files.length);
+
+    if (files && files.length < 7) {
+      const files = Array.from(e.target.files || []);
+      setData({ ...data, imagesUrls: files });
+    } else {
+      notif("Only 06 files could be upload");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -117,12 +118,44 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
     try {
       const formData = new FormData();
 
+      Object.entries(data).forEach(([key, value]) => {
+        if (Array.isArray(value) && key == "imagesUrls") {
+          // If the value is an array, append each element individually
+          value.forEach((item, index) => {
+            formData.append("imagesUrls", item);
+          });
+        } else {
+          // For other data types, append directly
+          formData.append(key, value);
+        }
+      });
+      /*    formData.append("cityId", data.cityId);
+      formData.append("titleId", data.titleId);
+      formData.append("fuelTypeId", data.fuelTypeId);
+      formData.append("transmissionId", data.transmissionId);
+      formData.append("engineTypeId", data.engineTypeId);
+      formData.append("colorId", data.colorId);
+      formData.append("modelId", data.modelId);
+      formData.append("note", data.note);
+      formData.append("isHybrid", data.isHybrid);
+      formData.append("isElectric", data.isElectric);
+      formData.append("keywords", data.keywords);
+      formData.append("minPrice", data.minPrice);
+      formData.append("cylinders", data.cylinders);
+      formData.append("sellerId", data.sellerId);
+      formData.append("year", data.year);
+      formData.append("doorsCount", data.doorsCount);
+      formData.append("odometer", data.odometer);
+      formData.append("salesPrice", data.salesPrice);
+      formData.append("logo", data.images[0]);
+ */
       const res = await postReq({
-        data: { ...data, imagesUrls: [""] },
+        data: formData,
         url: "car/create",
         extras,
+        isFileUpload: true,
       });
-      console.log(res.status);
+      console.log(res);
       if (res.status == 201) {
         notif(res?.data.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });
@@ -208,9 +241,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.toString(),
             value: item,
           }))}
-          onChange={(e) =>
-            setData({ ...data, doorsCount: e.target.value })
-          }
+          onChange={(e) => setData({ ...data, doorsCount: e.target.value })}
           title="Car doors"
         />
         <InputField
@@ -219,19 +250,15 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           type="text"
           placeholder="Ex: 100000"
           value={data.salesPrice === 0 ? "" : data.salesPrice}
-          onChange={(e) =>
-            setData({ ...data, salesPrice: e.target.value })
-          }
+          onChange={(e) => setData({ ...data, salesPrice: e.target.value })}
         />
         <InputField
           label="Minimum price"
           id="title"
           type="text"
           placeholder="Ex: 100000"
-          value={data.minPrice === 0 ? "" : data.minPrice }
-          onChange={(e) =>
-            setData({ ...data, minPrice: e.target.value })
-          }
+          value={data.minPrice === 0 ? "" : data.minPrice}
+          onChange={(e) => setData({ ...data, minPrice: e.target.value })}
         />
         <Selectable
           items={colors.map((item: characsItemProps) => ({
@@ -283,9 +310,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           type="text"
           placeholder="Ex: 3"
           value={data.cylinders}
-          onChange={(e) =>
-            setData({ ...data, cylinders: e.target.value })
-          }
+          onChange={(e) => setData({ ...data, cylinders: e.target.value })}
         />
         <InputField
           label="Odometre"
@@ -293,9 +318,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           type="text"
           placeholder="Ex: 3"
           value={data.odometer}
-          onChange={(e) =>
-            setData({ ...data, odometer: e.target.value })
-          }
+          onChange={(e) => setData({ ...data, odometer: e.target.value })}
         />
         <Selectable
           items={transmissions.map((item: characsItemProps) => ({
@@ -347,7 +370,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
         <FileUpload
           id="photos"
           label="Upload photos"
-          onChange={(e) => handleFileChange(e, "imagesUrls")}
+          onChange={handleFileChange}
         />
         <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>
