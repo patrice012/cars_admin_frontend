@@ -2,8 +2,9 @@
 
 import { requestProps } from "./types";
 
+
 // env
-let REACT_APP_DOMAIN = "http://localhost:5000/";
+let VITE_APP_DOMAIN = import.meta.env.VITE_APP_DOMAIN;
 
 const postReq = async ({ url, data, isFileUpload, extras }: requestProps) => {
   // headers
@@ -19,7 +20,7 @@ const postReq = async ({ url, data, isFileUpload, extras }: requestProps) => {
   }
 
   try {
-    const req = await fetch(`${REACT_APP_DOMAIN}${url}`, {
+    const req = await fetch(`${VITE_APP_DOMAIN}${url}`, {
       method: "POST",
       headers: headers,
       body: isFileUpload ? data : JSON.stringify(data),
