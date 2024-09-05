@@ -150,14 +150,10 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
         }
       });
 
-      formData.forEach((key, value) => {
-        console.log(key, value);
-      });
-
-      return;
+      formData.append("_id", item._id);
 
       const res = await postReq({
-        data: { _id: item._id, formData },
+        data: formData,
         url: "car/update",
         extras,
         isFileUpload: true,
