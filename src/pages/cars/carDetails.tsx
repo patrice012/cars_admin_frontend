@@ -10,6 +10,7 @@ import UpdateItem from "./updateCar";
 import { useQuery } from "react-query";
 import postReq from "../../helpers/postReq";
 import { useSession } from "../../contexts/authContext";
+import ClipLoader from "react-spinners/ClipLoader";
 
 const ItemDetails = () => {
   const location = useLocation();
@@ -50,6 +51,7 @@ const ItemKeyword = ({ item }: ItemKewordProps) => {
   const {
     data: itemDetails,
     isLoading: isLoading,
+    isSuccess: isSuccess,
     error,
     refetch: refetchDetails,
   } = useQuery(queryKey, getItem, {
@@ -57,7 +59,7 @@ const ItemKeyword = ({ item }: ItemKewordProps) => {
     enabled: true,
   });
 
-  console.log(itemDetails);
+  console.log("ff");
   console.log(item);
 
   const toggleDeleteData = (state: boolean) => {
@@ -70,8 +72,8 @@ const ItemKeyword = ({ item }: ItemKewordProps) => {
   return (
     <>
       <>
-        <div className="content-site " style={{ marginBottom:50}}>
-          <div className="flex-1 flex flex-col w-full " >
+        <div className="content-site " style={{ marginBottom: 50 }}>
+          <div className="flex-1 flex flex-col w-full ">
             <div
               style={{
                 display: "flex",
@@ -81,8 +83,8 @@ const ItemKeyword = ({ item }: ItemKewordProps) => {
               }}
               // className="flex flex-wrap"
             >
-              {item.imagesUrls.length
-                ? item.imagesUrls.map((photo: string, idx: number) => (
+              {isSuccess
+                ? itemDetails.imagesUrls.map((photo: string, idx: number) => (
                     <div
                       key={photo}
                       onClick={() => setIsOpen(!isOpen)}
@@ -90,33 +92,46 @@ const ItemKeyword = ({ item }: ItemKewordProps) => {
                         marginRight: idx != itemsLenght - 1 ? 20 : 0,
                         width: 240,
                       }}>
-                      <img style={{ width: 240 , height:220}} src={photo} />
+                      <img style={{ width: 240, height: 220 }} src={photo} />
                     </div>
                   ))
                 : ""}
             </div>
             <div className="mt-5">
-              <h3 className="text">Car Name: {item.name}</h3>
-              <div className="flex items-center">
-                <h3>Car Brand: {item.brandId.name}</h3>
-                <img className="mr-4" width={30} src={item.brandId.logo} />
-              </div>
-              <h3>Model: {item.modelId.name}</h3>
-              <h3>Seller: {item.sellerId.firstname}</h3>
-              <h3>Note: {item.note}</h3>
-              <h3>Sales price: {item.salesPrice}</h3>
-              <h3>Min price: {item.minPrice}</h3>
-              <h3>Color car: {item.colorId.name}</h3>
-              <h3>Odometer: {item.odometer}</h3>
-              <h3>Cylinders: {item.cylinders}</h3>
-              <h3>Year: {item.year}</h3>
-              <h3>Title: {item.titleId.name}</h3>
-              <h3>Fuel type: {item.fuelTypeId.name}</h3>
-              <h3>Engine type: {item.engineTypeId.name}</h3>
-              <h3>Transmission: {item.transmissionId.name}</h3>
-              <h3>City: {item.cityId.name}</h3>
-              <h3>IsHybrid: {item.isHybrid ? " yes " : " No "}</h3>
-              <h3>IsElectric: {item.isElectric ? " yes " : " No "}</h3>
+              {isSuccess ? (
+                <>
+                  <h3 className="text">Car Name: {itemDetails.name}</h3>
+                  <div className="flex items-center">
+                    <h3>Car Brand: {item.brandId.name}</h3>
+                    <img className="mr-4" width={30} src={item.brandId.logo} />
+                  </div>
+                  <h3>Model: {item.modelId.name}</h3>
+                  <h3>Seller: {item.sellerId.firstname}</h3>
+                  <h3>Note: {item.note}</h3>
+                  <h3>Sales price: {item.salesPrice}</h3>
+                  <h3>Min price: {item.minPrice}</h3>
+                  <h3>Color car: {item.colorId.name}</h3>
+                  <h3>Odometer: {item.odometer}</h3>
+                  <h3>Cylinders: {item.cylinders}</h3>
+                  <h3>Year: {item.year}</h3>
+                  <h3>Title: {item.titleId.name}</h3>
+                  <h3>Fuel type: {item.fuelTypeId.name}</h3>
+                  <h3>Engine type: {item.engineTypeId.name}</h3>
+                  <h3>Transmission: {item.transmissionId.name}</h3>
+                  <h3>City: {item.cityId.name}</h3>
+                  <h3>IsHybrid: {item.isHybrid ? " yes " : " No "}</h3>
+                  <h3>IsElectric: {item.isElectric ? " yes " : " No "}</h3>
+                </>
+              ) : (
+                <ClipLoader
+                  color="black"
+                  loading={isLoading}
+                  size={30}
+                  aria-label="Loading Spinner"
+                  data-testid="loader"
+                  
+                />
+              )}
             </div>
           </div>
           <div className="flex flex-col gap-10 rounded-lg items-center p-10">
@@ -144,7 +159,7 @@ const ItemKeyword = ({ item }: ItemKewordProps) => {
         </div>
         {isOpen && (
           <CarItemSlider
-            items={item.imagesUrls}
+            items={itemDetails.imagesUrls}
             isOpen={isOpen}
             toggleModal={() => setIsOpen(!isOpen)}
           />

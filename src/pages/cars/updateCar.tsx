@@ -55,6 +55,7 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
     isHybrid: item.isHybrid,
     note: item.note,
     oldphotos: [],
+    uploadsImages: [],
   });
   const [itemPhotos, setItemPhotos] = useState<any[]>([]);
   const [actionBtn, setActionBtn] = useState({
@@ -85,7 +86,7 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
       if (idx > -1) {
         const d = data.oldphotos;
         d.splice(idx, 1);
-        setData({ ...data, oldphotos: d });
+        setData({ ...data, imagesUrls: d });
       }
     }
   };
@@ -132,10 +133,34 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
     try {
       const formData = new FormData();
 
+      Object.entries(data).forEach(([key, value]) => {
+        if (Array.isArray(value) && key == "uploadsImages") {
+          // If the value is an array, append each element individually
+          value.forEach((item, index) => {
+            formData.append("uploadsImages", item);
+          });
+        } else if (Array.isArray(value) && key == "imagesUrls") {
+          // If the value is an array, append each element individually
+          value.forEach((item, index) => {
+            formData.append("imagesUrls", item);
+          });
+        } else {
+          // For other data types, append directly
+          formData.append(key, value);
+        }
+      });
+
+      formData.forEach((key, value) => {
+        console.log(key, value);
+      });
+
+      return;
+
       const res = await postReq({
-        data: { ...data, _id: item._id },
+        data: { _id: item._id, formData },
         url: "car/update",
         extras,
+        isFileUpload: true,
       });
       if (res.status == 200) {
         notif(res?.data.message ?? "Success, Data has been updated");
@@ -156,10 +181,6 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
     setWarning("");
     toggleModal({ state: state, action: "create" });
   };
-
-  /*   if (loading) {
-    return;
-  } */
 
   return (
     <Modal
@@ -347,7 +368,7 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
         <FileUpload
           id="photos"
           label="Upload photos"
-          onChange={(e) => handleFileChange(e, "photos")}
+          onChange={(e) => handleFileChange(e, "uploadsImages")}
         />
         <div
           style={{
@@ -388,7 +409,10 @@ const ImageDisplayItem = ({
 }) => {
   return (
     <div style={{ width: 170, position: "relative" }}>
-      <img src={typeof item == "string" ? item : URL.createObjectURL(item)} />
+      <img
+        src={typeof item == "string" ? item : URL.createObjectURL(item)}
+        style={{ height: 150, width: 200 }}
+      />
       <div
         onClick={onClick}
         style={{
