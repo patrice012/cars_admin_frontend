@@ -103,7 +103,8 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
       !data.minPrice ||
       !data.fuelTypeId ||
       !data.salesPrice ||
-      !data.sellerId
+      !data.sellerId ||
+      !data.imagesUrls
     ) {
       setWarning("Please fill all fields");
       return;
@@ -201,8 +202,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
       isOpen={isOpen}
       title="Add New Item"
       warning={warning}
-      closeModal={() => closeModal(false)}
-    >
+      closeModal={() => closeModal(false)}>
       <form onSubmit={handleSubmit}>
         <InputField
           required
@@ -226,7 +226,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.name,
             value: item._id,
           }))}
-          onOpen={() => !models.length && fetchData("model", () => setModels)}
+          onOpen={() => !models.length && fetchData("model", setModels)}
           onChange={(e) => setData({ ...data, modelId: e.target.value })}
           title="Model name"
         />
@@ -260,7 +260,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.name,
             value: item._id,
           }))}
-          onOpen={() => !colors.length && fetchData("colors", () => setColors)}
+          onOpen={() => !colors.length && fetchData("colors", setColors)}
           onChange={(e) => setData({ ...data, colorId: e.target.value })}
           title="Color "
         />
@@ -269,9 +269,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.firstname + " " + item.lastname,
             value: item._id,
           }))}
-          onOpen={() =>
-            !sellers.length && fetchData("seller", () => setSellers)
-          }
+          onOpen={() => !sellers.length && fetchData("seller", setSellers)}
           onChange={(e) => setData({ ...data, sellerId: e.target.value })}
           title="Seller"
         />
@@ -280,7 +278,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.name,
             value: item._id,
           }))}
-          onOpen={() => !titles.length && fetchData("title", () => setTitles)}
+          onOpen={() => !titles.length && fetchData("title", setTitles)}
           onChange={(e) => setData({ ...data, titleId: e.target.value })}
           title="Title"
         />
@@ -297,7 +295,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.name,
             value: item._id,
           }))}
-          onOpen={() => !cities.length && fetchData("city", () => setCities)}
+          onOpen={() => !cities.length && fetchData("city", setCities)}
           onChange={(e) => setData({ ...data, cityId: e.target.value })}
           title="City"
         />
@@ -323,8 +321,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             value: item._id,
           }))}
           onOpen={() =>
-            !transmissions.length &&
-            fetchData("transmission", () => setTransmissions)
+            !transmissions.length && fetchData("transmission", setTransmissions)
           }
           onChange={(e) => setData({ ...data, transmissionId: e.target.value })}
           title="Transmission"
@@ -334,9 +331,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.name,
             value: item._id,
           }))}
-          onOpen={() =>
-            !engines.length && fetchData("engine_type", () => setEngines)
-          }
+          onOpen={() => !engines.length && fetchData("engine_type", setEngines)}
           onChange={(e) => setData({ ...data, engineTypeId: e.target.value })}
           title="Engine"
         />
@@ -346,7 +341,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item.name,
             value: item._id,
           }))}
-          onOpen={() => !fuels.length && fetchData("fuel_type", () => setFuels)}
+          onOpen={() => !fuels.length && fetchData("fuel_type", setFuels)}
           onChange={(e) => setData({ ...data, fuelTypeId: e.target.value })}
           title="Fuels"
         />
