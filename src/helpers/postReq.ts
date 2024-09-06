@@ -29,7 +29,7 @@ const postReq = async ({ url, data, isFileUpload, extras }: requestProps) => {
       mode: "cors",
       method: "POST",
       headers: headers,
-      // credentials: "include",
+      credentials: "include", // Add this line
       body: isFileUpload ? data : JSON.stringify(data),
     });
 
