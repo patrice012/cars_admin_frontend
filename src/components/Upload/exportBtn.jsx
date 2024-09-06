@@ -1,7 +1,7 @@
 import { CiExport } from "react-icons/ci";
 import { Link } from "react-router-dom";
 
-let REACT_APP_DOMAIN = import.meta.env.VITE_REACT_APP_DOMAIN;
+let REACT_APP_DOMAIN = import.meta.env.VITE_API_ENDPOINT;
 
 export const ExportBtn = () => {
   return (
@@ -12,4 +12,3 @@ export const ExportBtn = () => {
     </div>
   );
 };
-

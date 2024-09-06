@@ -8,7 +8,7 @@ import { UploadFilesContext } from "../../contexts/UploadFilesContext";
 // helper
 import notif from "../../helpers/notif";
 // app domain
-let REACT_APP_DOMAIN = import.meta.env.VITE_REACT_APP_DOMAIN;
+let REACT_APP_DOMAIN = import.meta.env.VITE_API_ENDPOINT;
 let VITE_ENV = import.meta.env.VITE_ENV;
 // useQuery
 import { useQueryClient } from "react-query";

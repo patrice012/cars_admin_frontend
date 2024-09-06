@@ -2,9 +2,9 @@
 
 import { requestProps } from "./types";
 
-
 // env
-let VITE_APP_DOMAIN = import.meta.env.VITE_APP_DOMAIN;
+let API_ENDPOINT = import.meta.env.VITE_API_ENDPOINT;
+let VITE_ENV = import.meta.env.VITE_ENV;
 
 const postReq = async ({ url, data, isFileUpload, extras }: requestProps) => {
   // headers
@@ -12,6 +12,10 @@ const postReq = async ({ url, data, isFileUpload, extras }: requestProps) => {
   !isFileUpload && headers.append("Content-Type", "application/json");
   headers.append("Accept", "application/json");
   headers.append("authorisation", "Bearer ");
+  headers.append("GET", "POST", "OPTIONS");
+  headers.append("Access-Control-Allow-Origin", `${API_ENDPOINT}`);
+  headers.append("Access-Control-Allow-Credentials", "true");
+
   if (extras) {
     for (let e = 0; e < extras.length; e++) {
       const element = extras[e];
@@ -19,12 +23,25 @@ const postReq = async ({ url, data, isFileUpload, extras }: requestProps) => {
     }
   }
 
+  // fetch
+  let endpoint = `${API_ENDPOINT}${url}`;
+  console.log(endpoint, "endpoint");
+
   try {
-    const req = await fetch(`${VITE_APP_DOMAIN}${url}`, {
+    const req = await fetch(endpoint, {
+      mode: "cors",
       method: "POST",
       headers: headers,
+      credentials: "include",
       body: isFileUpload ? data : JSON.stringify(data),
     });
+
+    if (!req.ok) {
+      if (VITE_ENV === "development") {
+        console.log(req, "response error");
+      }
+      throw new Error(`HTTP error! status: ${req.status}`);
+    }
 
     const response = await req.json();
     return { status: req.status, data: response };
