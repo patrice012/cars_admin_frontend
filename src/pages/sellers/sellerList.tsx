@@ -8,11 +8,12 @@ import { MdDeleteOutline } from "react-icons/md";
 import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
 import AddNewSeller from "./addNewSeller";
-import {Seller }from "../../models/brand.model";
+import { Seller } from "../../models/brand.model";
 import { DeleteModal } from "../../components/Modal";
 import { useSession } from "../../contexts/authContext";
 import UpdateSeller from "./updateSeller";
 import Header from "../../components/Header/Header";
+import { ClipLoader } from "react-spinners";
 
 const META = {
   title: "Site Data",
@@ -51,7 +52,7 @@ export const SellerList = () => {
       extras: [{ key: "authorization", value: `Bearer ${session}` }],
     });
     if (result.status == 200) {
-      const data =  result.data;
+      const data = result.data;
       console.log(data);
       return data.data;
     }
@@ -117,8 +118,7 @@ export const SellerList = () => {
               <div className="actions flex items-center justify-start gap-8">
                 <button
                   onClick={() => toggleModal({ state: true, action: "create" })}
-                  className="btn btn-primary flex items-center justify-center gap-2"
-                >
+                  className="btn btn-primary flex items-center justify-center gap-2">
                   <BsPlusLg /> <p>Add seller</p>
                 </button>
                 {tableData ? (
@@ -168,39 +168,45 @@ export const SellerList = () => {
                 )}
 
                 {/* user-data */}
-                {tableData?.length
-                  ? tableData?.map((Seller: Seller, idx: number) => {
-                      return (
-                        <tr key={idx} className="cursor-pointer">
-                          <td>{Seller.firstname}</td>
-                          <td>{Seller.lastname}</td>
-                          <td>{Seller.phone}</td>
-                          <td>{Seller.whatsapp}</td>
-                          <th
-                            className="view-data"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedId(Seller._id);
-                              setSelectedSeller(Seller);
-                              setIsUpdating(true);
-                            }}
-                          >
-                            <RxUpdate />
-                          </th>
-                          <th
-                            className="view-data"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedId(Seller._id);
-                              setRemoving(true);
-                            }}
-                          >
-                            <MdDeleteOutline />
-                          </th>
-                        </tr>
-                      );
-                    })
-                  : null}
+                {tableData?.length ? (
+                  tableData?.map((Seller: Seller, idx: number) => {
+                    return (
+                      <tr key={idx} className="cursor-pointer">
+                        <td>{Seller.firstname}</td>
+                        <td>{Seller.lastname}</td>
+                        <td>{Seller.phone}</td>
+                        <td>{Seller.whatsapp}</td>
+                        <th
+                          className="view-data"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedId(Seller._id);
+                            setSelectedSeller(Seller);
+                            setIsUpdating(true);
+                          }}>
+                          <RxUpdate />
+                        </th>
+                        <th
+                          className="view-data"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedId(Seller._id);
+                            setRemoving(true);
+                          }}>
+                          <MdDeleteOutline />
+                        </th>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <ClipLoader
+                    color="black"
+                    loading={tableLoading}
+                    size={30}
+                    aria-label="Loading Spinner"
+                    data-testid="loader"
+                  />
+                )}
               </tbody>
             </table>
           </div>
@@ -211,8 +217,7 @@ export const SellerList = () => {
                 <button
                   disabled={!tableData?.hasPrevPage}
                   className="btn"
-                  onClick={handlePrev}
-                >
+                  onClick={handlePrev}>
                   Previous
                 </button>
 
@@ -223,8 +228,7 @@ export const SellerList = () => {
                 <button
                   disabled={!tableData?.hasNextPage}
                   className="btn"
-                  onClick={handleNext}
-                >
+                  onClick={handleNext}>
                   Next
                 </button>
               </div>

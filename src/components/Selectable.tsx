@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface SelectableProps {
   title: string;
   selected?: string | number;
   items: { label: string | number; value: string | number | any }[];
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  onOpen?: () => void; // Add the onOpen prop
+  onOpen?: () => void; // Prop to trigger data loading when the dropdown opens
 }
 
 const Selectable = ({
@@ -15,23 +15,30 @@ const Selectable = ({
   selected,
   onOpen,
 }: SelectableProps) => {
-  const [click, setClick] = useState(false);
-  const handleClick = () => {};
+  const [isOpened, setIsOpened] = useState(false);
+
+  const handleFocus = () => {
+    if (!isOpened && onOpen) {
+      onOpen(); // Load data when the dropdown is first opened
+      setIsOpened(true); // Set the state to ensure this runs only once
+    }
+  };
+
   return (
     <div className="form-group mb-4">
       <label htmlFor={"id"}>{title}</label>
       <select
         value={selected}
         onChange={onChange}
-        onFocus={onOpen} // Trigger onOpen when the dropdown is focused
-        className="select select-bordered w-full">
-        <option disabled selected={!selected}>
+        onFocus={handleFocus} // Trigger data loading when the dropdown is focused
+        className="select select-bordered w-full"
+      >
+        <option disabled value="">
           Choose item
         </option>
         {items.map((item) => (
           <option
             key={item.value}
-            selected={selected === item.value}
             value={item.value}>
             {item.label}
           </option>

@@ -102,25 +102,25 @@ const ItemKeyword = ({ item }: ItemKewordProps) => {
                 <>
                   <h3 className="text">Car Name: {itemDetails.name}</h3>
                   <div className="flex items-center">
-                    <h3>Car Brand: {item.brandId.name}</h3>
-                    <img className="mr-4" width={30} src={item.brandId.logo} />
+                    <h3>Car Brand: {itemDetails.brandId.name}</h3>
+                    <img className="mr-4" width={30} src={itemDetails.brandId.logo} />
                   </div>
-                  <h3>Model: {item.modelId.name}</h3>
-                  <h3>Seller: {item.sellerId.firstname}</h3>
-                  <h3>Note: {item.note}</h3>
-                  <h3>Sales price: {item.salesPrice}</h3>
-                  <h3>Min price: {item.minPrice}</h3>
-                  <h3>Color car: {item.colorId.name}</h3>
-                  <h3>Odometer: {item.odometer}</h3>
-                  <h3>Cylinders: {item.cylinders}</h3>
-                  <h3>Year: {item.year}</h3>
-                  <h3>Title: {item.titleId.name}</h3>
-                  <h3>Fuel type: {item.fuelTypeId.name}</h3>
-                  <h3>Engine type: {item.engineTypeId.name}</h3>
-                  <h3>Transmission: {item.transmissionId.name}</h3>
-                  <h3>City: {item.cityId.name}</h3>
-                  <h3>IsHybrid: {item.isHybrid ? " yes " : " No "}</h3>
-                  <h3>IsElectric: {item.isElectric ? " yes " : " No "}</h3>
+                  <h3>Model: {itemDetails.modelId.name}</h3>
+                  <h3>Seller: {itemDetails.sellerId.firstname}</h3>
+                  <h3>Note: {itemDetails.note}</h3>
+                  <h3>Sales price: {itemDetails.salesPrice}</h3>
+                  <h3>Min price: {itemDetails.minPrice}</h3>
+                  <h3>Color car: {itemDetails.colorId.name}</h3>
+                  <h3>Odometer: {itemDetails.odometer}</h3>
+                  <h3>Cylinders: {itemDetails.cylinders}</h3>
+                  <h3>Year: {itemDetails.year}</h3>
+                  <h3>Title: {itemDetails.titleId.name}</h3>
+                  <h3>Fuel type: {itemDetails.fuelTypeId.name}</h3>
+                  <h3>Engine type: {itemDetails.engineTypeId.name}</h3>
+                  <h3>Transmission: {itemDetails.transmissionId.name}</h3>
+                  <h3>City: {itemDetails.cityId.name}</h3>
+                  <h3>IsHybrid: {itemDetails.isHybrid ? " yes " : " No "}</h3>
+                  <h3>IsElectric: {itemDetails.isElectric ? " yes " : " No "}</h3>
                 </>
               ) : (
                 <ClipLoader

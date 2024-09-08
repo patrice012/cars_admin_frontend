@@ -11,6 +11,7 @@ import AddItem from "./addCar";
 import Item from "../../models/item.model";
 import { DeleteModal } from "../../components/Modal";
 import UpdateItem from "./updateCar";
+import { ClipLoader } from "react-spinners";
 
 const META = {
   title: "Site Data",
@@ -207,7 +208,14 @@ export const ItemList = () => {
                       </tr>
                     );
                   })
-                : null}
+                : <ClipLoader
+                color="black"
+                loading={tableLoading}
+                size={30}
+                aria-label="Loading Spinner"
+                data-testid="loader"
+                
+              />}
             </tbody>
           </table>
         </div>
