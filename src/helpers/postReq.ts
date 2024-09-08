@@ -12,9 +12,6 @@ const postReq = async ({ url, data, isFileUpload, extras }: requestProps) => {
   !isFileUpload && headers.append("Content-Type", "application/json");
   headers.append("Accept", "application/json");
   headers.append("authorisation", "Bearer ");
-  headers.append("GET", "POST", "OPTIONS");
-  headers.append("Access-Control-Allow-Origin", `${API_ENDPOINT}`);
-  headers.append("Access-Control-Allow-Credentials", "true");
 
   if (extras) {
     for (let e = 0; e < extras.length; e++) {
@@ -32,7 +29,7 @@ const postReq = async ({ url, data, isFileUpload, extras }: requestProps) => {
       mode: "cors",
       method: "POST",
       headers: headers,
-      credentials: "include",
+      credentials: "include", // Add this line
       body: isFileUpload ? data : JSON.stringify(data),
     });
 
@@ -50,5 +47,6 @@ const postReq = async ({ url, data, isFileUpload, extras }: requestProps) => {
     return { status: 400, data: {} };
   }
 };
+
 
 export default postReq;
