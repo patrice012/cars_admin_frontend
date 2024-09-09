@@ -65,7 +65,7 @@ export const ItemList = () => {
         perPage: META.perPage,
         search: debounce.trim(),
       },
-      url: "car",
+      url: "car/in-admin",
     });
     console.log(result);
     if (result.status == 200) {
