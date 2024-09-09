@@ -14,6 +14,7 @@ import { useSession } from "../../contexts/authContext";
 import UpdateSeller from "./updateSeller";
 import Header from "../../components/Header/Header";
 import { ClipLoader } from "react-spinners";
+import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
 
 const META = {
   title: "Site Data",
@@ -118,7 +119,8 @@ export const SellerList = () => {
               <div className="actions flex items-center justify-start gap-8">
                 <button
                   onClick={() => toggleModal({ state: true, action: "create" })}
-                  className="btn btn-primary flex items-center justify-center gap-2">
+                  className="btn btn-primary flex items-center justify-center gap-2"
+                >
                   <BsPlusLg /> <p>Add seller</p>
                 </button>
                 {tableData ? (
@@ -154,7 +156,7 @@ export const SellerList = () => {
                 {/* loading */}
                 {tableLoading &&
                   new Array(Number(4)).fill("").map((elm, idx) => {
-                    return <tr key={idx}>{/* <LoadingSkeleton /> */}</tr>;
+                    return <tr key={idx}>{<LoadingSkeleton />}</tr>;
                   })}
 
                 {/* error on nothing found */}
@@ -168,7 +170,7 @@ export const SellerList = () => {
                 )}
 
                 {/* user-data */}
-                {tableData?.length ? (
+                {tableData &&
                   tableData?.map((Seller: Seller, idx: number) => {
                     return (
                       <tr key={idx} className="cursor-pointer">
@@ -183,7 +185,8 @@ export const SellerList = () => {
                             setSelectedId(Seller._id);
                             setSelectedSeller(Seller);
                             setIsUpdating(true);
-                          }}>
+                          }}
+                        >
                           <RxUpdate />
                         </th>
                         <th
@@ -192,21 +195,13 @@ export const SellerList = () => {
                             e.stopPropagation();
                             setSelectedId(Seller._id);
                             setRemoving(true);
-                          }}>
+                          }}
+                        >
                           <MdDeleteOutline />
                         </th>
                       </tr>
                     );
-                  })
-                ) : (
-                  <ClipLoader
-                    color="black"
-                    loading={tableLoading}
-                    size={30}
-                    aria-label="Loading Spinner"
-                    data-testid="loader"
-                  />
-                )}
+                  })}
               </tbody>
             </table>
           </div>
@@ -217,7 +212,8 @@ export const SellerList = () => {
                 <button
                   disabled={!tableData?.hasPrevPage}
                   className="btn"
-                  onClick={handlePrev}>
+                  onClick={handlePrev}
+                >
                   Previous
                 </button>
 
@@ -228,7 +224,8 @@ export const SellerList = () => {
                 <button
                   disabled={!tableData?.hasNextPage}
                   className="btn"
-                  onClick={handleNext}>
+                  onClick={handleNext}
+                >
                   Next
                 </button>
               </div>
