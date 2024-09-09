@@ -2,7 +2,6 @@ import React from "react";
 import { IoIosClose } from "react-icons/io";
 import Slider from "react-slick";
 import { slideAutoPlaySettings } from "../helpers/constants";
-import { BsArrow90DegRight } from "react-icons/bs";
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 
 interface CarItemSliderProps {
@@ -21,9 +20,9 @@ const CarItemSlider = ({ isOpen, toggleModal, items }: CarItemSliderProps) => {
         id="upload-modal"
         className="modal-toggle"
       />
-      <div className="modal modal--container carousel w-full">
+      <div className="modal modal--container carousel w-full cursor-pointer">
         <div className="modal-box flex flex-col items-center gap-8">
-          <div style={{ width: 500, height:500 }} className="carousel w-full">
+          <div style={{ width: 500, height: 500 }} className="carousel w-full">
             <Slider
               nextArrow={
                 <FaArrowAltCircleRight fontSize="50px" color="#6E8DAB" />

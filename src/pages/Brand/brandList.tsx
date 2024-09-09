@@ -51,8 +51,7 @@ export const BrandList = () => {
       extras: [{ key: "authorization", value: `Bearer ${session}` }],
     });
     if (result.status == 200) {
-      const data = (result.data as { data: any }).data;
-      return data;
+      return result.data;
     }
   };
 
@@ -119,7 +118,7 @@ export const BrandList = () => {
                 <BsPlusLg /> <p>Add new</p>
               </button>
               {tableData ? (
-                <p>{tableData?.length || tableData?.docs?.length} items</p>
+                <p>{tableData?.data.length || tableData?.docs?.length} items</p>
               ) : null}
             </div>
           </div>
@@ -127,7 +126,7 @@ export const BrandList = () => {
           {/* table */}
           <table className="table table-zebra mt-6">
             {/* thead*/}
-            {tableData?.length || tableData ? (
+            {tableData?.data.length || tableData ? (
               <thead>
                 <tr>
                   <th>Logo</th>
@@ -153,7 +152,7 @@ export const BrandList = () => {
                 })}
 
               {/* error on nothing found */}
-              {(error || tableData?.length === 0) && (
+              {(error || tableData?.data.length === 0) && (
                 <>
                   <div className="nodata">
                     <img src="/img/nodata.svg" alt="no data found" />
@@ -163,8 +162,8 @@ export const BrandList = () => {
               )}
 
               {/* user-data */}
-              {tableData?.length
-                ? tableData?.map((brand: Brand, idx: number) => {
+              {tableData?.data.length
+                ? tableData?.data.map((brand: Brand, idx: number) => {
                     return (
                       <tr key={idx} className="cursor-pointer">
                         <img
@@ -203,7 +202,7 @@ export const BrandList = () => {
           </table>
         </div>
         {/* footer */}
-        {tableData?.length > META.perPage - 2 && (
+        {tableData?.data.length > META.perPage - 2 && (
           <div className="table-footer">
             <div className="elms">
               <button

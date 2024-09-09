@@ -123,7 +123,7 @@ export const ItemList = ({ page }: { page: string }) => {
   //  handle next and prev
   const handleNext = () => {
     // check if page available
-    if (!tableData?.data.hasNextPage) {
+    if (!tableData?.hasNextPage) {
       // notif page end
       return;
     }
@@ -133,12 +133,12 @@ export const ItemList = ({ page }: { page: string }) => {
     tableHeaderScrollTo!.scrollIntoView();
 
     // move page to next
-    setPageNumber(tableData?.data.nextPage);
+    setPageNumber(tableData?.nextPage);
   };
 
   const handlePrev = () => {
     // check if page available
-    if (!tableData?.data.hasPrevPage) {
+    if (!tableData?.hasPrevPage) {
       // notif page end
       return;
     }
@@ -148,7 +148,7 @@ export const ItemList = ({ page }: { page: string }) => {
     tableHeaderScrollTo!.scrollIntoView();
 
     // move page to next
-    setPageNumber(tableData?.data.prevPage);
+    setPageNumber(tableData?.prevPage);
   };
 
   // update row data
@@ -181,12 +181,7 @@ export const ItemList = ({ page }: { page: string }) => {
               >
                 <BsPlusLg /> <p>Add new</p>
               </button>
-              {tableData?.data.docs ? (
-                <p>
-                  {tableData?.data.totalDocs || tableData?.data.docs?.length}{" "}
-                  items
-                </p>
-              ) : null}
+              {tableData?.data ? <p>{tableData?.data?.length} items</p> : null}
             </div>
           </div>
 
@@ -259,11 +254,11 @@ export const ItemList = ({ page }: { page: string }) => {
           </table>
         </div>
         {/* footer */}
-        {tableData?.data.totalDocs > META.perPage - 2 && (
+        {tableData?.totalPages > META.perPage - 2 && (
           <div className="table-footer">
             <div className="elms">
               <button
-                disabled={!tableData?.data.hasPrevPage}
+                disabled={!tableData?.hasPrevPage}
                 className="btn"
                 onClick={handlePrev}
               >
@@ -271,11 +266,11 @@ export const ItemList = ({ page }: { page: string }) => {
               </button>
 
               <p>
-                Page {tableData?.data.page} of {tableData?.data.totalPages}
+                Page {tableData?.page} of {tableData?.totalPages}
               </p>
 
               <button
-                disabled={!tableData?.data.hasNextPage}
+                disabled={!tableData?.hasNextPage}
                 className="btn"
                 onClick={handleNext}
               >

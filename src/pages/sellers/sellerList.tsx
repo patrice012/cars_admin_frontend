@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate, useNavigation } from "react-router-dom";
 // icons
 import { BsPlusLg } from "react-icons/bs";
 import { RxUpdate } from "react-icons/rx";
@@ -31,6 +31,7 @@ export const SellerList = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [selectedSeller, setSelectedSeller] = useState<Seller>();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const toggleModal = ({ state = true, action = "create" }) => {
@@ -53,9 +54,8 @@ export const SellerList = () => {
       extras: [{ key: "authorization", value: `Bearer ${session}` }],
     });
     if (result.status == 200) {
-      const data = result.data;
-      console.log(data);
-      return data.data;
+      console.log(result.data);
+      return result.data;
     }
   };
 
@@ -123,8 +123,25 @@ export const SellerList = () => {
                 >
                   <BsPlusLg /> <p>Add seller</p>
                 </button>
+                <button
+                  style={{ background: "#eab308" }}
+                  onClick={() =>
+                    navigate("/characteristics/seller_type", {
+                      state: {
+                        hasRelation: false,
+                        relationName: "",
+                        relationUri: "",
+                      },
+                    })
+                  }
+                  className="btn  flex items-center justify-center gap-2"
+                >
+                  <p>Seller type</p>
+                </button>
                 {tableData ? (
-                  <p>{tableData?.length || tableData?.docs?.length} items</p>
+                  <p>
+                    {tableData?.data.length || tableData?.docs?.length} items
+                  </p>
                 ) : null}
               </div>
             </div>
@@ -132,7 +149,7 @@ export const SellerList = () => {
             {/* table */}
             <table className="table table-zebra mt-6">
               {/* thead*/}
-              {tableData?.length || tableData ? (
+              {tableData?.data.length || tableData ? (
                 <thead>
                   <tr>
                     <th>Firstname</th>
@@ -160,7 +177,7 @@ export const SellerList = () => {
                   })}
 
                 {/* error on nothing found */}
-                {(error || tableData?.length === 0) && (
+                {(error || tableData?.data.length === 0) && (
                   <>
                     <div className="nodata">
                       <img src="/img/nodata.svg" alt="no data found" />
@@ -171,7 +188,7 @@ export const SellerList = () => {
 
                 {/* user-data */}
                 {tableData &&
-                  tableData?.map((Seller: Seller, idx: number) => {
+                  tableData?.data.map((Seller: Seller, idx: number) => {
                     return (
                       <tr key={idx} className="cursor-pointer">
                         <td>{Seller.firstname}</td>
@@ -206,7 +223,7 @@ export const SellerList = () => {
             </table>
           </div>
           {/* footer */}
-          {tableData?.length > META.perPage - 2 && (
+          {tableData?.data.length > META.perPage - 2 && (
             <div className="table-footer">
               <div className="elms">
                 <button

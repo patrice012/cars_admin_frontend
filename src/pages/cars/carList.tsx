@@ -17,7 +17,7 @@ import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
 const META = {
   title: "Site Data",
   description: "Site Data",
-  perPage: 20,
+  perPage: 10,
   page: 1,
 };
 
@@ -45,14 +45,15 @@ export const ItemList = () => {
 
   // get table data
   const handleTableData = async () => {
+    console.log(pageNumber);
     const result = await postReq({
       data: { page: pageNumber, perPage: META.perPage },
       url: "car",
     });
+    console.log(result);
     if (result.status == 200) {
       const data = result.data;
-      console.log(data);
-      return data.data;
+      return data;
     }
   };
 
@@ -124,7 +125,7 @@ export const ItemList = () => {
                 <BsPlusLg /> <p>Add new</p>
               </button>
               {tableData ? (
-                <p>{tableData?.length || tableData?.length} item(s)</p>
+                <p>{tableData?.data.length || tableData?.length} item(s)</p>
               ) : null}
             </div>
           </div>
@@ -132,7 +133,7 @@ export const ItemList = () => {
           {/* table */}
           <table className="table table-zebra mt-6">
             {/* thead*/}
-            {tableData?.length || tableData ? (
+            {tableData?.data.length || tableData ? (
               <thead>
                 <tr>
                   <th>Name</th>
@@ -162,7 +163,7 @@ export const ItemList = () => {
                 })}
 
               {/* error on nothing found */}
-              {(error || tableData?.length === 0) && (
+              {(error || tableData?.data.length === 0) && (
                 <>
                   <div className="nodata ">
                     <img src="/img/nodata.svg" alt="no data found" />
@@ -172,7 +173,7 @@ export const ItemList = () => {
               )}
 
               {/* user-data */}
-              {tableData?.map((item: Item, idx: number) => {
+              {tableData?.data.map((item: Item, idx: number) => {
                 return (
                   <tr
                     key={idx}
@@ -214,11 +215,11 @@ export const ItemList = () => {
           </table>
         </div>
         {/* footer */}
-        {tableData?.length > META.perPage - 2 && (
+        {(tableData?.hasNextPage || tableData?.hasPrevPage) && (
           <div className="table-footer">
             <div className="elms">
               <button
-                disabled={!tableData?.hasPrevPage}
+                disabled={!tableData.hasPrevPage}
                 className="btn"
                 onClick={handlePrev}
               >
@@ -230,7 +231,7 @@ export const ItemList = () => {
               </p>
 
               <button
-                disabled={!tableData?.hasNextPage}
+                disabled={!tableData.hasNextPage}
                 className="btn"
                 onClick={handleNext}
               >
