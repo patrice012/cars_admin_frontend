@@ -12,6 +12,7 @@ import Item from "../../models/item.model";
 import { DeleteModal } from "../../components/Modal";
 import UpdateItem from "./updateCar";
 import { ClipLoader } from "react-spinners";
+import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
 
 const META = {
   title: "Site Data",
@@ -49,7 +50,7 @@ export const ItemList = () => {
       url: "car",
     });
     if (result.status == 200) {
-      const data =  result.data;
+      const data = result.data;
       console.log(data);
       return data.data;
     }
@@ -118,7 +119,8 @@ export const ItemList = () => {
             <div className="actions flex items-center justify-start gap-8">
               <button
                 onClick={() => toggleModal({ state: true, action: "create" })}
-                className="btn btn-primary flex items-center justify-center gap-2">
+                className="btn btn-primary flex items-center justify-center gap-2"
+              >
                 <BsPlusLg /> <p>Add new</p>
               </button>
               {tableData ? (
@@ -156,7 +158,7 @@ export const ItemList = () => {
               {/* loading */}
               {tableLoading &&
                 new Array(Number(4)).fill("").map((elm, idx) => {
-                  return <tr key={idx}>{/* <LoadingSkeleton /> */}</tr>;
+                  return <tr key={idx}>{<LoadingSkeleton />}</tr>;
                 })}
 
               {/* error on nothing found */}
@@ -170,52 +172,44 @@ export const ItemList = () => {
               )}
 
               {/* user-data */}
-              {tableData?.length
-                ? tableData?.map((item: Item, idx: number) => {
-                    return (
-                      <tr
-                        key={idx}
-                        onClick={() => {
-                          handleSiteKeywordDetail(item);
-                        }}
-                        className="cursor-pointer">
-                        <td>{item.name}</td>
-                        <td>{item.brandId.name}</td>
-                        <td>{item.modelId.name}</td>
-                        <td>
-                          {item.sellerId.firstname }
-                        </td>
-                        <td>{item.salesPrice}</td>
-                        <td>{item.minPrice}</td>
-                        <th
-                          className="view-data"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedItem(item);
-                            setIsUpdating(true);
-                          }}>
-                          <RxUpdate color="blue" />
-                        </th>
-                        <th
-                          className="view-data"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedId(item._id);
-                            setRemoving(true);
-                          }}>
-                          <MdDeleteOutline color="red" />
-                        </th>
-                      </tr>
-                    );
-                  })
-                : <ClipLoader
-                color="black"
-                loading={tableLoading}
-                size={30}
-                aria-label="Loading Spinner"
-                data-testid="loader"
-                
-              />}
+              {tableData?.map((item: Item, idx: number) => {
+                return (
+                  <tr
+                    key={idx}
+                    onClick={() => {
+                      handleSiteKeywordDetail(item);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <td>{item.name}</td>
+                    <td>{item.brandId.name}</td>
+                    <td>{item.modelId.name}</td>
+                    <td>{item.sellerId.firstname}</td>
+                    <td>{item.salesPrice}</td>
+                    <td>{item.minPrice}</td>
+                    <th
+                      className="view-data"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedItem(item);
+                        setIsUpdating(true);
+                      }}
+                    >
+                      <RxUpdate color="blue" />
+                    </th>
+                    <th
+                      className="view-data"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedId(item._id);
+                        setRemoving(true);
+                      }}
+                    >
+                      <MdDeleteOutline color="red" />
+                    </th>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -226,7 +220,8 @@ export const ItemList = () => {
               <button
                 disabled={!tableData?.hasPrevPage}
                 className="btn"
-                onClick={handlePrev}>
+                onClick={handlePrev}
+              >
                 Previous
               </button>
 
@@ -237,7 +232,8 @@ export const ItemList = () => {
               <button
                 disabled={!tableData?.hasNextPage}
                 className="btn"
-                onClick={handleNext}>
+                onClick={handleNext}
+              >
                 Next
               </button>
             </div>

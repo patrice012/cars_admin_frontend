@@ -8,10 +8,11 @@ import { MdDeleteOutline } from "react-icons/md";
 import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
 import AddNewBrand from "./addNewbrand";
-import Brand from "../../models/brand.model";
 import { DeleteModal } from "../../components/Modal";
 import { useSession } from "../../contexts/authContext";
 import UpdateBrand from "./updateBrand";
+import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
+import { Brand } from "../../models/brand.model";
 
 const META = {
   title: "Site Data",
@@ -148,7 +149,7 @@ export const BrandList = () => {
               {/* loading */}
               {tableLoading &&
                 new Array(Number(4)).fill("").map((elm, idx) => {
-                  return <tr key={idx}>{/* <LoadingSkeleton /> */}</tr>;
+                  return <tr key={idx}>{<LoadingSkeleton />}</tr>;
                 })}
 
               {/* error on nothing found */}
