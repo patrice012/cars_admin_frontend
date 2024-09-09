@@ -211,8 +211,8 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
                 }))
               : [
                   {
-                    label: item.colorId.name, // Afficher le label de l'élément sélectionné
-                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                    label: item.colorId.name, 
+                    value: data.fuelTypeId, 
                   },
                 ]
           }
