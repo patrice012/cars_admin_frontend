@@ -22,6 +22,8 @@ const META = {
   page: 1,
 };
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const ItemList = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,6 +34,7 @@ export const ItemList = () => {
   const [selectedId, setSelectedId] = useState("");
   const [selectedITem, setSelectedItem] = useState<Item>();
   const [search, setSearch] = useState("");
+  const [debounce, setDebounce] = useState(search);
 
   const toggleModal = ({ state = true, action = "create" }) => {
     if (action === "create") {
@@ -45,13 +48,22 @@ export const ItemList = () => {
     getPaginate();
   };
 
+  useEffect(() => {
+    const Handler = setTimeout(() => {
+      setDebounce(search);
+    }, 500);
+
+    return () => {
+      clearTimeout(Handler);
+    };
+  }, [search]);
+
   const handleTableData = async () => {
-    console.log(pageNumber);
     const result = await postReq({
       data: {
         page: pageNumber,
         perPage: META.perPage,
-        search: search.trim() || undefined, // Ajouter la recherche ici
+        search: debounce.trim(),
       },
       url: "car",
     });
@@ -62,7 +74,7 @@ export const ItemList = () => {
     }
   };
 
-  let queryKey = [location.pathname, pageNumber, "sites-list", search]; // Ajouter search dans queryKey
+  let queryKey = [location.pathname, pageNumber,  debounce, "sites-list"];
   const {
     data: tableData,
     isLoading: tableLoading,
@@ -73,9 +85,9 @@ export const ItemList = () => {
     enabled: true,
   });
 
-  useEffect(() => {
+ /*  useEffect(() => {
     getPaginate(); // Refetch les données à chaque changement de recherche
-  }, [search]);
+  }, [search]); */
 
   //  handle next and prev
   const handleNext = () => {
