@@ -44,9 +44,13 @@ const AddNew: React.FC<AddNewProps> = ({
   const [warning, setWarning] = useState("");
 
   useEffect(() => {
-    if (hasRelation?.relationData) {
-      const item = hasRelation.relationData as { _id: string }[];
-      setData({ ...data, subItem: item[0]._id });
+    try {
+      if (hasRelation?.relationData) {
+        const item = hasRelation.relationData as { _id: string }[];
+        setData({ ...data, subItem: item[0]._id });
+      }
+    } catch (error) {
+      console.log(error);
     }
   }, [hasRelation?.relationData]);
 
