@@ -134,15 +134,16 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
       const formData = new FormData();
 
       Object.entries(data).forEach(([key, value]) => {
-        if (Array.isArray(value) && key == "uploadsImages") {
-          // If the value is an array, append each element individually
-          value.forEach((item, index) => {
+        if (key === "uploadsImages" && Array.isArray(value)) {
+          // Append each element of the uploadsImages array individually
+          value.forEach((item) => {
             formData.append("uploadsImages", item);
           });
-        } else if (Array.isArray(value) && key == "imagesUrls") {
-          // If the value is an array, append each element individually
-          value.forEach((item, index) => {
-            formData.append("imagesUrls", item);
+        } else if (key === "imagesUrls") {
+          // Ensure imagesUrls is always an array, even if it's just a single string
+          const urls = Array.isArray(value) ? value : [value]; // Convert string to array if necessary
+          urls.forEach((item) => {
+            formData.append("imagesUrls[]", item); // Ensure it's appended as an array
           });
         } else {
           // For other data types, append directly
@@ -202,10 +203,19 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
           onChange={(e) => setData({ ...data, note: e.target.value })}
         />
         <Selectable
-          items={models.map((item: characsItemProps) => ({
-            label: item.name,
-            value: item._id,
-          }))}
+          items={
+            models.length
+              ? models.map((item: characsItemProps) => ({
+                  label: item.name,
+                  value: item._id,
+                }))
+              : [
+                  {
+                    label: item.colorId.name, // Afficher le label de l'élément sélectionné
+                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                  },
+                ]
+          }
           onOpen={() => !models.length && fetchData("model", setModels)}
           onChange={(e) => setData({ ...data, modelId: e.target.value })}
           selected={data.modelId}
@@ -243,30 +253,57 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
           }
         />
         <Selectable
-          items={colors.map((item: characsItemProps) => ({
-            label: item.name,
-            value: item._id,
-          }))}
+          items={
+            colors.length
+              ? colors.map((item: characsItemProps) => ({
+                  label: item.name,
+                  value: item._id,
+                }))
+              : [
+                  {
+                    label: item.colorId.name, // Afficher le label de l'élément sélectionné
+                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                  },
+                ]
+          }
           onOpen={() => !colors.length && fetchData("colors", setColors)}
           onChange={(e) => setData({ ...data, colorId: e.target.value })}
           title="Color "
           selected={data.colorId}
         />
         <Selectable
-          items={sellers.map((item: characsItemProps) => ({
-            label: item.firstname + " " + item.lastname,
-            value: item._id,
-          }))}
+          items={
+            sellers.length
+              ? sellers.map((item: characsItemProps) => ({
+                  label: item.firstname + " " + item.lastname,
+                  value: item._id,
+                }))
+              : [
+                  {
+                    label: item.sellerId.firstname, // Afficher le label de l'élément sélectionné
+                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                  },
+                ]
+          }
           onOpen={() => !sellers.length && fetchData("seller", setSellers)}
           onChange={(e) => setData({ ...data, sellerId: e.target.value })}
           title="Seller"
           selected={data.sellerId}
         />
         <Selectable
-          items={titles.map((item: characsItemProps) => ({
-            label: item.name,
-            value: item._id,
-          }))}
+          items={
+            titles.length
+              ? titles.map((item: characsItemProps) => ({
+                  label: item.name,
+                  value: item._id,
+                }))
+              : [
+                  {
+                    label: item.titleId.name, // Afficher le label de l'élément sélectionné
+                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                  },
+                ]
+          }
           onOpen={() => !titles.length && fetchData("title", setTitles)}
           onChange={(e) => setData({ ...data, titleId: e.target.value })}
           title="Title"
@@ -282,10 +319,19 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
           selected={data.year}
         />
         <Selectable
-          items={cities.map((item: characsItemProps) => ({
-            label: item.name,
-            value: item._id,
-          }))}
+          items={
+            cities.length
+              ? cities.map((item: characsItemProps) => ({
+                  label: item.name,
+                  value: item._id,
+                }))
+              : [
+                  {
+                    label: item.cityId.name, // Afficher le label de l'élément sélectionné
+                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                  },
+                ]
+          }
           onOpen={() => !cities.length && fetchData("city", setCities)}
           onChange={(e) => setData({ ...data, cityId: e.target.value })}
           title="City"
@@ -312,10 +358,19 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
           }
         />
         <Selectable
-          items={transmissions.map((item: characsItemProps) => ({
-            label: item.name,
-            value: item._id,
-          }))}
+          items={
+            transmissions.length
+              ? transmissions.map((item: characsItemProps) => ({
+                  label: item.name,
+                  value: item._id,
+                }))
+              : [
+                  {
+                    label: item.transmissionId.name, // Afficher le label de l'élément sélectionné
+                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                  },
+                ]
+          }
           onOpen={() =>
             !transmissions.length && fetchData("transmission", setTransmissions)
           }
@@ -324,25 +379,44 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
           selected={data.transmissionId}
         />
         <Selectable
-          items={engines.map((item: characsItemProps) => ({
-            label: item.name,
-            value: item._id,
-          }))}
+          items={
+            engines.length
+              ? engines.map((item: characsItemProps) => ({
+                  label: item.name,
+                  value: item._id,
+                }))
+              : [
+                  {
+                    label: item.engineTypeId.name, // Afficher le label de l'élément sélectionné
+                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                  },
+                ]
+          }
           onOpen={() => !engines.length && fetchData("engine_type", setEngines)}
           onChange={(e) => setData({ ...data, engineTypeId: e.target.value })}
           title="Engine"
           selected={data.engineTypeId}
         />
         <Selectable
-          items={fuels.map((item: characsItemProps) => ({
-            label: item.name,
-            value: item._id,
-          }))}
-          onOpen={() => !fuels.length && fetchData("fuel_type", setFuels)}
+          items={
+            fuels.length
+              ? fuels.map((item: characsItemProps) => ({
+                  label: item.name,
+                  value: item._id,
+                }))
+              : [
+                  {
+                    label: item.fuelTypeId.name, // Afficher le label de l'élément sélectionné
+                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                  },
+                ]
+          }
+          onOpen={() => !fuels.length && fetchData("fuel_type", setFuels)} // Charger les données au clic si elles ne sont pas encore chargées
           onChange={(e) => setData({ ...data, fuelTypeId: e.target.value })}
           title="Fuels"
           selected={data.fuelTypeId}
         />
+
         <div className=" flex justify-start items-center" style={{ gap: 20 }}>
           <span>Electric car</span>
           <input

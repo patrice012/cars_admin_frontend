@@ -8,11 +8,13 @@ import { MdDeleteOutline } from "react-icons/md";
 import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
 import AddNewSeller from "./addNewSeller";
-import {Seller }from "../../models/brand.model";
+import { Seller } from "../../models/brand.model";
 import { DeleteModal } from "../../components/Modal";
 import { useSession } from "../../contexts/authContext";
 import UpdateSeller from "./updateSeller";
 import Header from "../../components/Header/Header";
+import { ClipLoader } from "react-spinners";
+import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
 
 const META = {
   title: "Site Data",
@@ -51,7 +53,7 @@ export const SellerList = () => {
       extras: [{ key: "authorization", value: `Bearer ${session}` }],
     });
     if (result.status == 200) {
-      const data =  result.data;
+      const data = result.data;
       console.log(data);
       return data.data;
     }
@@ -154,7 +156,7 @@ export const SellerList = () => {
                 {/* loading */}
                 {tableLoading &&
                   new Array(Number(4)).fill("").map((elm, idx) => {
-                    return <tr key={idx}>{/* <LoadingSkeleton /> */}</tr>;
+                    return <tr key={idx}>{<LoadingSkeleton />}</tr>;
                   })}
 
                 {/* error on nothing found */}
@@ -168,39 +170,38 @@ export const SellerList = () => {
                 )}
 
                 {/* user-data */}
-                {tableData?.length
-                  ? tableData?.map((Seller: Seller, idx: number) => {
-                      return (
-                        <tr key={idx} className="cursor-pointer">
-                          <td>{Seller.firstname}</td>
-                          <td>{Seller.lastname}</td>
-                          <td>{Seller.phone}</td>
-                          <td>{Seller.whatsapp}</td>
-                          <th
-                            className="view-data"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedId(Seller._id);
-                              setSelectedSeller(Seller);
-                              setIsUpdating(true);
-                            }}
-                          >
-                            <RxUpdate />
-                          </th>
-                          <th
-                            className="view-data"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedId(Seller._id);
-                              setRemoving(true);
-                            }}
-                          >
-                            <MdDeleteOutline />
-                          </th>
-                        </tr>
-                      );
-                    })
-                  : null}
+                {tableData &&
+                  tableData?.map((Seller: Seller, idx: number) => {
+                    return (
+                      <tr key={idx} className="cursor-pointer">
+                        <td>{Seller.firstname}</td>
+                        <td>{Seller.lastname}</td>
+                        <td>{Seller.phone}</td>
+                        <td>{Seller.whatsapp}</td>
+                        <th
+                          className="view-data"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedId(Seller._id);
+                            setSelectedSeller(Seller);
+                            setIsUpdating(true);
+                          }}
+                        >
+                          <RxUpdate />
+                        </th>
+                        <th
+                          className="view-data"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedId(Seller._id);
+                            setRemoving(true);
+                          }}
+                        >
+                          <MdDeleteOutline />
+                        </th>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>

@@ -12,6 +12,7 @@ import AddNew from "./addNew";
 import UpdateData from "./updateItem";
 import DeletedData from "./deleteData";
 import { useSession } from "../../../contexts/authContext";
+import { LoadingSkeleton } from "../../Table/LoadingSkeleton";
 
 const META = {
   title: "Site Data",
@@ -214,7 +215,7 @@ export const ItemList = ({ page }: { page: string }) => {
               {/* loading */}
               {tableLoading &&
                 new Array(Number(4)).fill("").map((elm, idx) => {
-                  return <tr key={idx}>{/* <LoadingSkeleton /> */}</tr>;
+                  return <tr key={idx}>{<LoadingSkeleton />}</tr>;
                 })}
 
               {/* error on nothing found */}
@@ -228,33 +229,32 @@ export const ItemList = ({ page }: { page: string }) => {
               )}
 
               {/* user-data */}
-              {tableData?.data.length
-                ? tableData?.data.map((item: ItemType, idx: number) => {
-                    return (
-                      <tr key={idx} className="cursor-pointer">
-                        <td>{item?.name}</td>
-                        <th
-                          className="view-data"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            UpdateRowData(item);
-                          }}
-                        >
-                          <RxUpdate />
-                        </th>
-                        <th
-                          className="view-data"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            DeleteRowData(item._id);
-                          }}
-                        >
-                          <MdDeleteOutline />
-                        </th>
-                      </tr>
-                    );
-                  })
-                : null}
+              {tableData?.data.length &&
+                tableData?.data.map((item: ItemType, idx: number) => {
+                  return (
+                    <tr key={idx} className="cursor-pointer">
+                      <td>{item?.name}</td>
+                      <th
+                        className="view-data"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          UpdateRowData(item);
+                        }}
+                      >
+                        <RxUpdate />
+                      </th>
+                      <th
+                        className="view-data"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          DeleteRowData(item._id);
+                        }}
+                      >
+                        <MdDeleteOutline />
+                      </th>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
