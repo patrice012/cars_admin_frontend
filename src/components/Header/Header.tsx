@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { HiOutlineMenuAlt2 } from "react-icons/hi";
 import {
@@ -10,9 +10,11 @@ import {
 const Header = ({
   page,
   headerStatus = "",
+  actions,
 }: {
   page: string;
   headerStatus: string;
+  actions?: React.ReactNode;
 }) => {
   const handleClick = () => {
     toggleSideBar();
@@ -39,7 +41,8 @@ const Header = ({
           {headerStatus == "start" ? "Running" : ""}
         </span>
         {/* new btn */}
-        <div className="right-side">
+        <div className="right-side items-center">
+          {actions ?? <span></span>}
           <div className="dropdown dropdown-bottom dropdown-end">
             <label className="user-icon m-1" tabIndex={0}>
               <div className="user-img">
