@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../../components/Modal";
 import postReq from "../../helpers/postReq";
 import notif from "../../helpers/notif";
@@ -9,7 +9,7 @@ import Button from "../../components/Button";
 import PropTypes from "prop-types";
 import Selectable from "../../components/Selectable";
 import { useSession } from "../../contexts/authContext";
-import { defaultCarDoorsCount, defaultCarsYear } from "../../helpers/constants";
+import { cylinders, defaultCarDoorsCount, defaultCarsYear } from "../../helpers/constants";
 import { characsItemProps } from "../../helpers/types";
 
 interface AddItemProps {
@@ -45,13 +45,14 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
     isElectric: false,
     isHybrid: false,
     note: "",
+    brand: "",
   });
   const [actionBtn, setActionBtn] = useState({
     text: "Save",
     isDisabled: false,
   });
   const [warning, setWarning] = useState("");
-
+  const [brand, setBrand] = useState("");
   const [models, setModels] = useState([]);
   const [sellers, setSellers] = useState([]);
   const [colors, setColors] = useState([]);
@@ -60,6 +61,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
   const [engines, setEngines] = useState([]);
   const [cities, setCities] = useState([]);
   const [fuels, setFuels] = useState([]);
+  const [brands, setBrands] = useState([]);
 
   const fetchData = async (
     url: string,
@@ -71,20 +73,37 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
       extras,
     });
     if (result.status === 200) {
+      console.log(data.brand);
       console.log(result.data.data);
+      if (data.brand && url === "model") {
+        const Models = result?.data?.data.filter(
+          (item: { brandId: { _id: string } }) =>
+            item.brandId._id === data.brand
+        );
+        if (!Models) {
+          return null;
+        }
+        console.log(Models);
+        setState(Models);
+        return;
+      }
       setState(result.data.data);
     }
   };
+
+  useEffect(() => {
+    setModels([]);
+  }, [data.brand]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     console.log(files.length);
 
-    if (files && files.length < 7) {
+    if (files && files.length) {
       const files = Array.from(e.target.files || []);
       setData({ ...data, imagesUrls: files });
     } else {
-      notif("Only 06 files could be upload");
+      notif("Only files could be upload");
     }
   };
 
@@ -124,26 +143,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           formData.append(key, value);
         }
       });
-      /*    formData.append("cityId", data.cityId);
-      formData.append("titleId", data.titleId);
-      formData.append("fuelTypeId", data.fuelTypeId);
-      formData.append("transmissionId", data.transmissionId);
-      formData.append("engineTypeId", data.engineTypeId);
-      formData.append("colorId", data.colorId);
-      formData.append("modelId", data.modelId);
-      formData.append("note", data.note);
-      formData.append("isHybrid", data.isHybrid);
-      formData.append("isElectric", data.isElectric);
-      formData.append("keywords", data.keywords);
-      formData.append("minPrice", data.minPrice);
-      formData.append("cylinders", data.cylinders);
-      formData.append("sellerId", data.sellerId);
-      formData.append("year", data.year);
-      formData.append("doorsCount", data.doorsCount);
-      formData.append("odometer", data.odometer);
-      formData.append("salesPrice", data.salesPrice);
-      formData.append("logo", data.images[0]);
- */
+
       const res = await postReq({
         data: formData,
         url: "car/create",
@@ -189,6 +189,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
       isElectric: false,
       isHybrid: false,
       note: "",
+      brand: "",
     });
     toggleModal({ state: state, action: "create" });
   };
@@ -222,6 +223,15 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
         />
 
         <Selectable
+          items={brands.map((item: characsItemProps) => ({
+            label: item.name,
+            value: item._id,
+          }))}
+          onOpen={() => !brands.length && fetchData("brand", setBrands)}
+          onChange={(e) => setData({ ...data, brand: e.target.value })}
+          title="Brand name"
+        />
+        <Selectable
           items={models.map((item: characsItemProps) => ({
             label: item.name,
             value: item._id,
@@ -230,7 +240,6 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           onChange={(e) => setData({ ...data, modelId: e.target.value })}
           title="Model name"
         />
-
         <Selectable
           items={defaultCarDoorsCount.map((item) => ({
             label: item.toString(),
@@ -238,6 +247,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           }))}
           onChange={(e) => setData({ ...data, doorsCount: e.target.value })}
           title="Car doors"
+          selected={4}
         />
         <InputField
           label="Sales price"
@@ -299,13 +309,13 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           onChange={(e) => setData({ ...data, cityId: e.target.value })}
           title="City"
         />
-        <InputField
-          label="Cylinders"
-          id="title"
-          type="text"
-          placeholder="Ex: 3"
-          value={data.cylinders}
-          onChange={(e) => setData({ ...data, cylinders: e.target.value })}
+        <Selectable
+          items={cylinders.map((item: number) => ({
+            label: item,
+            value: item,
+          }))}
+          onChange={(e) => setData({ ...data, cylinders: Number(e.target.value) })}
+          title="Cylinders"
         />
         <InputField
           label="Odometre"
