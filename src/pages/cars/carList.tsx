@@ -137,6 +137,13 @@ export const ItemList = () => {
     }
   };
 
+  const toggleDeleteManyData = (state: boolean) => {
+    setRemovingMany(!removingMany);
+    if (state) {
+      getPaginate();
+    }
+  };
+
   const handleDelete = (id: string) => {
     if (id === "all") {
       if (check) {
@@ -159,13 +166,13 @@ export const ItemList = () => {
     }
   };
 
-  const deleteManyCar = async () => {
+ /*  const deleteManyCar = async () => {
     const res = await postReq({
       data: { carsId: deleteList },
       url: "car/delete-many",
     });
     console.log(res);
-  };
+  }; */
 
   return (
     <>
@@ -357,7 +364,7 @@ export const ItemList = () => {
       )}
       {removingMany && (
         <DeleteManyModal
-          deleteItem={toggleDeleteData}
+          deleteItem={toggleDeleteManyData}
           _id={deleteList}
           url="car/delete-may"
           isOpen={removingMany}
