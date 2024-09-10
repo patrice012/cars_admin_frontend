@@ -209,12 +209,12 @@ export const ItemList = () => {
                       handleSiteKeywordDetail(item);
                     }}
                     className="cursor-pointer">
-                    <td>{item.name}</td>
-                    <td>{item.brandId.name}</td>
-                    <td>{item.modelId.name}</td>
-                    <td>{item.sellerId.firstname}</td>
-                    <td>{item.salesPrice}</td>
-                    <td>{item.minPrice}</td>
+                    <td>{item?.name}</td>
+                    <td>{item.brandId?.name}</td>
+                    <td>{item.modelId?.name}</td>
+                    <td>{item.sellerId?.firstname}</td>
+                    <td>{item?.salesPrice}</td>
+                    <td>{item?.minPrice}</td>
                     <th
                       className="view-data"
                       onClick={(e) => {
