@@ -9,7 +9,11 @@ import Button from "../../components/Button";
 import PropTypes from "prop-types";
 import Selectable from "../../components/Selectable";
 import { useSession } from "../../contexts/authContext";
-import { cylinders, defaultCarDoorsCount, defaultCarsYear } from "../../helpers/constants";
+import {
+  cylinders,
+  defaultCarDoorsCount,
+  defaultCarsYear,
+} from "../../helpers/constants";
 import { characsItemProps } from "../../helpers/types";
 
 interface AddItemProps {
@@ -26,14 +30,14 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
   ]);
   const [data, setData] = useState({
     name: "",
-    modelId: "",
-    colorId: "",
-    engineTypeId: "",
-    transmissionId: "",
-    fuelTypeId: "",
-    titleId: "",
-    cityId: "",
-    sellerId: "",
+    model: "",
+    color: "",
+    engineType: "",
+    transmission: "",
+    fuelType: "",
+    title: "",
+    city: "",
+    seller: "",
     cylinders: 0,
     year: 2023,
     doorsCount: 4,
@@ -62,6 +66,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
   const [cities, setCities] = useState([]);
   const [fuels, setFuels] = useState([]);
   const [brands, setBrands] = useState([]);
+  
 
   const fetchData = async (
     url: string,
@@ -77,8 +82,8 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
       console.log(result.data.data);
       if (data.brand && url === "model") {
         const Models = result?.data?.data.filter(
-          (item: { brandId: { _id: string } }) =>
-            item?.brandId?._id === data.brand
+          (item: { brand: { _id: string } }) =>
+            item?.brand?._id === data.brand
         );
         if (!Models) {
           return null;
@@ -115,14 +120,14 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
 
     if (
       !data.name ||
-      !data.cityId ||
-      !data.colorId ||
-      !data.modelId ||
-      !data.engineTypeId ||
+      !data.city ||
+      !data.color ||
+      !data.model ||
+      !data.engineType ||
       !data.minPrice ||
-      !data.fuelTypeId ||
+      !data.fuelType ||
       !data.salesPrice ||
-      !data.sellerId ||
+      !data.seller ||
       !data.imagesUrls
     ) {
       setWarning("Please fill all fields");
@@ -170,14 +175,14 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
     setWarning("");
     setData({
       name: "",
-      modelId: "",
-      colorId: "",
-      engineTypeId: "",
-      transmissionId: "",
-      fuelTypeId: "",
-      titleId: "",
-      cityId: "",
-      sellerId: "",
+      model: "",
+      color: "",
+      engineType: "",
+      transmission: "",
+      fuelType: "",
+      title: "",
+      city: "",
+      seller: "",
       cylinders: 0,
       year: 2023,
       doorsCount: 4,
@@ -237,7 +242,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             value: item._id,
           }))}
           onOpen={() => !models.length && fetchData("model", setModels)}
-          onChange={(e) => setData({ ...data, modelId: e.target.value })}
+          onChange={(e) => setData({ ...data, model: e.target.value })}
           title="Model name"
         />
         <Selectable
@@ -271,7 +276,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             value: item._id,
           }))}
           onOpen={() => !colors.length && fetchData("colors", setColors)}
-          onChange={(e) => setData({ ...data, colorId: e.target.value })}
+          onChange={(e) => setData({ ...data, color: e.target.value })}
           title="Color "
         />
         <Selectable
@@ -280,7 +285,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             value: item._id,
           }))}
           onOpen={() => !sellers.length && fetchData("seller", setSellers)}
-          onChange={(e) => setData({ ...data, sellerId: e.target.value })}
+          onChange={(e) => setData({ ...data, seller: e.target.value })}
           title="Seller"
         />
         <Selectable
@@ -289,7 +294,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             value: item._id,
           }))}
           onOpen={() => !titles.length && fetchData("title", setTitles)}
-          onChange={(e) => setData({ ...data, titleId: e.target.value })}
+          onChange={(e) => setData({ ...data, title: e.target.value })}
           title="Title"
         />
         <Selectable
@@ -306,7 +311,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             value: item._id,
           }))}
           onOpen={() => !cities.length && fetchData("city", setCities)}
-          onChange={(e) => setData({ ...data, cityId: e.target.value })}
+          onChange={(e) => setData({ ...data, city: e.target.value })}
           title="City"
         />
         <Selectable
@@ -314,7 +319,9 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item,
             value: item,
           }))}
-          onChange={(e) => setData({ ...data, cylinders: Number(e.target.value) })}
+          onChange={(e) =>
+            setData({ ...data, cylinders: Number(e.target.value) })
+          }
           title="Cylinders"
         />
         <InputField
@@ -333,7 +340,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           onOpen={() =>
             !transmissions.length && fetchData("transmission", setTransmissions)
           }
-          onChange={(e) => setData({ ...data, transmissionId: e.target.value })}
+          onChange={(e) => setData({ ...data, transmission: e.target.value })}
           title="Transmission"
         />
         <Selectable
@@ -342,7 +349,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             value: item._id,
           }))}
           onOpen={() => !engines.length && fetchData("engine_type", setEngines)}
-          onChange={(e) => setData({ ...data, engineTypeId: e.target.value })}
+          onChange={(e) => setData({ ...data, engineType: e.target.value })}
           title="Engine"
         />
 
@@ -352,7 +359,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             value: item._id,
           }))}
           onOpen={() => !fuels.length && fetchData("fuel_type", setFuels)}
-          onChange={(e) => setData({ ...data, fuelTypeId: e.target.value })}
+          onChange={(e) => setData({ ...data, fuelType: e.target.value })}
           title="Fuels"
         />
         <div className=" flex justify-start items-center" style={{ gap: 20 }}>

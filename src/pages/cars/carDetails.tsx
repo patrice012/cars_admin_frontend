@@ -8,7 +8,7 @@ import UpdateItem from "./updateCar";
 import { useQuery } from "react-query";
 import postReq from "../../helpers/postReq";
 import { useSession } from "../../contexts/authContext";
-import { CloseCircle, Edit, Trash } from "iconsax-react";
+import { CloseCircle, Edit, TickCircle, Trash } from "iconsax-react";
 
 const ItemDetails = () => {
   const location = useLocation();
@@ -55,22 +55,23 @@ const ItemDetails = () => {
       <button
         style={{ background: "#ca8a04" }}
         onClick={() => setDeactivating(true)}
-        className="btn border-0 btn-square"
-      >
-        <CloseCircle color="white" />
+        className="btn border-0 btn-square">
+        {itemDetails && itemDetails.isActive ? (
+          <CloseCircle color="white" />
+        ) : (
+          <TickCircle color="white" />
+        )}
       </button>
       <button
         style={{ background: "#2563eb" }}
         onClick={() => setIsUpdating(true)}
-        className="btn border-0 btn-square"
-      >
+        className="btn border-0 btn-square">
         <Edit color="white" />
       </button>
       <button
         style={{ background: "red" }}
         onClick={() => setRemoving(true)}
-        className="btn border-0 btn-square"
-      >
+        className="btn border-0 btn-square">
         <Trash color="white" />
       </button>
     </div>
@@ -86,8 +87,7 @@ const ItemDetails = () => {
               <div
                 className="cursor-pointer"
                 key={photo}
-                onClick={() => setIsOpen(!isOpen)}
-              >
+                onClick={() => setIsOpen(!isOpen)}>
                 <img src={photo} />
               </div>
             ))}
@@ -104,7 +104,7 @@ const ItemDetails = () => {
               <tbody>
                 <tr>
                   <td>Car Brand</td>
-                  <td>{itemDetails?.brandId?.name}</td>
+                  <td>{itemDetails?.brand?.name}</td>
                 </tr>
 
                 <tr>
@@ -112,24 +112,24 @@ const ItemDetails = () => {
                   <td>{itemDetails?.name}</td>
                 </tr>
                 <tr>
-                  <td>Brand:</td>
+                  <td>Brand logo:</td>
                   <td>
                     <div className="flex items-center">
                       <img
                         className="mr-4"
                         width={30}
-                        src={itemDetails?.brandId?.logo}
+                        src={itemDetails?.brand?.logo}
                       />
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td>Model:</td>
-                  <td>{itemDetails?.modelId?.name}</td>
+                  <td>{itemDetails?.model?.name}</td>
                 </tr>
                 <tr>
                   <td>Seller:</td>
-                  <td>{itemDetails?.sellerId?.firstname}</td>
+                  <td>{itemDetails?.seller?.firstname}</td>
                 </tr>
                 <tr>
                   <td>Note:</td>
@@ -145,7 +145,7 @@ const ItemDetails = () => {
                 </tr>
                 <tr>
                   <td>Color car:</td>
-                  <td>{itemDetails?.colorId?.name}</td>
+                  <td>{itemDetails?.color?.name}</td>
                 </tr>
                 <tr>
                   <td>Odometer:</td>
@@ -161,23 +161,23 @@ const ItemDetails = () => {
                 </tr>
                 <tr>
                   <td>Title:</td>
-                  <td>{itemDetails?.titleId?.name}</td>
+                  <td>{itemDetails?.title?.name}</td>
                 </tr>
                 <tr>
                   <td>Fuel type:</td>
-                  <td>{itemDetails?.fuelTypeId?.name}</td>
+                  <td>{itemDetails?.fuelType?.name}</td>
                 </tr>
                 <tr>
                   <td>Engine type:</td>
-                  <td>{itemDetails?.engineTypeId?.name}</td>
+                  <td>{itemDetails?.engineType?.name}</td>
                 </tr>
                 <tr>
                   <td>Transmission:</td>
-                  <td>{itemDetails?.transmissionId?.name}</td>
+                  <td>{itemDetails?.transmission?.name}</td>
                 </tr>
                 <tr>
                   <td>City:</td>
-                  <td>{itemDetails?.cityId?.name}</td>
+                  <td>{itemDetails?.city?.name}</td>
                 </tr>
                 <tr>
                   <td>IsHybrid:</td>

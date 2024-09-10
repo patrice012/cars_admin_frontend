@@ -35,14 +35,14 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
   const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [data, setData] = useState({
     name: item.name,
-    modelId: item.modelId._id,
-    colorId: item.colorId._id,
-    engineTypeId: item.engineTypeId._id,
-    transmissionId: item.transmissionId._id,
-    fuelTypeId: item.fuelTypeId._id,
-    titleId: item.titleId._id,
-    cityId: item.cityId._id,
-    sellerId: item.sellerId._id,
+    model: item.model._id,
+    color: item.color._id,
+    engineType: item.engineType._id,
+    transmission: item.transmission._id,
+    fuelType: item.fuelType._id,
+    title: item.title._id,
+    city: item.city._id,
+    seller: item.seller._id,
     cylinders: item.cylinders,
     year: item.year,
     doorsCount: item.doorsCount,
@@ -211,14 +211,14 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
                 }))
               : [
                   {
-                    label: item.colorId.name, 
-                    value: data.fuelTypeId, 
+                    label: item.color.name, 
+                    value: data.fuelType, 
                   },
                 ]
           }
           onOpen={() => !models.length && fetchData("model", setModels)}
-          onChange={(e) => setData({ ...data, modelId: e.target.value })}
-          selected={data.modelId}
+          onChange={(e) => setData({ ...data, model: e.target.value })}
+          selected={data.model}
           title="Model name"
         />
         <Selectable
@@ -261,15 +261,15 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
                 }))
               : [
                   {
-                    label: item.colorId.name, // Afficher le label de l'élément sélectionné
-                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                    label: item.color.name, // Afficher le label de l'élément sélectionné
+                    value: data.fuelType, // Conserver la valeur sélectionnée avant le chargement
                   },
                 ]
           }
           onOpen={() => !colors.length && fetchData("colors", setColors)}
-          onChange={(e) => setData({ ...data, colorId: e.target.value })}
+          onChange={(e) => setData({ ...data, color: e.target.value })}
           title="Color "
-          selected={data.colorId}
+          selected={data.color}
         />
         <Selectable
           items={
@@ -280,15 +280,15 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
                 }))
               : [
                   {
-                    label: item.sellerId.firstname, // Afficher le label de l'élément sélectionné
-                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                    label: item.seller.firstname, // Afficher le label de l'élément sélectionné
+                    value: data.fuelType, // Conserver la valeur sélectionnée avant le chargement
                   },
                 ]
           }
           onOpen={() => !sellers.length && fetchData("seller", setSellers)}
-          onChange={(e) => setData({ ...data, sellerId: e.target.value })}
+          onChange={(e) => setData({ ...data, seller: e.target.value })}
           title="Seller"
-          selected={data.sellerId}
+          selected={data.seller}
         />
         <Selectable
           items={
@@ -299,15 +299,15 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
                 }))
               : [
                   {
-                    label: item.titleId.name, // Afficher le label de l'élément sélectionné
-                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                    label: item.title.name, // Afficher le label de l'élément sélectionné
+                    value: data.fuelType, // Conserver la valeur sélectionnée avant le chargement
                   },
                 ]
           }
           onOpen={() => !titles.length && fetchData("title", setTitles)}
-          onChange={(e) => setData({ ...data, titleId: e.target.value })}
+          onChange={(e) => setData({ ...data, title: e.target.value })}
           title="Title"
-          selected={data.titleId}
+          selected={data.title}
         />
         <Selectable
           items={defaultCarsYear.map((item: number) => ({
@@ -327,15 +327,15 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
                 }))
               : [
                   {
-                    label: item.cityId.name, // Afficher le label de l'élément sélectionné
-                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                    label: item.city.name, // Afficher le label de l'élément sélectionné
+                    value: data.fuelType, // Conserver la valeur sélectionnée avant le chargement
                   },
                 ]
           }
           onOpen={() => !cities.length && fetchData("city", setCities)}
-          onChange={(e) => setData({ ...data, cityId: e.target.value })}
+          onChange={(e) => setData({ ...data, city: e.target.value })}
           title="City"
-          selected={data.cityId}
+          selected={data.city}
         />
         <InputField
           label="Cylinders"
@@ -366,17 +366,17 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
                 }))
               : [
                   {
-                    label: item.transmissionId.name, // Afficher le label de l'élément sélectionné
-                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                    label: item.transmission.name, // Afficher le label de l'élément sélectionné
+                    value: data.fuelType, // Conserver la valeur sélectionnée avant le chargement
                   },
                 ]
           }
           onOpen={() =>
             !transmissions.length && fetchData("transmission", setTransmissions)
           }
-          onChange={(e) => setData({ ...data, transmissionId: e.target.value })}
+          onChange={(e) => setData({ ...data, transmission: e.target.value })}
           title="Transmission"
-          selected={data.transmissionId}
+          selected={data.transmission}
         />
         <Selectable
           items={
@@ -387,15 +387,15 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
                 }))
               : [
                   {
-                    label: item.engineTypeId.name, // Afficher le label de l'élément sélectionné
-                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                    label: item.engineType.name, // Afficher le label de l'élément sélectionné
+                    value: data.fuelType, // Conserver la valeur sélectionnée avant le chargement
                   },
                 ]
           }
           onOpen={() => !engines.length && fetchData("engine_type", setEngines)}
-          onChange={(e) => setData({ ...data, engineTypeId: e.target.value })}
+          onChange={(e) => setData({ ...data, engineType: e.target.value })}
           title="Engine"
-          selected={data.engineTypeId}
+          selected={data.engineType}
         />
         <Selectable
           items={
@@ -406,15 +406,15 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
                 }))
               : [
                   {
-                    label: item.fuelTypeId.name, // Afficher le label de l'élément sélectionné
-                    value: data.fuelTypeId, // Conserver la valeur sélectionnée avant le chargement
+                    label: item.fuelType.name, // Afficher le label de l'élément sélectionné
+                    value: data.fuelType, // Conserver la valeur sélectionnée avant le chargement
                   },
                 ]
           }
           onOpen={() => !fuels.length && fetchData("fuel_type", setFuels)} // Charger les données au clic si elles ne sont pas encore chargées
-          onChange={(e) => setData({ ...data, fuelTypeId: e.target.value })}
+          onChange={(e) => setData({ ...data, fuelType: e.target.value })}
           title="Fuels"
-          selected={data.fuelTypeId}
+          selected={data.fuelType}
         />
 
         <div className=" flex justify-start items-center" style={{ gap: 20 }}>

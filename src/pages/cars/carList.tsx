@@ -9,11 +9,13 @@ import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
 import AddItem from "./addCar";
 import Item from "../../models/item.model";
-import { DeleteModal } from "../../components/Modal";
+import { DeleteModal, DeleteManyModal } from "../../components/Modal";
 import UpdateItem from "./updateCar";
 import { ClipLoader } from "react-spinners";
 import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
 import InputField from "../../components/InputField";
+import { Trash } from "iconsax-react";
+import { useSession } from "../../contexts/authContext";
 
 const META = {
   title: "Site Data",
@@ -29,12 +31,15 @@ export const ItemList = () => {
   const navigate = useNavigate();
   const [pageNumber, setPageNumber] = useState(META.page);
   const [removing, setRemoving] = useState(false);
+  const [removingMany, setRemovingMany] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [selectedId, setSelectedId] = useState("");
   const [selectedITem, setSelectedItem] = useState<Item>();
   const [search, setSearch] = useState("");
   const [debounce, setDebounce] = useState(search);
+  const [deleteList, setDeleteList] = useState([]);
+  const [check, setCheck] = useState(false);
 
   const toggleModal = ({ state = true, action = "create" }) => {
     if (action === "create") {
@@ -74,7 +79,7 @@ export const ItemList = () => {
     }
   };
 
-  let queryKey = [location.pathname, pageNumber,  debounce, "sites-list"];
+  let queryKey = [location.pathname, pageNumber, debounce, "sites-list"];
   const {
     data: tableData,
     isLoading: tableLoading,
@@ -85,7 +90,7 @@ export const ItemList = () => {
     enabled: true,
   });
 
- /*  useEffect(() => {
+  /*  useEffect(() => {
     getPaginate(); // Refetch les données à chaque changement de recherche
   }, [search]); */
 
@@ -132,6 +137,36 @@ export const ItemList = () => {
     }
   };
 
+  const handleDelete = (id: string) => {
+    if (id === "all") {
+      if (check) {
+        setDeleteList([]);
+      } else {
+        tableData?.data.map((item: Item, idx: number) => {
+          setDeleteList((idSelected) => {
+            return [...idSelected, item._id];
+          });
+        });
+      }
+    } else {
+      setDeleteList((idSelected) => {
+        if (deleteList.includes(id)) {
+          return idSelected.filter((selected) => selected != id);
+        } else {
+          return [...idSelected, id];
+        }
+      });
+    }
+  };
+
+  const deleteManyCar = async () => {
+    const res = await postReq({
+      data: { carsId: deleteList },
+      url: "car/delete-many",
+    });
+    console.log(res);
+  };
+
   return (
     <>
       <section className="table-container">
@@ -148,14 +183,27 @@ export const ItemList = () => {
                 <p>{tableData?.data.length || tableData?.length} item(s)</p>
               ) : null}
             </div>
-            <InputField
-              label=""
-              id="title"
-              type="text"
-              placeholder="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+            <div className="flex gap-[24px]">
+              {deleteList.length > 0 ? (
+                <button
+                  style={{ background: "red" }}
+                  onClick={() => setRemovingMany(true)}
+                  className="btn border-0 btn-square">
+                  <Trash color="white" />
+                </button>
+              ) : (
+                ""
+              )}
+
+              <InputField
+                label=""
+                id="title"
+                type="text"
+                placeholder="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
           </div>
 
           {/* table */}
@@ -164,6 +212,19 @@ export const ItemList = () => {
             {tableData?.data.length || tableData ? (
               <thead>
                 <tr>
+                  <th>
+                    <input
+                      type="checkbox"
+                      className=" items-start justify-start flex"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onChange={(e) => {
+                        setCheck(!check);
+                        handleDelete("all");
+                      }}
+                    />
+                  </th>
                   <th>Name</th>
                   <th>Brand</th>
                   <th>Model</th>
@@ -208,11 +269,24 @@ export const ItemList = () => {
                     onClick={() => {
                       handleSiteKeywordDetail(item);
                     }}
-                    className="cursor-pointer">
+                    className="cursor-pointer items-center">
+                    <td>
+                      <input
+                        type="checkbox"
+                        className=" items-start justify-start flex"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        checked={deleteList.includes(item._id)}
+                        onChange={(e) => {
+                          handleDelete(item?._id);
+                        }}
+                      />
+                    </td>
                     <td>{item?.name}</td>
-                    <td>{item.brandId?.name}</td>
-                    <td>{item.modelId?.name}</td>
-                    <td>{item.sellerId?.firstname}</td>
+                    <td>{item.brand?.name}</td>
+                    <td>{item.model?.name}</td>
+                    <td>{item.seller?.firstname}</td>
                     <td>{item?.salesPrice}</td>
                     <td>{item?.minPrice}</td>
                     <th
@@ -281,6 +355,18 @@ export const ItemList = () => {
           closeModal={() => setRemoving(!removing)}
         />
       )}
+      {removingMany && (
+        <DeleteManyModal
+          deleteItem={toggleDeleteData}
+          _id={deleteList}
+          url="car/delete-may"
+          isOpen={removingMany}
+          closeModal={() => setRemovingMany(!removingMany)}
+        />
+      )}
     </>
   );
 };
+function clg(check: boolean) {
+  throw new Error("Function not implemented.");
+}
