@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { BsPlusLg } from "react-icons/bs";
 import { RxUpdate } from "react-icons/rx";
 import { MdDeleteOutline } from "react-icons/md";
@@ -18,11 +17,9 @@ import InputField from "../../components/InputField";
 const META = {
   title: "Site Data",
   description: "Site Data",
-  perPage: 10,
+  perPage: 20,
   page: 1,
 };
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const ItemList = () => {
   const location = useLocation();
@@ -32,9 +29,8 @@ export const ItemList = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [selectedId, setSelectedId] = useState("");
-  const [selectedITem, setSelectedItem] = useState<Item>();
+  const [selectedItem, setSelectedItem] = useState<Item>();
   const [search, setSearch] = useState("");
-  const [debounce, setDebounce] = useState(search);
 
   const toggleModal = ({ state = true, action = "create" }) => {
     if (action === "create") {
@@ -48,33 +44,23 @@ export const ItemList = () => {
     getPaginate();
   };
 
-  useEffect(() => {
-    const Handler = setTimeout(() => {
-      setDebounce(search);
-    }, 500);
-
-    return () => {
-      clearTimeout(Handler);
-    };
-  }, [search]);
-
+  // get table data
   const handleTableData = async () => {
     const result = await postReq({
       data: {
         page: pageNumber,
         perPage: META.perPage,
-        search: debounce.trim(),
+        search: search.trim() || undefined, // Ajouter la recherche ici
       },
-      url: "car/in-admin",
+      url: "car",
     });
-    console.log(result);
-    if (result.status == 200) {
+    if (result.status === 200) {
       const data = result.data;
-      return data;
+      return data.data;
     }
   };
 
-  let queryKey = [location.pathname, pageNumber,  debounce, "sites-list"];
+  let queryKey = [location.pathname, pageNumber, "sites-list", search]; // Ajouter search dans queryKey
   const {
     data: tableData,
     isLoading: tableLoading,
@@ -85,41 +71,29 @@ export const ItemList = () => {
     enabled: true,
   });
 
- /*  useEffect(() => {
+  useEffect(() => {
     getPaginate(); // Refetch les données à chaque changement de recherche
-  }, [search]); */
+  }, [search]);
 
   //  handle next and prev
   const handleNext = () => {
-    // check if page available
     if (!tableData?.hasNextPage) {
-      // notif page end
       return;
     }
-
-    // scroll to the header of table
     const tableHeaderScrollTo = document.querySelector("thead");
-    tableHeaderScrollTo!.scrollIntoView();
-
-    // move page to next
+    tableHeaderScrollTo?.scrollIntoView();
     setPageNumber(tableData?.nextPage);
   };
 
   const handlePrev = () => {
-    // check if page available
     if (!tableData?.hasPrevPage) {
-      // notif page end
       return;
     }
-
-    // scroll to the header of table
     const tableHeaderScrollTo = document.querySelector("thead");
-    tableHeaderScrollTo!.scrollIntoView();
-
+    tableHeaderScrollTo?.scrollIntoView();
     setPageNumber(tableData?.prevPage);
   };
 
-  // view item data
   const handleSiteKeywordDetail = async (item: Item) => {
     if (!item._id) return;
     navigate(`/items/${item._id}`, { state: { ...item } });
@@ -136,7 +110,6 @@ export const ItemList = () => {
     <>
       <section className="table-container">
         <div className="site--container">
-          {/* user-data */}
           <div className="wrapper-btn justify-between">
             <div className="actions flex items-center justify-start gap-8">
               <button
@@ -144,9 +117,7 @@ export const ItemList = () => {
                 className="btn btn-primary flex items-center justify-center gap-2">
                 <BsPlusLg /> <p>Add new</p>
               </button>
-              {tableData ? (
-                <p>{tableData?.data.length || tableData?.length} item(s)</p>
-              ) : null}
+              {tableData ? <p>{tableData?.length || tableData?.length} item(s)</p> : null}
             </div>
             <InputField
               label=""
@@ -154,14 +125,12 @@ export const ItemList = () => {
               type="text"
               placeholder="search"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => setSearch(e.target.value)} // Gérer la recherche ici
             />
           </div>
 
-          {/* table */}
           <table className="table table-zebra mt-6">
-            {/* thead*/}
-            {tableData?.data.length || tableData ? (
+            {tableData?.length || tableData ? (
               <thead>
                 <tr>
                   <th>Name</th>
@@ -184,69 +153,56 @@ export const ItemList = () => {
             )}
 
             <tbody>
-              {/* loading */}
               {tableLoading &&
-                new Array(Number(4)).fill("").map((elm, idx) => {
-                  return <tr key={idx}>{<LoadingSkeleton />}</tr>;
-                })}
+                new Array(Number(4)).fill("").map((_, idx) => (
+                  <tr key={idx}>{<LoadingSkeleton />}</tr>
+                ))}
 
-              {/* error on nothing found */}
-              {(error || tableData?.data.length === 0) && (
-                <>
-                  <div className="nodata ">
-                    <img src="/img/nodata.svg" alt="no data found" />
-                    <h3>No record found</h3>
-                  </div>
-                </>
+              {(error || tableData?.length === 0) && (
+                <div className="nodata ">
+                  <img src="/img/nodata.svg" alt="no data found" />
+                  <h3>No record found</h3>
+                </div>
               )}
 
-              {/* user-data */}
-              {tableData?.data.map((item: Item, idx: number) => {
-                return (
-                  <tr
-                    key={idx}
-                    onClick={() => {
-                      handleSiteKeywordDetail(item);
-                    }}
-                    className="cursor-pointer">
-                    <td>{item?.name}</td>
-                    <td>{item.brandId?.name}</td>
-                    <td>{item.modelId?.name}</td>
-                    <td>{item.sellerId?.firstname}</td>
-                    <td>{item?.salesPrice}</td>
-                    <td>{item?.minPrice}</td>
-                    <th
-                      className="view-data"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedItem(item);
-                        setIsUpdating(true);
-                      }}>
-                      <RxUpdate color="blue" />
-                    </th>
-                    <th
-                      className="view-data"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedId(item._id);
-                        setRemoving(true);
-                      }}>
-                      <MdDeleteOutline color="red" />
-                    </th>
-                  </tr>
-                );
-              })}
+              {tableData?.map((item: Item, idx: number) => (
+                <tr
+                  key={idx}
+                  onClick={() => handleSiteKeywordDetail(item)}
+                  className="cursor-pointer">
+                  <td>{item.name}</td>
+                  <td>{item.brandId.name}</td>
+                  <td>{item.modelId.name}</td>
+                  <td>{item.sellerId.firstname}</td>
+                  <td>{item.salesPrice}</td>
+                  <td>{item.minPrice}</td>
+                  <th
+                    className="view-data"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedItem(item);
+                      setIsUpdating(true);
+                    }}>
+                    <RxUpdate color="blue" />
+                  </th>
+                  <th
+                    className="view-data"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedId(item._id);
+                      setRemoving(true);
+                    }}>
+                    <MdDeleteOutline color="red" />
+                  </th>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
-        {/* footer */}
-        {(tableData?.hasNextPage || tableData?.hasPrevPage) && (
+        {tableData?.length > META.perPage - 2 && (
           <div className="table-footer">
             <div className="elms">
-              <button
-                disabled={!tableData.hasPrevPage}
-                className="btn"
-                onClick={handlePrev}>
+              <button disabled={!tableData?.hasPrevPage} className="btn" onClick={handlePrev}>
                 Previous
               </button>
 
@@ -254,10 +210,7 @@ export const ItemList = () => {
                 Page {tableData?.page} of {tableData?.totalPages}
               </p>
 
-              <button
-                disabled={!tableData.hasNextPage}
-                className="btn"
-                onClick={handleNext}>
+              <button disabled={!tableData?.hasNextPage} className="btn" onClick={handleNext}>
                 Next
               </button>
             </div>
@@ -265,9 +218,9 @@ export const ItemList = () => {
         )}
       </section>
       {isCreating && <AddItem isOpen={isCreating} toggleModal={toggleModal} />}
-      {isUpdating && selectedITem && (
+      {isUpdating && selectedItem && (
         <UpdateItem
-          item={selectedITem}
+          item={selectedItem}
           isOpen={isUpdating}
           toggleModal={() => toggleModal({ state: false, action: "update" })}
         />

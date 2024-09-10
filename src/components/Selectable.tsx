@@ -20,7 +20,7 @@ const Selectable = ({
   const handleFocus = () => {
     if (!isOpened && onOpen) {
       onOpen(); // Load data when the dropdown is first opened
-      setIsOpened(true); // Set the state to ensure this runs only once
+       // Set the state to ensure this runs only once
     }
   };
 

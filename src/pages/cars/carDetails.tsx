@@ -108,12 +108,12 @@ const ItemDetails = () => {
               <tbody>
                 <tr>
                   <td>Car Brand</td>
-                  <td>{itemDetails.brandId.name}</td>
+                  <td>{itemDetails?.brandId?.name}</td>
                 </tr>
 
                 <tr>
                   <td>Car Name:</td>
-                  <td>{itemDetails.name}</td>
+                  <td>{itemDetails?.name}</td>
                 </tr>
                 <tr>
                   <td>Brand:</td>
@@ -122,66 +122,66 @@ const ItemDetails = () => {
                       <img
                         className="mr-4"
                         width={30}
-                        src={itemDetails.brandId.logo}
+                        src={itemDetails?.brandId?.logo}
                       />
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td>Model:</td>
-                  <td>{itemDetails.modelId.name}</td>
+                  <td>{itemDetails?.modelId?.name}</td>
                 </tr>
                 <tr>
                   <td>Seller:</td>
-                  <td>{itemDetails.sellerId.firstname}</td>
+                  <td>{itemDetails?.sellerId?.firstname}</td>
                 </tr>
                 <tr>
                   <td>Note:</td>
-                  <td>{itemDetails.note}</td>
+                  <td>{itemDetails?.note}</td>
                 </tr>
                 <tr>
                   <td>Sales price:</td>
-                  <td>{itemDetails.salesPrice}</td>
+                  <td>{itemDetails?.salesPrice}</td>
                 </tr>
                 <tr>
                   <td>Min price:</td>
-                  <td>{itemDetails.minPrice}</td>
+                  <td>{itemDetails?.minPrice}</td>
                 </tr>
                 <tr>
                   <td>Color car:</td>
-                  <td>{itemDetails.colorId.name}</td>
+                  <td>{itemDetails?.colorId?.name}</td>
                 </tr>
                 <tr>
                   <td>Odometer:</td>
-                  <td>{itemDetails.odometer}</td>
+                  <td>{itemDetails?.odometer}</td>
                 </tr>
                 <tr>
                   <td>Cylinders:</td>
-                  <td>{itemDetails.cylinders}</td>
+                  <td>{itemDetails?.cylinders}</td>
                 </tr>
                 <tr>
                   <td>Year:</td>
-                  <td>{itemDetails.year}</td>
+                  <td>{itemDetails?.year}</td>
                 </tr>
                 <tr>
                   <td>Title:</td>
-                  <td>{itemDetails.titleId.name}</td>
+                  <td>{itemDetails?.titleId?.name}</td>
                 </tr>
                 <tr>
                   <td>Fuel type:</td>
-                  <td>{itemDetails.fuelTypeId.name}</td>
+                  <td>{itemDetails?.fuelTypeId?.name}</td>
                 </tr>
                 <tr>
                   <td>Engine type:</td>
-                  <td>{itemDetails.engineTypeId.name}</td>
+                  <td>{itemDetails?.engineTypeId?.name}</td>
                 </tr>
                 <tr>
                   <td>Transmission:</td>
-                  <td>{itemDetails.transmissionId.name}</td>
+                  <td>{itemDetails?.transmissionId?.name}</td>
                 </tr>
                 <tr>
                   <td>City:</td>
-                  <td>{itemDetails.cityId.name}</td>
+                  <td>{itemDetails?.cityId?.name}</td>
                 </tr>
                 <tr>
                   <td>IsHybrid:</td>
@@ -215,7 +215,7 @@ const ItemDetails = () => {
         {removing && (
           <DeleteModal
             deleteItem={toggleDeleteData}
-            _id={item._id}
+            _id={item?._id}
             url="car/delete"
             isOpen={removing}
             closeModal={() => setRemoving(!removing)}
@@ -226,7 +226,7 @@ const ItemDetails = () => {
           <DisableModal
             data={{ ...itemDetails, isActive: false }}
             deleteItem={toggleDeleteData}
-            _id={item._id}
+            _id={item?._id}
             url="car/update"
             isOpen={deactivating}
             closeModal={() => setDeactivating(!deactivating)}
