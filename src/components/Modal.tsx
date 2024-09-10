@@ -152,7 +152,7 @@ export const DeleteManyModal = ({
     setActionBtn({ text: "Deleting...", isDisabled: true });
 
     try {
-      const res = await postReq({ data: { _id: _id }, url, extras });
+      const res = await postReq({ data: { carsId: _id }, url, extras });
       if (res) {
         notif(res?.data.message ?? "Success, Data has been deleted");
         setActionBtn({ text: "Delete", isDisabled: false });
