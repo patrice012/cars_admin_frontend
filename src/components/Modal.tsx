@@ -141,19 +141,19 @@ export const DisableModal = ({
     text: "Deactivate",
     isDisabled: false,
   });
-  console.log(data);
   const handleRemove = async () => {
     setActionBtn({ text: "Deactivating...", isDisabled: true });
 
     try {
       const res = await postReq({
-        data: { ...data, _id: _id },
-        url,
+        data: { id: data._id, isActive: false },
+        url: "car/update-field",
         extras,
       });
       if (res) {
+        console.log(res);
         notif(res?.data.message ?? "Success, Data has been deleted");
-        setActionBtn({ text: "Delete", isDisabled: false });
+        setActionBtn({ text: "Deactivate", isDisabled: false });
         deleteItem(true);
       } else {
         notif("Failed to delete data");

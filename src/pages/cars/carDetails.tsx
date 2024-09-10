@@ -8,7 +8,7 @@ import UpdateItem from "./updateCar";
 import { useQuery } from "react-query";
 import postReq from "../../helpers/postReq";
 import { useSession } from "../../contexts/authContext";
-import { CloseCircle, Edit, Trash } from "iconsax-react";
+import { CloseCircle, Edit, TickCircle, Trash } from "iconsax-react";
 
 const ItemDetails = () => {
   const location = useLocation();
@@ -57,7 +57,11 @@ const ItemDetails = () => {
         onClick={() => setDeactivating(true)}
         className="btn border-0 btn-square"
       >
-        <CloseCircle color="white" />
+        {item.isActive ? (
+          <CloseCircle color="white" />
+        ) : (
+          <TickCircle color="white" />
+        )}
       </button>
       <button
         style={{ background: "#2563eb" }}
