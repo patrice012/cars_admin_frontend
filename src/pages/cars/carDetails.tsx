@@ -224,7 +224,7 @@ const ItemDetails = () => {
 
         {deactivating && (
           <DisableModal
-            data={{ ...itemDetails, isActive: false }}
+            data={{ ...itemDetails, isActive: !itemDetails.isActive }}
             deleteItem={toggleDeleteData}
             _id={item?._id}
             url="car/update"
