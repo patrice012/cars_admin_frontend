@@ -78,7 +78,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
       if (data.brand && url === "model") {
         const Models = result?.data?.data.filter(
           (item: { brandId: { _id: string } }) =>
-            item.brandId._id === data.brand
+            item?.brandId?._id === data.brand
         );
         if (!Models) {
           return null;

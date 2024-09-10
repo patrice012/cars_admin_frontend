@@ -191,10 +191,10 @@ export const SellerList = () => {
                   tableData?.data.map((Seller: Seller, idx: number) => {
                     return (
                       <tr key={idx} className="cursor-pointer">
-                        <td>{Seller.firstname}</td>
-                        <td>{Seller.lastname}</td>
-                        <td>{Seller.phone}</td>
-                        <td>{Seller.whatsapp}</td>
+                        <td>{Seller?.firstname}</td>
+                        <td>{Seller?.lastname}</td>
+                        <td>{Seller?.phone}</td>
+                        <td>{Seller?.whatsapp}</td>
                         <th
                           className="view-data"
                           onClick={(e) => {
