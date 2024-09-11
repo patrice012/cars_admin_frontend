@@ -64,6 +64,7 @@ interface DeleteManyModalProps {
   isOpen: boolean;
   closeModal: Function;
   deleteItem: (isDeleted: boolean) => void;
+  setDelete?: any;
 }
 
 export const DeleteModal = ({
@@ -112,16 +113,14 @@ export const DeleteModal = ({
         <div className="modal-box flex items-center  gap-8">
           <button
             onClick={handleCloseModal}
-            className="btn btn--action  flex items-center justify-center gap-2"
-          >
+            className="btn btn--action  flex items-center justify-center gap-2">
             <span>Cancel</span>
           </button>
 
           <button
             onClick={handleRemove}
             style={{ background: "red", color: "#FFF" }}
-            className="btn flex items-center justify-center gap-2"
-          >
+            className="btn flex items-center justify-center gap-2">
             <span>{actionBtn.text}</span>
           </button>
         </div>
@@ -141,6 +140,7 @@ export const DeleteManyModal = ({
   isOpen,
   closeModal,
   deleteItem,
+  setDelete,
 }: DeleteManyModalProps) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
@@ -157,6 +157,7 @@ export const DeleteManyModal = ({
         notif(res?.data.message ?? "Success, Data has been deleted");
         setActionBtn({ text: "Delete", isDisabled: false });
         deleteItem(true);
+        setDelete([]);
       } else {
         notif("Failed to delete data");
         deleteItem(false);
@@ -181,16 +182,14 @@ export const DeleteManyModal = ({
         <div className="modal-box flex items-center  gap-8">
           <button
             onClick={handleCloseModal}
-            className="btn btn--action  flex items-center justify-center gap-2"
-          >
+            className="btn btn--action  flex items-center justify-center gap-2">
             <span>Cancel</span>
           </button>
 
           <button
             onClick={handleRemove}
             style={{ background: "red", color: "#FFF" }}
-            className="btn flex items-center justify-center gap-2"
-          >
+            className="btn flex items-center justify-center gap-2">
             <span>{actionBtn.text}</span>
           </button>
         </div>
@@ -219,11 +218,14 @@ export const DisableModal = ({
     isDisabled: false,
   });
   const handleRemove = async () => {
-    setActionBtn({ text: "Deactivating...", isDisabled: true });
+    setActionBtn({
+      text: !data.isActive ? "Deactivating..." : " Activing...",
+      isDisabled: true,
+    });
 
     try {
       const res = await postReq({
-        data: { id: data._id, isActive: data.isActive },
+        data: { carsId: [_id], isActive: data.isActive },
         url: "car/update-field",
         extras,
       });
@@ -256,8 +258,7 @@ export const DisableModal = ({
         <div className="modal-box flex items-center  gap-8">
           <button
             onClick={handleCloseModal}
-            className="btn btn--action  flex items-center justify-center gap-2"
-          >
+            className="btn btn--action  flex items-center justify-center gap-2">
             <span>Cancel</span>
           </button>
 
@@ -267,8 +268,7 @@ export const DisableModal = ({
               background: !data.isActive ? "red" : "blue",
               color: "#FFF",
             }}
-            className="btn flex items-center justify-center gap-2"
-          >
+            className="btn flex items-center justify-center gap-2">
             <span>{actionBtn.text}</span>
           </button>
         </div>
@@ -289,27 +289,34 @@ export const DisableModalMany = ({
   closeModal,
   deleteItem,
   data,
+  setDelete,
 }: DeleteManyModalProps & { data: any }) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [actionBtn, setActionBtn] = useState({
-    text: "Deactivate",
+    text: data.isActive ? "Deactivate" : "Activate",
     isDisabled: false,
   });
-  console.log(data);
+
   const handleRemove = async () => {
-    setActionBtn({ text: "Deactivating...", isDisabled: true });
+    setActionBtn({
+      text: data.isActive ? "Deactivating..." : " Activing...",
+      isDisabled: true,
+    });
 
     try {
       const res = await postReq({
-        data: { ...data, carsId: _id },
-        url,
+        data: { carsId: _id, isActive: !data.isActive },
+        url: "car/update-field",
         extras,
       });
+      console.log(res);
+
       if (res) {
         notif(res?.data.message ?? "Success, Data has been deleted");
         setActionBtn({ text: "Delete", isDisabled: false });
         deleteItem(true);
+        setDelete([]);
       } else {
         notif("Failed to delete data");
         deleteItem(false);
@@ -340,7 +347,10 @@ export const DisableModalMany = ({
 
           <button
             onClick={handleRemove}
-            style={{ background: "red", color: "#FFF" }}
+            style={{
+              background: data.isActive ? "red" : "blue",
+              color: "#FFF",
+            }}
             className="btn flex items-center justify-center gap-2">
             <span>{actionBtn.text}</span>
           </button>

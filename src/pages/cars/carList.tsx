@@ -45,14 +45,16 @@ export const ItemList = () => {
   const [search, setSearch] = useState("");
   const [debounce, setDebounce] = useState(search);
   const [deleteList, setDeleteList] = useState([]);
+  const [DisableList, setDisableList] = useState([]);
   const [check, setCheck] = useState(false);
+  const [allSelected, setAllSelectedActive] = useState<boolean | null>(null);
+
   const [filtre, setFiltre] = useState(null);
   const filtres = [
     { label: "all", value: null },
     { label: "active", value: true },
     { label: "inactive", value: false },
   ];
-  
 
   const toggleModal = ({ state = true, action = "create" }) => {
     if (action === "create") {
@@ -77,7 +79,7 @@ export const ItemList = () => {
   }, [search]);
 
   const handleTableData = async () => {
-    console.log(filtre)
+    console.log(filtre);
     const result = await postReq({
       data: {
         page: pageNumber,
@@ -194,6 +196,26 @@ export const ItemList = () => {
     }
   };
 
+  useEffect(() => {
+    if (deleteList.length > 0) {
+      const firstItem = tableData?.data.find(
+        (item: Item) => item._id === deleteList[0]
+      );
+      if (firstItem) {
+        const isFirstItemActive = firstItem.isActive;
+        const allSameStatus = deleteList.every((id) => {
+          const selectedItem = tableData?.data.find(
+            (item: Item) => item._id === id
+          );
+          return selectedItem?.isActive === isFirstItemActive;
+        });
+        setAllSelectedActive(allSameStatus ? isFirstItemActive : null);
+      }
+    } else {
+      setAllSelectedActive(null);
+    }
+  }, [deleteList, tableData]);
+
   /*  const deleteManyCar = async () => {
     const res = await postReq({
       data: { carsId: deleteList },
@@ -221,12 +243,14 @@ export const ItemList = () => {
             <div className="flex gap-[24px]">
               {deleteList.length > 0 ? (
                 <>
-                  <button
-                    style={{ background: "#2563eb" }}
-                    onClick={() => setDeactivatingMany(true)}
-                    className="btn border-0 btn-square">
-                    <CloseCircle color="white" />
-                  </button>
+                  {allSelected !== null && (
+                    <button
+                      style={{ background: "#2563eb" }}
+                      onClick={() => setDeactivatingMany(true)}
+                      className="btn border-0 btn-square">
+                      <CloseCircle color="white" />
+                    </button>
+                  )}
                   <button
                     style={{ background: "red" }}
                     onClick={() => setRemovingMany(true)}
@@ -342,7 +366,7 @@ export const ItemList = () => {
                     <td>{item.model?.name}</td>
                     <td>{item.seller?.firstname}</td>
                     <td>{item?.salesPrice}</td>
-                    <td>{item?.isActive ? "yes" : "No"}</td>
+                    <td>{item?.isActive ? "Active" : "Inactive"}</td>
                     <th
                       className="view-data"
                       onClick={(e) => {
@@ -415,16 +439,18 @@ export const ItemList = () => {
           _id={deleteList}
           url="car/delete-many"
           isOpen={removingMany}
+          setDelete={setDeleteList}
           closeModal={() => setRemovingMany(!removingMany)}
         />
       )}
       {deactivatingMany && (
         <DisableModalMany
-          data={{ isActive: false }}
+          data={{ isActive: allSelected }}
           deleteItem={toggleDesactiveManyData}
           _id={deleteList}
           url="car/delete-many"
           isOpen={deactivatingMany}
+          setDelete={setDeleteList}
           closeModal={() => setDeactivatingMany(!deactivatingMany)}
         />
       )}
