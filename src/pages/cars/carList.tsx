@@ -9,13 +9,18 @@ import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
 import AddItem from "./addCar";
 import Item from "../../models/item.model";
-import { DeleteModal, DeleteManyModal } from "../../components/Modal";
+import {
+  DeleteModal,
+  DeleteManyModal,
+  DisableModalMany,
+} from "../../components/Modal";
 import UpdateItem from "./updateCar";
 import { ClipLoader } from "react-spinners";
 import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
 import InputField from "../../components/InputField";
-import { Trash } from "iconsax-react";
+import { CloseCircle, Trash } from "iconsax-react";
 import { useSession } from "../../contexts/authContext";
+import Selectable from "../../components/Selectable";
 
 const META = {
   title: "Site Data",
@@ -32,6 +37,7 @@ export const ItemList = () => {
   const [pageNumber, setPageNumber] = useState(META.page);
   const [removing, setRemoving] = useState(false);
   const [removingMany, setRemovingMany] = useState(false);
+  const [deactivatingMany, setDeactivatingMany] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [selectedId, setSelectedId] = useState("");
@@ -39,7 +45,16 @@ export const ItemList = () => {
   const [search, setSearch] = useState("");
   const [debounce, setDebounce] = useState(search);
   const [deleteList, setDeleteList] = useState([]);
+  const [DisableList, setDisableList] = useState([]);
   const [check, setCheck] = useState(false);
+  const [allSelected, setAllSelectedActive] = useState<boolean | null>(null);
+
+  const [filtre, setFiltre] = useState(null);
+  const filtres = [
+    { label: "all", value: null },
+    { label: "active", value: true },
+    { label: "inactive", value: false },
+  ];
 
   const toggleModal = ({ state = true, action = "create" }) => {
     if (action === "create") {
@@ -64,11 +79,13 @@ export const ItemList = () => {
   }, [search]);
 
   const handleTableData = async () => {
+    console.log(filtre);
     const result = await postReq({
       data: {
         page: pageNumber,
         perPage: META.perPage,
         search: debounce.trim(),
+        isActive: filtre === "all" ? null : filtre,
       },
       url: "car/in-admin",
     });
@@ -79,7 +96,13 @@ export const ItemList = () => {
     }
   };
 
-  let queryKey = [location.pathname, pageNumber, debounce, "sites-list"];
+  let queryKey = [
+    location.pathname,
+    pageNumber,
+    debounce,
+    filtre,
+    "sites-list",
+  ];
   const {
     data: tableData,
     isLoading: tableLoading,
@@ -144,6 +167,13 @@ export const ItemList = () => {
     }
   };
 
+  const toggleDesactiveManyData = (state: boolean) => {
+    setDeactivatingMany(!deactivatingMany);
+    if (state) {
+      getPaginate();
+    }
+  };
+
   const handleDelete = (id: string) => {
     if (id === "all") {
       if (check) {
@@ -166,7 +196,27 @@ export const ItemList = () => {
     }
   };
 
- /*  const deleteManyCar = async () => {
+  useEffect(() => {
+    if (deleteList.length > 0) {
+      const firstItem = tableData?.data.find(
+        (item: Item) => item._id === deleteList[0]
+      );
+      if (firstItem) {
+        const isFirstItemActive = firstItem.isActive;
+        const allSameStatus = deleteList.every((id) => {
+          const selectedItem = tableData?.data.find(
+            (item: Item) => item._id === id
+          );
+          return selectedItem?.isActive === isFirstItemActive;
+        });
+        setAllSelectedActive(allSameStatus ? isFirstItemActive : null);
+      }
+    } else {
+      setAllSelectedActive(null);
+    }
+  }, [deleteList, tableData]);
+
+  /*  const deleteManyCar = async () => {
     const res = await postReq({
       data: { carsId: deleteList },
       url: "car/delete-many",
@@ -192,16 +242,37 @@ export const ItemList = () => {
             </div>
             <div className="flex gap-[24px]">
               {deleteList.length > 0 ? (
-                <button
-                  style={{ background: "red" }}
-                  onClick={() => setRemovingMany(true)}
-                  className="btn border-0 btn-square">
-                  <Trash color="white" />
-                </button>
+                <>
+                  {allSelected !== null && (
+                    <button
+                      style={{ background: "#2563eb" }}
+                      onClick={() => setDeactivatingMany(true)}
+                      className="btn border-0 btn-square">
+                      <CloseCircle color="white" />
+                    </button>
+                  )}
+                  <button
+                    style={{ background: "red" }}
+                    onClick={() => setRemovingMany(true)}
+                    className="btn border-0 btn-square">
+                    <Trash color="white" />
+                  </button>
+                </>
               ) : (
                 ""
               )}
 
+              <Selectable
+                items={filtres.map((item: any) => ({
+                  label: item.label,
+                  value: item.value,
+                }))}
+                onChange={(e) => {
+                  setFiltre(e.target.value);
+                  setPageNumber(1);
+                }}
+                title=""
+              />
               <InputField
                 label=""
                 id="title"
@@ -237,7 +308,7 @@ export const ItemList = () => {
                   <th>Model</th>
                   <th>Seller</th>
                   <th>Sales Price</th>
-                  <th>Min Price</th>
+                  <th>Status</th>
                   <th>Update</th>
                   <th>Delete</th>
                 </tr>
@@ -295,7 +366,7 @@ export const ItemList = () => {
                     <td>{item.model?.name}</td>
                     <td>{item.seller?.firstname}</td>
                     <td>{item?.salesPrice}</td>
-                    <td>{item?.minPrice}</td>
+                    <td>{item?.isActive ? "Active" : "Inactive"}</td>
                     <th
                       className="view-data"
                       onClick={(e) => {
@@ -366,9 +437,21 @@ export const ItemList = () => {
         <DeleteManyModal
           deleteItem={toggleDeleteManyData}
           _id={deleteList}
-          url="car/delete-may"
+          url="car/delete-many"
           isOpen={removingMany}
+          setDelete={setDeleteList}
           closeModal={() => setRemovingMany(!removingMany)}
+        />
+      )}
+      {deactivatingMany && (
+        <DisableModalMany
+          data={{ isActive: allSelected }}
+          deleteItem={toggleDesactiveManyData}
+          _id={deleteList}
+          url="car/delete-many"
+          isOpen={deactivatingMany}
+          setDelete={setDeleteList}
+          closeModal={() => setDeactivatingMany(!deactivatingMany)}
         />
       )}
     </>
