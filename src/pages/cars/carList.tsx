@@ -71,7 +71,6 @@ export const ItemList = () => {
   ];
 
   const filtres2 = [
-    { label: "all", value: "all" },
     { label: "brand", value: "brand" },
     { label: "model", value: "model" },
     { label: "seller", value: "seller" },
@@ -107,7 +106,7 @@ export const ItemList = () => {
   useEffect(() => {
     if (filtre2 === "all") {
       console.log(filtre2);
-      setFilterSelected(null)
+      setFilterSelected(null);
       getPaginate();
     }
   }, [addFilter, filtre2]);
@@ -305,6 +304,15 @@ export const ItemList = () => {
                 ""
               )}
 
+              {filterSelected && (
+                <button
+                  style={{ background: "#ca8a04" }}
+                  onClick={() =>{ setFilterSelected(null); setFiltre2(null)}}
+                  className="btn border-0 btn-square">
+                  <CloseCircle color="white" />
+                </button>
+              )}
+
               <Selectable
                 items={filtres2.map((item: any) => ({
                   label: item.label,
@@ -316,6 +324,7 @@ export const ItemList = () => {
                   setPageNumber(1);
                 }}
                 title=""
+                selected={filtre2 ? filtre2 : ""}
               />
 
               <Selectable
@@ -328,6 +337,7 @@ export const ItemList = () => {
                   setPageNumber(1);
                 }}
                 title=""
+                
               />
               <InputField
                 label=""
