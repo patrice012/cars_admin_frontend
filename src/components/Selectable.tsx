@@ -21,7 +21,6 @@ const Selectable = ({
   const handleFocus = () => {
     if (!isOpened && onOpen) {
       onOpen(); // Load data when the dropdown is first opened
-      // Set the state to ensure this runs only once
     }
   };
 
@@ -32,8 +31,7 @@ const Selectable = ({
         value={selected}
         onChange={onChange}
         onFocus={handleFocus} // Trigger data loading when the dropdown is focused
-        className="select select-bordered w-full"
-      >
+        className="select select-bordered w-full">
         <option disabled value="">
           Choose item
         </option>
