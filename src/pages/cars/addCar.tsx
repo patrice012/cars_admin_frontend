@@ -232,6 +232,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           onOpen={() => !brands.length && fetchData("brand", setBrands)}
           onChange={(e) => setData({ ...data, brand: e.target.value })}
           title="Brand name"
+          selected={data.brand}
         />
         <Selectable
           items={models.map((item: characsItemProps) => ({
@@ -241,6 +242,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           onOpen={() => !models.length && fetchData("model", setModels)}
           onChange={(e) => setData({ ...data, model: e.target.value })}
           title="Model name"
+          selected={data.model}
         />
         <Selectable
           items={defaultCarDoorsCount.map((item) => ({
@@ -258,7 +260,6 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           placeholder="Ex: 100000"
           value={data.salesPrice === 0 ? "" : data.salesPrice}
           onChange={(e) => setData({ ...data, salesPrice: e.target.value })}
-          
         />
         <InputField
           label="Minimum price"
@@ -276,6 +277,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           onOpen={() => !colors.length && fetchData("colors", setColors)}
           onChange={(e) => setData({ ...data, color: e.target.value })}
           title="Color "
+          selected={data.color}
         />
         <Selectable
           items={sellers.map((item: characsItemProps) => ({
@@ -285,6 +287,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           onOpen={() => !sellers.length && fetchData("seller", setSellers)}
           onChange={(e) => setData({ ...data, seller: e.target.value })}
           title="Seller"
+          selected={data.seller}
         />
         <Selectable
           items={titles.map((item: characsItemProps) => ({
@@ -294,6 +297,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           onOpen={() => !titles.length && fetchData("title", setTitles)}
           onChange={(e) => setData({ ...data, title: e.target.value })}
           title="Title"
+          selected={data.title}
         />
         <Selectable
           items={defaultCarsYear.map((item: number) => ({
@@ -302,6 +306,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           }))}
           onChange={(e) => setData({ ...data, year: Number(e.target.value) })}
           title="Car year"
+          selected={data.year}
         />
         <Selectable
           items={cities.map((item: characsItemProps) => ({
@@ -311,6 +316,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           onOpen={() => !cities.length && fetchData("city", setCities)}
           onChange={(e) => setData({ ...data, city: e.target.value })}
           title="City"
+          selected={data.city}
         />
         <Selectable
           items={cylinders.map((item: number) => ({
@@ -321,6 +327,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             setData({ ...data, cylinders: Number(e.target.value) })
           }
           title="Cylinders"
+          selected={data.cylinders}
         />
         <InputField
           label="Odometre"
@@ -340,6 +347,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           }
           onChange={(e) => setData({ ...data, transmission: e.target.value })}
           title="Transmission"
+          selected={data.transmission}
         />
         <Selectable
           items={engines.map((item: characsItemProps) => ({
@@ -349,6 +357,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           onOpen={() => !engines.length && fetchData("engine_type", setEngines)}
           onChange={(e) => setData({ ...data, engineType: e.target.value })}
           title="Engine"
+          selected={data.engineType}
         />
 
         <Selectable
@@ -359,6 +368,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           onOpen={() => !fuels.length && fetchData("fuel_type", setFuels)}
           onChange={(e) => setData({ ...data, fuelType: e.target.value })}
           title="Fuels"
+          selected={data.fuelType}
         />
         <div className=" flex justify-start items-center" style={{ gap: 20 }}>
           <span>Hybrid car</span>
