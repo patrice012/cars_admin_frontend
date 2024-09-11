@@ -227,7 +227,7 @@ const ItemDetails = () => {
             data={{ ...itemDetails, isActive: !itemDetails.isActive }}
             deleteItem={toggleDeleteData}
             _id={item?._id}
-            url="car/update"
+            url="car/update-field"
             isOpen={deactivating}
             closeModal={() => setDeactivating(!deactivating)}
           />
