@@ -115,18 +115,7 @@ const ItemDetails = () => {
                   <td>Car Name:</td>
                   <td>{itemDetails?.name}</td>
                 </tr>
-                <tr>
-                  <td>Brand logo:</td>
-                  <td>
-                    <div className="flex items-center">
-                      <img
-                        className="mr-4"
-                        width={30}
-                        src={itemDetails?.brand?.logo}
-                      />
-                    </div>
-                  </td>
-                </tr>
+                
                 <tr>
                   <td>Model:</td>
                   <td>{itemDetails?.model?.name}</td>
