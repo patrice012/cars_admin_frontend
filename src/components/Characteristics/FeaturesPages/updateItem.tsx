@@ -30,7 +30,7 @@ const UpdateData: React.FC<UpdateDataProps> = ({
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [data, setData] = useState({
-    name: "",
+    name: updatedData["name"],
     subItem: "",
     _id: updatedData["_id"] || "",
   });
@@ -55,6 +55,10 @@ const UpdateData: React.FC<UpdateDataProps> = ({
       console.error(error);
     }
   }, [hasRelation?.relationData]);
+
+  useEffect(() => {
+    console.log(updatedData);
+  }, []);
 
   useEffect(() => {
     setSave(data.name.length > 0);

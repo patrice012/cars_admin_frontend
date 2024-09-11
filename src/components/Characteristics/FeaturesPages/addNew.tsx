@@ -77,7 +77,7 @@ const AddNew: React.FC<AddNewProps> = ({
         url = "engine_type/create";
       } else if (page?.toLowerCase() === "model") {
         url = "model/create";
-        subItemTitle = "brandId";
+        subItemTitle = "brand";
       } else if (page?.toLowerCase() === "transmission") {
         url = "transmission/create";
       } else if (page?.toLowerCase() === "fuel") {
@@ -90,8 +90,10 @@ const AddNew: React.FC<AddNewProps> = ({
         url = "seller_type/create";
       } else if (page?.toLowerCase() === "city") {
         url = "city/create";
-        subItemTitle = "countryId";
+        subItemTitle = "country";
       }
+
+      console.log(data, subItemTitle, data.subItem, "Items");
 
       const response = await postReq({
         data: { ...data, [subItemTitle]: data.subItem },
