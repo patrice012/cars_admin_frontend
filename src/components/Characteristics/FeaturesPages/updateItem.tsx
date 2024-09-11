@@ -45,14 +45,14 @@ const UpdateData: React.FC<UpdateDataProps> = ({
   useEffect(() => {
     try {
       if (hasRelation?.relationData) {
-
-        const item = hasRelation.relationData as { _id: string }[];
-        console.log(item);
-        
-        setData({ ...data, subItem: item[0]._id });
+        const isItemIn = updatedData[hasRelation.relationUri ?? ""];
+        setData({
+          ...data,
+          subItem: isItemIn ? isItemIn._id : hasRelation.relationData[0]?._id,
+        });
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }, [hasRelation?.relationData]);
 
@@ -121,8 +121,6 @@ const UpdateData: React.FC<UpdateDataProps> = ({
         subItemTitle = "countryId";
       }
 
-      console.log(data);
-
       const response = await postReq({
         data: { ...data, [subItemTitle]: data.subItem },
         url: uri,
@@ -138,7 +136,7 @@ const UpdateData: React.FC<UpdateDataProps> = ({
         setWarning("");
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
       setActionBtn({ text: "Save", isDisabled: false });
     }
   };

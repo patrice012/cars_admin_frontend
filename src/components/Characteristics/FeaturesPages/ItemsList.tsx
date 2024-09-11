@@ -13,6 +13,7 @@ import UpdateData from "./updateItem";
 import DeletedData from "./deleteData";
 import { useSession } from "../../../contexts/authContext";
 import { LoadingSkeleton } from "../../Table/LoadingSkeleton";
+import { subItemProps } from "../../../helpers/types";
 
 const META = {
   title: "Site Data",
@@ -24,6 +25,7 @@ const META = {
 interface ItemType {
   name: string;
   _id: string;
+  [key: string]: subItemProps | any;
 }
 
 export const ItemList = ({ page }: { page: string }) => {
@@ -192,6 +194,7 @@ export const ItemList = ({ page }: { page: string }) => {
               <thead>
                 <tr>
                   <th>Name</th>
+                  {hasRelation && <th> {relationUri?.toUpperCase()} </th>}
 
                   <th>Update</th>
                   <th>Delete</th>
@@ -229,6 +232,9 @@ export const ItemList = ({ page }: { page: string }) => {
                   return (
                     <tr key={idx} className="cursor-pointer">
                       <td>{item?.name}</td>
+
+                      {hasRelation && <td> {item?.[relationUri].name} </td>}
+
                       <th
                         className="view-data"
                         onClick={(e) => {
@@ -299,6 +305,7 @@ export const ItemList = ({ page }: { page: string }) => {
             hasRelation,
             relationName,
             relationData: subTableData ?? [],
+            relationUri: relationUri,
           }}
           isOpen={isUpdating}
           toggleModal={toggleModal}
