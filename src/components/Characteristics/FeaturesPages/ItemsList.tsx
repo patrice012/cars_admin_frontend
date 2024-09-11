@@ -239,6 +239,7 @@ export const ItemList = ({ page }: { page: string }) => {
                         className="view-data"
                         onClick={(e) => {
                           e.stopPropagation();
+                          console.log(item);
                           UpdateRowData(item);
                         }}
                       >
