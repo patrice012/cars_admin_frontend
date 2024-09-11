@@ -272,3 +272,76 @@ export const DisableModal = ({
     </>
   );
 };
+
+export const DisableModalMany = ({
+  _id,
+  url,
+  isOpen,
+  closeModal,
+  deleteItem,
+  data,
+}: DeleteManyModalProps & { data: any }) => {
+  const { session } = useSession();
+  const extras = [{ key: "authorization", value: "Bearer " + session }];
+  const [actionBtn, setActionBtn] = useState({
+    text: "Deactivate",
+    isDisabled: false,
+  });
+  console.log(data);
+  const handleRemove = async () => {
+    setActionBtn({ text: "Deactivating...", isDisabled: true });
+
+    try {
+      const res = await postReq({
+        data: { ...data, carsId: _id },
+        url,
+        extras,
+      });
+      if (res) {
+        notif(res?.data.message ?? "Success, Data has been deleted");
+        setActionBtn({ text: "Delete", isDisabled: false });
+        deleteItem(true);
+      } else {
+        notif("Failed to delete data");
+        deleteItem(false);
+      }
+    } catch (error) {}
+  };
+
+  const handleCloseModal = () => {
+    closeModal(isOpen);
+  };
+
+  return (
+    <>
+      <input
+        type="checkbox"
+        checked={isOpen}
+        readOnly
+        id="delete-modal"
+        className="modal-toggle"
+      />
+      <div className="modal modal--container" role="dialog">
+        <div className="modal-box flex items-center  gap-8">
+          <button
+            onClick={handleCloseModal}
+            className="btn btn--action  flex items-center justify-center gap-2">
+            <span>Cancel</span>
+          </button>
+
+          <button
+            onClick={handleRemove}
+            style={{ background: "red", color: "#FFF" }}
+            className="btn flex items-center justify-center gap-2">
+            <span>{actionBtn.text}</span>
+          </button>
+        </div>
+        <div className="wrapper">
+          <label className="modal-backdrop close-modal" htmlFor="upload-modal">
+            <IoIosClose onClick={handleCloseModal} />
+          </label>
+        </div>
+      </div>
+    </>
+  );
+};

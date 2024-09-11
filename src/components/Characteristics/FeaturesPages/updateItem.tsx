@@ -45,7 +45,10 @@ const UpdateData: React.FC<UpdateDataProps> = ({
   useEffect(() => {
     try {
       if (hasRelation?.relationData) {
+
         const item = hasRelation.relationData as { _id: string }[];
+        console.log(item);
+        
         setData({ ...data, subItem: item[0]._id });
       }
     } catch (error) {

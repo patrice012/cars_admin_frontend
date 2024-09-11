@@ -6,6 +6,7 @@ interface ItemType {
 }
 
 type Item = {
+  isActive: boolean;
   _id: string;
   name: string,
   model: ItemType,
