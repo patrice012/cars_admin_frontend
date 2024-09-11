@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { ReactSVG } from "react-svg";
 // icons
 import { BsPlusLg } from "react-icons/bs";
 import { RxUpdate } from "react-icons/rx";
@@ -166,6 +167,7 @@ export const BrandList = () => {
                 ? tableData?.data.map((brand: Brand, idx: number) => {
                     return (
                       <tr key={idx} className="cursor-pointer">
+                        {/* <ReactSVG src={brand.logo} /> */}
                         <img
                           className="pl-3"
                           width={40}

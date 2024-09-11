@@ -14,7 +14,6 @@ const Selectable = ({
   items,
   onChange,
   selected,
-  selectedName,
   onOpen,
 }: SelectableProps) => {
   const [isOpened, setIsOpened] = useState(false);
@@ -40,7 +39,7 @@ const Selectable = ({
         </option>
         {items.map((item) => (
           <option key={item.value} value={item.value}>
-            {selectedName ?? item.label}
+            {item.label}
           </option>
         ))}
       </select>
