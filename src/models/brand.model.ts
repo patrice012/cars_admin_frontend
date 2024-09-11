@@ -12,5 +12,5 @@ export type Seller = {
   phone: string;
   whatsapp: string;
   isActive:boolean;
-  sellerTypeId:string;
+  sellerType:string;
 };

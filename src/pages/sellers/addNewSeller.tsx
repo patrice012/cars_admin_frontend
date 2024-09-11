@@ -33,12 +33,12 @@ const AddNewSeller: React.FC<AddNewSellerProps> = ({ isOpen, toggleModal }) => {
     lastname: string;
     whatsapp: string;
     phone: string;
-    sellerTypeId: string;
+    sellerType: string;
   }>({
     firstname: "",
     whatsapp: "",
     phone: "",
-    sellerTypeId: "",
+    sellerType: "",
     lastname: "",
   });
 
@@ -48,6 +48,7 @@ const AddNewSeller: React.FC<AddNewSellerProps> = ({ isOpen, toggleModal }) => {
       url: "seller_type",
       extras: [{ key: "authorization", value: "Bearer " + session }],
     });
+
     if (result.status == 200) {
       console.log(result.data);
       return result.data;
@@ -109,7 +110,7 @@ const AddNewSeller: React.FC<AddNewSellerProps> = ({ isOpen, toggleModal }) => {
       firstname: "",
       whatsapp: "",
       phone: "",
-      sellerTypeId: "",
+      sellerType: "",
       lastname: "",
     });
     toggleModal({ state: state, action: "create" });
@@ -150,8 +151,8 @@ const AddNewSeller: React.FC<AddNewSellerProps> = ({ isOpen, toggleModal }) => {
                   value: item._id,
                 }))
           }
-          selected={data.sellerTypeId}
-          onChange={(e) => setData({ ...data, sellerTypeId: e.target.value })}
+          selected={data.sellerType}
+          onChange={(e) => setData({ ...data, sellerType: e.target.value })}
           title="Seller type"
         />
         <span>Phone number</span>

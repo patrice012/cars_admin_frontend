@@ -33,6 +33,11 @@ export const SellerList = () => {
   const [selectedSeller, setSelectedSeller] = useState<Seller>();
   const navigate = useNavigate();
   const location = useLocation();
+  const [search, setSearch] = useState("");
+  const [debounce, setDebounce] = useState(search);
+  const [deleteList, setDeleteList] = useState([]);
+  const [DisableList, setDisableList] = useState([]);
+  const [check, setCheck] = useState(false);
 
   const toggleModal = ({ state = true, action = "create" }) => {
     if (action === "create") {

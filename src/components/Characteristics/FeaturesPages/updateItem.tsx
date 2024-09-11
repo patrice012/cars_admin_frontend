@@ -109,7 +109,7 @@ const UpdateData: React.FC<UpdateDataProps> = ({
       } else if (page?.toLowerCase() === "transmission") {
         uri = "transmission/update";
       } else if (page?.toLowerCase() === "fuel") {
-        uri = "fuel/update";
+        uri = "fuel_type/update";
       } else if (page?.toLowerCase() === "title") {
         uri = "title/update";
       } else if (page?.toLowerCase() === "countries") {

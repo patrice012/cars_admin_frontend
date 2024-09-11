@@ -30,6 +30,11 @@ export const BrandList = () => {
   const [selectedId, setSelectedId] = useState("");
   const [selectedBrand, setSelectedBrand] = useState<Brand>();
   const location = useLocation();
+  const [search, setSearch] = useState("");
+  const [debounce, setDebounce] = useState(search);
+  const [deleteList, setDeleteList] = useState([]);
+  const [DisableList, setDisableList] = useState([]);
+  const [check, setCheck] = useState(false);
 
   const toggleModal = ({ state = true, action = "create" }) => {
     if (action === "create") {
@@ -129,6 +134,7 @@ export const BrandList = () => {
             {tableData?.data.length || tableData ? (
               <thead>
                 <tr>
+                  
                   <th>Logo</th>
                   <th>Title</th>
                   <th>Update</th>

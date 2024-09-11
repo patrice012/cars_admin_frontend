@@ -30,7 +30,7 @@ const UpdateSeller: React.FC<UpdateSellerProps> = ({
     firstname: Seller.firstname,
     whatsapp: Seller.whatsapp,
     phone: Seller.phone,
-    sellerTypeId: Seller.sellerTypeId,
+    sellerType: Seller.sellerType,
     lastname: Seller.lastname,
   });
   const [actionBtn, setActionBtn] = useState({
@@ -99,7 +99,7 @@ const UpdateSeller: React.FC<UpdateSellerProps> = ({
       firstname: "",
       whatsapp: "",
       phone: "",
-      sellerTypeId: "",
+      sellerType: "",
       lastname: "",
     });
     toggleModal({ state: state, action: "create" });
@@ -140,8 +140,8 @@ const UpdateSeller: React.FC<UpdateSellerProps> = ({
                   value: item._id,
                 }))
           }
-          selected={data.sellerTypeId.name}
-          onChange={(e) => setData({ ...data, sellerTypeId: e.target.value })}
+          selected={data.sellerType._id}
+          onChange={(e) => setData({ ...data, sellerType: e.target.value })}
           title="Seller type"
         />
         <span>Phone number</span>

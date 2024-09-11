@@ -37,6 +37,11 @@ export const ItemList = ({ page }: { page: string }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const location = useLocation();
   const { hasRelation, relationName, relationUri } = location.state;
+  const [search, setSearch] = useState("");
+  const [debounce, setDebounce] = useState(search);
+  const [deleteList, setDeleteList] = useState([]);
+  const [DisableList, setDisableList] = useState([]);
+  const [check, setCheck] = useState(false);
   // toggle view data
   const [rowData, setRowData] = useState({});
 
