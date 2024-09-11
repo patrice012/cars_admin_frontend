@@ -66,7 +66,6 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
   const [cities, setCities] = useState([]);
   const [fuels, setFuels] = useState([]);
   const [brands, setBrands] = useState([]);
-  
 
   const fetchData = async (
     url: string,
@@ -82,8 +81,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
       console.log(result.data.data);
       if (data.brand && url === "model") {
         const Models = result?.data?.data.filter(
-          (item: { brand: { _id: string } }) =>
-            item?.brand?._id === data.brand
+          (item: { brand: { _id: string } }) => item?.brand?._id === data.brand
         );
         if (!Models) {
           return null;
@@ -115,7 +113,6 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     e.stopPropagation();
-
     console.log(data);
 
     if (
@@ -261,6 +258,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           placeholder="Ex: 100000"
           value={data.salesPrice === 0 ? "" : data.salesPrice}
           onChange={(e) => setData({ ...data, salesPrice: e.target.value })}
+          
         />
         <InputField
           label="Minimum price"
