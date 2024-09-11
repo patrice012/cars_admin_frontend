@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { ReactSVG } from "react-svg";
 // icons
 import { BsPlusLg } from "react-icons/bs";
 import { RxUpdate } from "react-icons/rx";
@@ -165,7 +166,8 @@ export const BrandList = () => {
             <div className="actions flex items-center justify-start gap-8">
               <button
                 onClick={() => toggleModal({ state: true, action: "create" })}
-                className="btn btn-primary flex items-center justify-center gap-2">
+                className="btn btn-primary flex items-center justify-center gap-2"
+              >
                 <BsPlusLg /> <p>Add new</p>
               </button>
               {tableData ? (
@@ -177,7 +179,8 @@ export const BrandList = () => {
                 <button
                   style={{ background: "red" }}
                   onClick={() => setRemovingMany(true)}
-                  className="btn border-0 btn-square">
+                  className="btn border-0 btn-square"
+                >
                   <Trash color="white" />
                 </button>
               ) : (
@@ -278,7 +281,8 @@ export const BrandList = () => {
                             setSelectedId(brand._id);
                             setSelectedBrand(brand);
                             setIsUpdating(true);
-                          }}>
+                          }}
+                        >
                           <RxUpdate />
                         </th>
                         <th
@@ -287,7 +291,8 @@ export const BrandList = () => {
                             e.stopPropagation();
                             setSelectedId(brand._id);
                             setRemoving(true);
-                          }}>
+                          }}
+                        >
                           <MdDeleteOutline />
                         </th>
                       </tr>
@@ -304,7 +309,8 @@ export const BrandList = () => {
               <button
                 disabled={!tableData?.hasPrevPage}
                 className="btn"
-                onClick={handlePrev}>
+                onClick={handlePrev}
+              >
                 Previous
               </button>
 
@@ -315,7 +321,8 @@ export const BrandList = () => {
               <button
                 disabled={!tableData?.hasNextPage}
                 className="btn"
-                onClick={handleNext}>
+                onClick={handleNext}
+              >
                 Next
               </button>
             </div>
