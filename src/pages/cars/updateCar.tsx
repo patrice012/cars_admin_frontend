@@ -7,7 +7,7 @@ import InputField from "../../components/InputField";
 import FileUpload from "../../components/FileUpload";
 import Button from "../../components/Button";
 import PropTypes from "prop-types";
-import Selectable from "../../components/Selectable";
+import { Selectable } from "../../components/Selectable";
 import { useQuery } from "react-query";
 import { Brand } from "../../models/brand.model";
 import { useSession } from "../../contexts/authContext";
@@ -184,8 +184,7 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
       isOpen={isOpen}
       title="Update Item"
       warning={warning}
-      closeModal={() => closeModal(false)}
-    >
+      closeModal={() => closeModal(false)}>
       <form style={{ maxWidth: 600, width: 600 }} onSubmit={handleSubmit}>
         <InputField
           required
@@ -417,7 +416,13 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
           title="Fuels"
           selected={data.fuelType}
         />
-
+        <TextAreaField
+          label="keywords"
+          id="keywords"
+          placeholder="Enter keywords"
+          value={data.keywords}
+          onChange={(e) => setData({ ...data, keywords: e.target.value })}
+        />
         <div className=" flex justify-start items-center" style={{ gap: 20 }}>
           <span>Electric car</span>
           <input
@@ -447,8 +452,7 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
             flexDirection: "row",
             flexWrap: "wrap",
             gap: 13,
-          }}
-        >
+          }}>
           {itemPhotos.map((uri, index) => (
             <ImageDisplayItem
               onClick={() => removeImage(index, uri)}
@@ -482,8 +486,7 @@ const ImageDisplayItem = ({
   return (
     <div
       className="w-[220px] h-[140px] cursor-pointer"
-      style={{ position: "relative" }}
-    >
+      style={{ position: "relative" }}>
       <img
         src={typeof item == "string" ? item : URL.createObjectURL(item)}
         style={{ height: "100%", width: "100%" }}
@@ -496,8 +499,7 @@ const ImageDisplayItem = ({
           right: 0,
           background: "red",
           cursor: "pointer",
-        }}
-      >
+        }}>
         <MdClose color="white" size="20px" />
       </div>
     </div>

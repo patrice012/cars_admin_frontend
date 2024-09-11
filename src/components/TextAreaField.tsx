@@ -23,7 +23,7 @@ const TextAreaField: React.FC<TextAreaFieldProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="input input-bordered w-full"
+        className="input input-bordered w-full py-[7px]"
       />
     </div>
   );

@@ -18,7 +18,7 @@ import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
 import { CloseCircle, Trash } from "iconsax-react";
 import InputField from "../../components/InputField";
 import Item from "../../models/item.model";
-import Selectable from "../../components/Selectable";
+import {Selectable} from "../../components/Selectable";
 import { characsItemProps } from "../../helpers/types";
 
 const META = {

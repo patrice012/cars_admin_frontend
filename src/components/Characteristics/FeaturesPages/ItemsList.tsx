@@ -18,7 +18,7 @@ import { CloseCircle, Trash } from "iconsax-react";
 import InputField from "../../InputField";
 import Item from "../../../models/item.model";
 import { DeleteManyModal } from "../../Modal";
-import Selectable from "../../Selectable";
+import {Selectable} from "../../Selectable";
 
 const META = {
   title: "Site Data",

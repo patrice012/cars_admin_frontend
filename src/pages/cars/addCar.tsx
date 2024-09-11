@@ -7,7 +7,7 @@ import InputField from "../../components/InputField";
 import FileUpload from "../../components/FileUpload";
 import Button from "../../components/Button";
 import PropTypes from "prop-types";
-import Selectable from "../../components/Selectable";
+import { Selectable } from "../../components/Selectable";
 import { useSession } from "../../contexts/authContext";
 import {
   cylinders,
@@ -45,7 +45,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
     salesPrice: 0,
     minPrice: 0,
     imagesUrls: [],
-    keywords: [],
+    keywords: "",
     isElectric: false,
     isHybrid: false,
     note: "",
@@ -140,6 +140,14 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           value.forEach((item, index) => {
             formData.append("imagesUrls", item);
           });
+        } else if (key === "keywords") {
+
+          const keywordsArray = value.split(";").map((keyword: string) => keyword.trim());
+    
+          keywordsArray.forEach((keyword: string) => {
+            formData.append("keywords", keyword); 
+          });
+
         } else {
           // For other data types, append directly
           formData.append(key, value);
@@ -187,7 +195,7 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
       salesPrice: 0,
       minPrice: 0,
       imagesUrls: [],
-      keywords: [],
+      keywords: "",
       isElectric: false,
       isHybrid: false,
       note: "",
@@ -370,6 +378,15 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           title="Fuels"
           selected={data.fuelType}
         />
+
+        <TextAreaField
+          label="keywords"
+          id="keywords"
+          placeholder="Enter keywords"
+          value={data.keywords}
+          onChange={(e) => setData({ ...data, keywords: e.target.value })}
+        />
+
         <div className=" flex justify-start items-center" style={{ gap: 20 }}>
           <span>Hybrid car</span>
           <input

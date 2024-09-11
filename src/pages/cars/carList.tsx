@@ -21,7 +21,7 @@ import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
 import InputField from "../../components/InputField";
 import { CloseCircle, Trash } from "iconsax-react";
 import { useSession } from "../../contexts/authContext";
-import Selectable from "../../components/Selectable";
+import {Selectable, SelectableFilter } from "../../components/Selectable";
 import Button from "../../components/Button";
 import FileUpload from "../../components/FileUpload";
 import TextAreaField from "../../components/TextAreaField";
