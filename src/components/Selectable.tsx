@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 interface SelectableProps {
   title: string;
   selected?: string | number;
+  selectedName?: string;
   items: { label: string | number; value: string | number | any }[];
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   onOpen?: () => void; // Prop to trigger data loading when the dropdown opens
@@ -13,6 +14,7 @@ const Selectable = ({
   items,
   onChange,
   selected,
+  selectedName,
   onOpen,
 }: SelectableProps) => {
   const [isOpened, setIsOpened] = useState(false);
@@ -20,7 +22,7 @@ const Selectable = ({
   const handleFocus = () => {
     if (!isOpened && onOpen) {
       onOpen(); // Load data when the dropdown is first opened
-       // Set the state to ensure this runs only once
+      // Set the state to ensure this runs only once
     }
   };
 
@@ -37,10 +39,8 @@ const Selectable = ({
           Choose item
         </option>
         {items.map((item) => (
-          <option
-            key={item.value}
-            value={item.value}>
-            {item.label}
+          <option key={item.value} value={item.value}>
+            {selectedName ?? item.label}
           </option>
         ))}
       </select>

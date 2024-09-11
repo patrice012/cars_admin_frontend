@@ -55,7 +55,8 @@ const ItemDetails = () => {
       <button
         style={{ background: "#ca8a04" }}
         onClick={() => setDeactivating(true)}
-        className="btn border-0 btn-square">
+        className="btn border-0 btn-square"
+      >
         {itemDetails && itemDetails.isActive ? (
           <CloseCircle color="white" />
         ) : (
@@ -65,13 +66,15 @@ const ItemDetails = () => {
       <button
         style={{ background: "#2563eb" }}
         onClick={() => setIsUpdating(true)}
-        className="btn border-0 btn-square">
+        className="btn border-0 btn-square"
+      >
         <Edit color="white" />
       </button>
       <button
         style={{ background: "red" }}
         onClick={() => setRemoving(true)}
-        className="btn border-0 btn-square">
+        className="btn border-0 btn-square"
+      >
         <Trash color="white" />
       </button>
     </div>
@@ -87,7 +90,8 @@ const ItemDetails = () => {
               <div
                 className="cursor-pointer"
                 key={photo}
-                onClick={() => setIsOpen(!isOpen)}>
+                onClick={() => setIsOpen(!isOpen)}
+              >
                 <img src={photo} />
               </div>
             ))}
@@ -220,10 +224,10 @@ const ItemDetails = () => {
 
         {deactivating && (
           <DisableModal
-            data={{ ...itemDetails, isActive: false }}
+            data={{ ...itemDetails, isActive: !itemDetails.isActive }}
             deleteItem={toggleDeleteData}
             _id={item?._id}
-            url="car/update"
+            url="car/update-field"
             isOpen={deactivating}
             closeModal={() => setDeactivating(!deactivating)}
           />

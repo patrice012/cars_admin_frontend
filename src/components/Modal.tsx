@@ -112,14 +112,16 @@ export const DeleteModal = ({
         <div className="modal-box flex items-center  gap-8">
           <button
             onClick={handleCloseModal}
-            className="btn btn--action  flex items-center justify-center gap-2">
+            className="btn btn--action  flex items-center justify-center gap-2"
+          >
             <span>Cancel</span>
           </button>
 
           <button
             onClick={handleRemove}
             style={{ background: "red", color: "#FFF" }}
-            className="btn flex items-center justify-center gap-2">
+            className="btn flex items-center justify-center gap-2"
+          >
             <span>{actionBtn.text}</span>
           </button>
         </div>
@@ -179,14 +181,16 @@ export const DeleteManyModal = ({
         <div className="modal-box flex items-center  gap-8">
           <button
             onClick={handleCloseModal}
-            className="btn btn--action  flex items-center justify-center gap-2">
+            className="btn btn--action  flex items-center justify-center gap-2"
+          >
             <span>Cancel</span>
           </button>
 
           <button
             onClick={handleRemove}
             style={{ background: "red", color: "#FFF" }}
-            className="btn flex items-center justify-center gap-2">
+            className="btn flex items-center justify-center gap-2"
+          >
             <span>{actionBtn.text}</span>
           </button>
         </div>
@@ -211,22 +215,22 @@ export const DisableModal = ({
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [actionBtn, setActionBtn] = useState({
-    text: "Deactivate",
+    text: !data.isActive ? "Deactivate" : "Activate",
     isDisabled: false,
   });
-  console.log(data);
   const handleRemove = async () => {
     setActionBtn({ text: "Deactivating...", isDisabled: true });
 
     try {
       const res = await postReq({
-        data: { ...data, _id: _id },
-        url,
+        data: { id: data._id, isActive: data.isActive },
+        url: "car/update-field",
         extras,
       });
       if (res) {
+        console.log(res);
         notif(res?.data.message ?? "Success, Data has been deleted");
-        setActionBtn({ text: "Delete", isDisabled: false });
+        setActionBtn({ text: "Deactivate", isDisabled: false });
         deleteItem(true);
       } else {
         notif("Failed to delete data");
@@ -252,14 +256,19 @@ export const DisableModal = ({
         <div className="modal-box flex items-center  gap-8">
           <button
             onClick={handleCloseModal}
-            className="btn btn--action  flex items-center justify-center gap-2">
+            className="btn btn--action  flex items-center justify-center gap-2"
+          >
             <span>Cancel</span>
           </button>
 
           <button
             onClick={handleRemove}
-            style={{ background: "red", color: "#FFF" }}
-            className="btn flex items-center justify-center gap-2">
+            style={{
+              background: !data.isActive ? "red" : "blue",
+              color: "#FFF",
+            }}
+            className="btn flex items-center justify-center gap-2"
+          >
             <span>{actionBtn.text}</span>
           </button>
         </div>
