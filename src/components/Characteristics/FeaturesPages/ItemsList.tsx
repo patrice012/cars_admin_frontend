@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 // icons
@@ -14,6 +14,10 @@ import DeletedData from "./deleteData";
 import { useSession } from "../../../contexts/authContext";
 import { LoadingSkeleton } from "../../Table/LoadingSkeleton";
 import { subItemProps } from "../../../helpers/types";
+import { Trash } from "iconsax-react";
+import InputField from "../../InputField";
+import Item from "../../../models/item.model";
+import { DeleteManyModal } from "../../Modal";
 
 const META = {
   title: "Site Data",
@@ -38,6 +42,7 @@ export const ItemList = ({ page }: { page: string }) => {
   const location = useLocation();
   const { hasRelation, relationName, relationUri } = location.state;
   const [search, setSearch] = useState("");
+  const [removingMany, setRemovingMany] = useState(false);
   const [debounce, setDebounce] = useState(search);
   const [deleteList, setDeleteList] = useState([]);
   const [DisableList, setDisableList] = useState([]);
@@ -58,34 +63,49 @@ export const ItemList = ({ page }: { page: string }) => {
     }
   };
 
+  useEffect(() => {
+    const Handler = setTimeout(() => {
+      setDebounce(search);
+    }, 500);
+
+    return () => {
+      clearTimeout(Handler);
+    };
+  }, [search]);
+
+  let uri = "";
+  if (page?.toLowerCase() === "colors") {
+    uri = "colors";
+  } else if (page?.toLowerCase() === "cylinders") {
+    uri = "cylinders";
+  } else if (page?.toLowerCase() === "enginetype") {
+    uri = "engine_type";
+  } else if (page?.toLowerCase() === "model") {
+    uri = "model";
+  } else if (page?.toLowerCase() === "transmission") {
+    uri = "transmission";
+  } else if (page?.toLowerCase() === "fuel") {
+    uri = "fuel_type";
+  } else if (page?.toLowerCase() === "title") {
+    uri = "title";
+  } else if (page?.toLowerCase() === "countries") {
+    uri = "country";
+  } else if (page?.toLowerCase() === "city") {
+    uri = "city";
+  } else if (page?.toLowerCase() === "sellertype") {
+    uri = "seller_type";
+  }
+
   // get table data
   const handleTableData = async () => {
-    let uri = "";
-    if (page?.toLowerCase() === "colors") {
-      uri = "colors";
-    } else if (page?.toLowerCase() === "cylinders") {
-      uri = "cylinders";
-    } else if (page?.toLowerCase() === "enginetype") {
-      uri = "engine_type";
-    } else if (page?.toLowerCase() === "model") {
-      uri = "model";
-    } else if (page?.toLowerCase() === "transmission") {
-      uri = "transmission";
-    } else if (page?.toLowerCase() === "fuel") {
-      uri = "fuel_type";
-    } else if (page?.toLowerCase() === "title") {
-      uri = "title";
-    } else if (page?.toLowerCase() === "countries") {
-      uri = "country";
-    } else if (page?.toLowerCase() === "city") {
-      uri = "city";
-    } else if (page?.toLowerCase() === "sellertype") {
-      uri = "seller_type";
-    }
     console.log(relationUri);
     // send req
     const result = await postReq({
-      data: { page: pageNumber, perPage: META.perPage },
+      data: {
+        page: pageNumber,
+        perPage: META.perPage,
+        search: debounce.trim(),
+      },
       url: uri,
       extras,
     });
@@ -93,7 +113,7 @@ export const ItemList = ({ page }: { page: string }) => {
     if (result.status == 200) return result.data;
   };
 
-  let queryKey = [location.pathname, pageNumber, "sites-list"];
+  let queryKey = [location.pathname, pageNumber, debounce, "sites-list"];
   const {
     data: tableData,
     isLoading: tableLoading,
@@ -175,20 +195,68 @@ export const ItemList = ({ page }: { page: string }) => {
     setIsDeleting(true);
   };
 
+  const toggleDeleteManyData = (state: boolean) => {
+    setRemovingMany(!removingMany);
+    if (state) {
+      getPaginate();
+    }
+  };
+
+  const handleDelete = (id: string) => {
+    if (id === "all") {
+      if (check) {
+        setDeleteList([]);
+      } else {
+        tableData?.data.map((item: Item, idx: number) => {
+          setDeleteList((idSelected) => {
+            return [...idSelected, item._id];
+          });
+        });
+      }
+    } else {
+      setDeleteList((idSelected) => {
+        if (deleteList.includes(id)) {
+          return idSelected.filter((selected) => selected != id);
+        } else {
+          return [...idSelected, id];
+        }
+      });
+    }
+  };
   return (
     <>
       <section className="table-container">
         <div className="site--container">
           {/* user-data */}
-          <div className="wrapper-btn">
+          <div className="wrapper-btn justify-between">
             <div className="actions flex items-center justify-start gap-8">
               <button
                 onClick={() => toggleModal({ state: true, action: "create" })}
-                className="btn btn-primary flex items-center justify-center gap-2"
-              >
+                className="btn btn-primary flex items-center justify-center gap-2">
                 <BsPlusLg /> <p>Add new</p>
               </button>
               {tableData?.data ? <p>{tableData?.data?.length} items</p> : null}
+            </div>
+            <div className="flex gap-[24px]">
+              {deleteList.length > 0 ? (
+                <button
+                  style={{ background: "red" }}
+                  onClick={() => setRemovingMany(true)}
+                  className="btn border-0 btn-square">
+                  <Trash color="white" />
+                </button>
+              ) : (
+                ""
+              )}
+
+              <InputField
+                label=""
+                id="title"
+                type="text"
+                placeholder="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
             </div>
           </div>
 
@@ -198,6 +266,19 @@ export const ItemList = ({ page }: { page: string }) => {
             {tableData?.data.docs?.length || tableData ? (
               <thead>
                 <tr>
+                  <th>
+                    <input
+                      type="checkbox"
+                      className=" items-start justify-start flex"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onChange={(e) => {
+                        setCheck(!check);
+                        handleDelete("all");
+                      }}
+                    />
+                  </th>
                   <th>Name</th>
                   {hasRelation && <th> {relationUri?.toUpperCase()} </th>}
 
@@ -236,6 +317,19 @@ export const ItemList = ({ page }: { page: string }) => {
                 tableData?.data.map((item: ItemType, idx: number) => {
                   return (
                     <tr key={idx} className="cursor-pointer">
+                      <td>
+                        <input
+                          type="checkbox"
+                          className=" items-start justify-start flex"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                          checked={deleteList.includes(item?._id)}
+                          onChange={(e) => {
+                            handleDelete(item?._id);
+                          }}
+                        />
+                      </td>
                       <td>{item?.name}</td>
 
                       {hasRelation && <td> {item?.[relationUri].name} </td>}
@@ -246,8 +340,7 @@ export const ItemList = ({ page }: { page: string }) => {
                           e.stopPropagation();
                           console.log(item);
                           UpdateRowData(item);
-                        }}
-                      >
+                        }}>
                         <RxUpdate />
                       </th>
                       <th
@@ -255,8 +348,7 @@ export const ItemList = ({ page }: { page: string }) => {
                         onClick={(e) => {
                           e.stopPropagation();
                           DeleteRowData(item._id);
-                        }}
-                      >
+                        }}>
                         <MdDeleteOutline />
                       </th>
                     </tr>
@@ -272,8 +364,7 @@ export const ItemList = ({ page }: { page: string }) => {
               <button
                 disabled={!tableData?.hasPrevPage}
                 className="btn"
-                onClick={handlePrev}
-              >
+                onClick={handlePrev}>
                 Previous
               </button>
 
@@ -284,8 +375,7 @@ export const ItemList = ({ page }: { page: string }) => {
               <button
                 disabled={!tableData?.hasNextPage}
                 className="btn"
-                onClick={handleNext}
-              >
+                onClick={handleNext}>
                 Next
               </button>
             </div>
@@ -317,6 +407,17 @@ export const ItemList = ({ page }: { page: string }) => {
           toggleModal={toggleModal}
           page={page}
           updatedData={rowData}
+        />
+      )}
+
+      {removingMany && (
+        <DeleteManyModal
+          deleteItem={toggleDeleteManyData}
+          _id={deleteList}
+          url={`${uri}/delete-many`}
+          isOpen={removingMany}
+          setDelete={setDeleteList}
+          closeModal={() => setRemovingMany(!removingMany)}
         />
       )}
 

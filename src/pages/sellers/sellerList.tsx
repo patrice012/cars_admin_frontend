@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useNavigation } from "react-router-dom";
 // icons
 import { BsPlusLg } from "react-icons/bs";
@@ -9,12 +9,15 @@ import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
 import AddNewSeller from "./addNewSeller";
 import { Seller } from "../../models/brand.model";
-import { DeleteModal } from "../../components/Modal";
+import { DeleteManyModal, DeleteModal } from "../../components/Modal";
 import { useSession } from "../../contexts/authContext";
 import UpdateSeller from "./updateSeller";
 import Header from "../../components/Header/Header";
 import { ClipLoader } from "react-spinners";
 import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
+import { Trash } from "iconsax-react";
+import InputField from "../../components/InputField";
+import Item from "../../models/item.model";
 
 const META = {
   title: "Site Data",
@@ -30,6 +33,7 @@ export const SellerList = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [selectedId, setSelectedId] = useState("");
+  const [removingMany, setRemovingMany] = useState(false);
   const [selectedSeller, setSelectedSeller] = useState<Seller>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -50,11 +54,25 @@ export const SellerList = () => {
     }
   };
 
+  useEffect(() => {
+    const Handler = setTimeout(() => {
+      setDebounce(search);
+    }, 500);
+
+    return () => {
+      clearTimeout(Handler);
+    };
+  }, [search]);
+
   // get table data
   const handleTableData = async () => {
     // send req
     const result = await postReq({
-      data: { page: pageNumber, perPage: META.perPage },
+      data: {
+        page: pageNumber,
+        perPage: META.perPage,
+        search: debounce.trim(),
+      },
       url: "seller",
       extras: [{ key: "authorization", value: `Bearer ${session}` }],
     });
@@ -64,7 +82,7 @@ export const SellerList = () => {
     }
   };
 
-  let queryKey = [location.pathname, pageNumber, "sites-list"];
+  let queryKey = [location.pathname, pageNumber, debounce, "sites-list"];
   const {
     data: tableData,
     isLoading: tableLoading,
@@ -113,6 +131,35 @@ export const SellerList = () => {
     }
   };
 
+  const toggleDeleteManyData = (state: boolean) => {
+    setRemovingMany(!removingMany);
+    if (state) {
+      getPaginate();
+    }
+  };
+
+  const handleDelete = (id: string) => {
+    if (id === "all") {
+      if (check) {
+        setDeleteList([]);
+      } else {
+        tableData?.data.map((item: Item, idx: number) => {
+          setDeleteList((idSelected) => {
+            return [...idSelected, item._id];
+          });
+        });
+      }
+    } else {
+      setDeleteList((idSelected) => {
+        if (deleteList.includes(id)) {
+          return idSelected.filter((selected) => selected != id);
+        } else {
+          return [...idSelected, id];
+        }
+      });
+    }
+  };
+
   return (
     <>
       <Header page="Sellers" headerStatus="" />
@@ -120,12 +167,11 @@ export const SellerList = () => {
         <section className="table-container">
           <div className="site--container">
             {/* user-data */}
-            <div className="wrapper-btn">
+            <div className="wrapper-btn justify-between">
               <div className="actions flex items-center justify-start gap-8">
                 <button
                   onClick={() => toggleModal({ state: true, action: "create" })}
-                  className="btn btn-primary flex items-center justify-center gap-2"
-                >
+                  className="btn btn-primary flex items-center justify-center gap-2">
                   <BsPlusLg /> <p>Add seller</p>
                 </button>
                 <button
@@ -139,8 +185,7 @@ export const SellerList = () => {
                       },
                     })
                   }
-                  className="btn  flex items-center justify-center gap-2"
-                >
+                  className="btn  flex items-center justify-center gap-2">
                   <p>Seller type</p>
                 </button>
                 {tableData ? (
@@ -148,6 +193,27 @@ export const SellerList = () => {
                     {tableData?.data.length || tableData?.docs?.length} items
                   </p>
                 ) : null}
+              </div>
+              <div className="flex gap-[24px]">
+                {deleteList.length > 0 ? (
+                  <button
+                    style={{ background: "red" }}
+                    onClick={() => setRemovingMany(true)}
+                    className="btn border-0 btn-square">
+                    <Trash color="white" />
+                  </button>
+                ) : (
+                  ""
+                )}
+
+                <InputField
+                  label=""
+                  id="title"
+                  type="text"
+                  placeholder="search"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
               </div>
             </div>
 
@@ -157,6 +223,19 @@ export const SellerList = () => {
               {tableData?.data.length || tableData ? (
                 <thead>
                   <tr>
+                    <th>
+                      <input
+                        type="checkbox"
+                        className=" items-start justify-start flex"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        onChange={(e) => {
+                          setCheck(!check);
+                          handleDelete("all");
+                        }}
+                      />
+                    </th>
                     <th>Firstname</th>
                     <th>Lastname</th>
                     <th>phone</th>
@@ -196,6 +275,19 @@ export const SellerList = () => {
                   tableData?.data.map((Seller: Seller, idx: number) => {
                     return (
                       <tr key={idx} className="cursor-pointer">
+                        <td>
+                          <input
+                            type="checkbox"
+                            className=" items-start justify-start flex"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                            checked={deleteList.includes(Seller._id)}
+                            onChange={(e) => {
+                              handleDelete(Seller?._id);
+                            }}
+                          />
+                        </td>
                         <td>{Seller?.firstname}</td>
                         <td>{Seller?.lastname}</td>
                         <td>{Seller?.phone}</td>
@@ -207,8 +299,7 @@ export const SellerList = () => {
                             setSelectedId(Seller._id);
                             setSelectedSeller(Seller);
                             setIsUpdating(true);
-                          }}
-                        >
+                          }}>
                           <RxUpdate />
                         </th>
                         <th
@@ -217,8 +308,7 @@ export const SellerList = () => {
                             e.stopPropagation();
                             setSelectedId(Seller._id);
                             setRemoving(true);
-                          }}
-                        >
+                          }}>
                           <MdDeleteOutline />
                         </th>
                       </tr>
@@ -234,8 +324,7 @@ export const SellerList = () => {
                 <button
                   disabled={!tableData?.hasPrevPage}
                   className="btn"
-                  onClick={handlePrev}
-                >
+                  onClick={handlePrev}>
                   Previous
                 </button>
 
@@ -246,8 +335,7 @@ export const SellerList = () => {
                 <button
                   disabled={!tableData?.hasNextPage}
                   className="btn"
-                  onClick={handleNext}
-                >
+                  onClick={handleNext}>
                   Next
                 </button>
               </div>
@@ -264,7 +352,16 @@ export const SellerList = () => {
             toggleModal={() => toggleModal({ state: true, action: "update" })}
           />
         )}
-
+        {removingMany && (
+          <DeleteManyModal
+            deleteItem={toggleDeleteManyData}
+            _id={deleteList}
+            url="seller/delete-many"
+            isOpen={removingMany}
+            setDelete={setDeleteList}
+            closeModal={() => setRemovingMany(!removingMany)}
+          />
+        )}
         {removing && (
           <DeleteModal
             deleteItem={toggleDeleteData}

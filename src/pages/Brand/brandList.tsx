@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 // icons
 import { BsPlusLg } from "react-icons/bs";
@@ -8,11 +8,14 @@ import { MdDeleteOutline } from "react-icons/md";
 import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
 import AddNewBrand from "./addNewbrand";
-import { DeleteModal } from "../../components/Modal";
+import { DeleteManyModal, DeleteModal } from "../../components/Modal";
 import { useSession } from "../../contexts/authContext";
 import UpdateBrand from "./updateBrand";
 import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
 import { Brand } from "../../models/brand.model";
+import { Trash } from "iconsax-react";
+import InputField from "../../components/InputField";
+import Item from "../../models/item.model";
 
 const META = {
   title: "Site Data",
@@ -30,6 +33,7 @@ export const BrandList = () => {
   const [selectedId, setSelectedId] = useState("");
   const [selectedBrand, setSelectedBrand] = useState<Brand>();
   const location = useLocation();
+  const [removingMany, setRemovingMany] = useState(false);
   const [search, setSearch] = useState("");
   const [debounce, setDebounce] = useState(search);
   const [deleteList, setDeleteList] = useState([]);
@@ -47,11 +51,25 @@ export const BrandList = () => {
     }
   };
 
+  useEffect(() => {
+    const Handler = setTimeout(() => {
+      setDebounce(search);
+    }, 500);
+
+    return () => {
+      clearTimeout(Handler);
+    };
+  }, [search]);
+
   // get table data
   const handleTableData = async () => {
     // send req
     const result = await postReq({
-      data: { page: pageNumber, perPage: META.perPage },
+      data: {
+        page: pageNumber,
+        perPage: META.perPage,
+        search: debounce.trim(),
+      },
       url: "brand",
       extras: [{ key: "authorization", value: `Bearer ${session}` }],
     });
@@ -60,7 +78,7 @@ export const BrandList = () => {
     }
   };
 
-  let queryKey = [location.pathname, pageNumber, "sites-list"];
+  let queryKey = [location.pathname, pageNumber, debounce, "sites-list"];
   const {
     data: tableData,
     isLoading: tableLoading,
@@ -109,22 +127,71 @@ export const BrandList = () => {
     }
   };
 
+  const toggleDeleteManyData = (state: boolean) => {
+    setRemovingMany(!removingMany);
+    if (state) {
+      getPaginate();
+    }
+  };
+
+  const handleDelete = (id: string) => {
+    if (id === "all") {
+      if (check) {
+        setDeleteList([]);
+      } else {
+        tableData?.data.map((item: Item, idx: number) => {
+          setDeleteList((idSelected) => {
+            return [...idSelected, item._id];
+          });
+        });
+      }
+    } else {
+      setDeleteList((idSelected) => {
+        if (deleteList.includes(id)) {
+          return idSelected.filter((selected) => selected != id);
+        } else {
+          return [...idSelected, id];
+        }
+      });
+    }
+  };
+
   return (
     <>
       <section className="table-container">
         <div className="site--container">
           {/* user-data */}
-          <div className="wrapper-btn">
+          <div className="wrapper-btn justify-between">
             <div className="actions flex items-center justify-start gap-8">
               <button
                 onClick={() => toggleModal({ state: true, action: "create" })}
-                className="btn btn-primary flex items-center justify-center gap-2"
-              >
+                className="btn btn-primary flex items-center justify-center gap-2">
                 <BsPlusLg /> <p>Add new</p>
               </button>
               {tableData ? (
                 <p>{tableData?.data.length || tableData?.docs?.length} items</p>
               ) : null}
+            </div>
+            <div className="flex gap-[24px]">
+              {deleteList.length > 0 ? (
+                <button
+                  style={{ background: "red" }}
+                  onClick={() => setRemovingMany(true)}
+                  className="btn border-0 btn-square">
+                  <Trash color="white" />
+                </button>
+              ) : (
+                ""
+              )}
+
+              <InputField
+                label=""
+                id="title"
+                type="text"
+                placeholder="search"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
             </div>
           </div>
 
@@ -134,7 +201,19 @@ export const BrandList = () => {
             {tableData?.data.length || tableData ? (
               <thead>
                 <tr>
-                  
+                  <th>
+                    <input
+                      type="checkbox"
+                      className=" items-start justify-start flex"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      onChange={(e) => {
+                        setCheck(!check);
+                        handleDelete("all");
+                      }}
+                    />
+                  </th>
                   <th>Logo</th>
                   <th>Title</th>
                   <th>Update</th>
@@ -172,6 +251,19 @@ export const BrandList = () => {
                 ? tableData?.data.map((brand: Brand, idx: number) => {
                     return (
                       <tr key={idx} className="cursor-pointer">
+                        <td>
+                          <input
+                            type="checkbox"
+                            className=" items-start justify-start flex"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                            checked={deleteList.includes(brand?._id)}
+                            onChange={(e) => {
+                              handleDelete(brand?._id);
+                            }}
+                          />
+                        </td>
                         <img
                           className="pl-3"
                           width={40}
@@ -186,8 +278,7 @@ export const BrandList = () => {
                             setSelectedId(brand._id);
                             setSelectedBrand(brand);
                             setIsUpdating(true);
-                          }}
-                        >
+                          }}>
                           <RxUpdate />
                         </th>
                         <th
@@ -196,8 +287,7 @@ export const BrandList = () => {
                             e.stopPropagation();
                             setSelectedId(brand._id);
                             setRemoving(true);
-                          }}
-                        >
+                          }}>
                           <MdDeleteOutline />
                         </th>
                       </tr>
@@ -214,8 +304,7 @@ export const BrandList = () => {
               <button
                 disabled={!tableData?.hasPrevPage}
                 className="btn"
-                onClick={handlePrev}
-              >
+                onClick={handlePrev}>
                 Previous
               </button>
 
@@ -226,8 +315,7 @@ export const BrandList = () => {
               <button
                 disabled={!tableData?.hasNextPage}
                 className="btn"
-                onClick={handleNext}
-              >
+                onClick={handleNext}>
                 Next
               </button>
             </div>
@@ -242,6 +330,16 @@ export const BrandList = () => {
           brand={selectedBrand!}
           isOpen={isUpdating}
           toggleModal={() => toggleModal({ state: true, action: "update" })}
+        />
+      )}
+      {removingMany && (
+        <DeleteManyModal
+          deleteItem={toggleDeleteManyData}
+          _id={deleteList}
+          url="brand/delete-many"
+          isOpen={removingMany}
+          setDelete={setDeleteList}
+          closeModal={() => setRemovingMany(!removingMany)}
         />
       )}
 
