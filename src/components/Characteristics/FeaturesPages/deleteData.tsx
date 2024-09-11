@@ -53,7 +53,7 @@ const DeletedData: React.FC<DeletedDataProps> = ({
       } else if (page?.toLowerCase() === "transmission") {
         uri = "transmission/delete";
       } else if (page?.toLowerCase() === "fuel") {
-        uri = "fuel/delete";
+        uri = "fuel_type/delete";
       } else if (page?.toLowerCase() === "title") {
         uri = "title/delete";
       } else if (page?.toLowerCase() === "countries") {
