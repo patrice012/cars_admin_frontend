@@ -8,8 +8,9 @@ import { MdDeleteOutline } from "react-icons/md";
 import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
 import AddItem from "./addCar";
+import PropTypes from "prop-types";
 import Item from "../../models/item.model";
-import {
+import Modal, {
   DeleteModal,
   DeleteManyModal,
   DisableModalMany,
@@ -21,6 +22,16 @@ import InputField from "../../components/InputField";
 import { CloseCircle, Trash } from "iconsax-react";
 import { useSession } from "../../contexts/authContext";
 import Selectable from "../../components/Selectable";
+import Button from "../../components/Button";
+import FileUpload from "../../components/FileUpload";
+import TextAreaField from "../../components/TextAreaField";
+import {
+  defaultCarDoorsCount,
+  defaultCarsYear,
+  cylinders,
+} from "../../helpers/constants";
+import notif from "../../helpers/notif";
+import { characsItemProps } from "../../helpers/types";
 
 const META = {
   title: "Site Data",
@@ -45,15 +56,30 @@ export const ItemList = () => {
   const [search, setSearch] = useState("");
   const [debounce, setDebounce] = useState(search);
   const [deleteList, setDeleteList] = useState([]);
-  const [DisableList, setDisableList] = useState([]);
+  const [addFilter, setAddFilter] = useState(false);
   const [check, setCheck] = useState(false);
   const [allSelected, setAllSelectedActive] = useState<boolean | null>(null);
+  const [filterSelected, setFilterSelected] = useState<string | null>(null);
 
   const [filtre, setFiltre] = useState(null);
+
+  const [filtre2, setFiltre2] = useState<string | null>(null);
   const filtres = [
     { label: "all", value: null },
     { label: "active", value: true },
     { label: "inactive", value: false },
+  ];
+
+  const filtres2 = [
+    { label: "all", value: "all" },
+    { label: "brand", value: "brand" },
+    { label: "model", value: "model" },
+    { label: "seller", value: "seller" },
+    { label: "color", value: "color" },
+    { label: "city", value: "city" },
+    { label: "engine", value: "engine" },
+    { label: "transmission", value: "transmission" },
+    { label: "fuel", value: "fuel" },
   ];
 
   const toggleModal = ({ state = true, action = "create" }) => {
@@ -78,6 +104,14 @@ export const ItemList = () => {
     };
   }, [search]);
 
+  useEffect(() => {
+    if (filtre2 === "all") {
+      console.log(filtre2);
+      setFilterSelected(null)
+      getPaginate();
+    }
+  }, [addFilter, filtre2]);
+
   const handleTableData = async () => {
     console.log(filtre);
     const result = await postReq({
@@ -86,6 +120,14 @@ export const ItemList = () => {
         perPage: META.perPage,
         search: debounce.trim(),
         isActive: filtre === "all" ? null : filtre,
+        brand: filtre2 === "brand" ? filterSelected : null,
+        model: filtre2 === "model" ? filterSelected : null,
+        seller: filtre2 === "seller" ? filterSelected : null,
+        color: filtre2 === "color" ? filterSelected : null,
+        city: filtre2 === "city" ? filterSelected : null,
+        engine: filtre2 === "engine" ? filterSelected : null,
+        transmission: filtre2 === "transmission" ? filterSelected : null,
+        fuel: filtre2 === "fuel" ? filterSelected : null,
       },
       url: "car/in-admin",
     });
@@ -101,6 +143,7 @@ export const ItemList = () => {
     pageNumber,
     debounce,
     filtre,
+    filterSelected,
     "sites-list",
   ];
   const {
@@ -261,6 +304,19 @@ export const ItemList = () => {
               ) : (
                 ""
               )}
+
+              <Selectable
+                items={filtres2.map((item: any) => ({
+                  label: item.label,
+                  value: item.value,
+                }))}
+                onChange={(e) => {
+                  setFiltre2(e.target.value);
+                  setAddFilter(true);
+                  setPageNumber(1);
+                }}
+                title=""
+              />
 
               <Selectable
                 items={filtres.map((item: any) => ({
@@ -454,9 +510,114 @@ export const ItemList = () => {
           closeModal={() => setDeactivatingMany(!deactivatingMany)}
         />
       )}
+
+      {filtre2 !== "all" && addFilter && (
+        <AddFilter
+          isOpen={addFilter}
+          close={setAddFilter}
+          item={filtre2}
+          seleted={filterSelected}
+          setSelected={setFilterSelected}
+        />
+      )}
     </>
   );
 };
 function clg(check: boolean) {
   throw new Error("Function not implemented.");
 }
+
+interface AddItemProps {
+  isOpen: boolean;
+  close: any;
+  item: string;
+  seleted: string | null;
+  setSelected: any;
+}
+
+const AddFilter: React.FC<AddItemProps> = ({
+  isOpen,
+  close,
+  item,
+  seleted,
+  setSelected,
+}) => {
+  const { session } = useSession();
+  const extras = [{ key: "authorization", value: "Bearer " + session }];
+
+  const [actionBtn, setActionBtn] = useState({
+    text: "Save",
+    isDisabled: false,
+  });
+  const [warning, setWarning] = useState("");
+  const [models, setModels] = useState([]);
+
+  const fetchData = async (
+    uri: string,
+    setState: React.Dispatch<React.SetStateAction<any[]>>
+  ) => {
+    console.log(uri);
+    let url = "";
+    if (uri === "color") {
+      url = "colors";
+    } else if (uri === "cylinder") {
+      url = "cylinders";
+    } else if (uri === "engine") {
+      url = "engine_type";
+    } else if (uri === "model") {
+      url = "model";
+    } else if (uri === "transmission") {
+      url = "transmission";
+    } else if (uri === "fuel") {
+      url = "fuel_type";
+    } else if (uri === "title") {
+      url = "title";
+    } else if (uri === "city") {
+      url = "city";
+    } else if (uri === "seller") {
+      url = "seller";
+    } else if (uri === "brand") {
+      url = "brand";
+    }
+    console.log(url);
+    const result = await postReq({
+      data: {},
+      url,
+      extras,
+    });
+    if (result.status === 200) {
+      setState(result.data.data);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {};
+
+  const closeModal = (state: boolean) => {
+    setWarning("");
+
+    close(false);
+  };
+
+  return (
+    <Modal
+      isOpen={isOpen}
+      title="Filter Item"
+      warning={warning}
+      closeModal={() => closeModal(false)}>
+      <form onSubmit={handleSubmit}>
+        <Selectable
+          items={models.map((ele: characsItemProps) => ({
+            label: item == "seller" ? ele.firstname : ele.name,
+            value: ele._id,
+          }))}
+          onOpen={() => !models.length && fetchData(item, setModels)}
+          onChange={(e) => {
+            setSelected(e.target.value), close(false);
+          }}
+          title={`filter ${item}`}
+          selected=""
+        />
+      </form>
+    </Modal>
+  );
+};
