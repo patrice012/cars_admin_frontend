@@ -84,15 +84,15 @@ const ItemDetails = () => {
     <>
       <Header actions={actions} page={item.name} headerStatus={""} />
       <div className="flex w-full gap-6 mt-6">
-        <div className="w-[50%] grid grid-cols-2 gap-4">
+        <div className="w-[50%] flex flex-wrap gap-4">
           {isSuccess &&
             itemDetails.imagesUrls.map((photo: string, idx: number) => (
               <div
-                className="cursor-pointer"
+                className="w-[220px] h-[140px] cursor-pointer border"
                 key={photo}
                 onClick={() => setIsOpen(!isOpen)}
               >
-                <img src={photo} />
+                <img className="w-[100%] h-[100%]" src={photo} />
               </div>
             ))}
         </div>

@@ -16,6 +16,7 @@ export interface hasRelationProps {
   hasRelation?: boolean;
   relationName: string;
   relationData?: any[];
+  relationUri?: string;
 }
 
 interface AddNewProps {
