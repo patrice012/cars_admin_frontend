@@ -83,12 +83,12 @@ const ItemDetails = () => {
   return (
     <>
       <Header actions={actions} page={item.name} headerStatus={""} />
-      <div className="flex w-full gap-6 mt-6">
+      <div className="flex w-full items-start gap-6 mt-6">
         <div className="w-[50%] flex flex-wrap gap-4">
           {isSuccess &&
             itemDetails.imagesUrls.map((photo: string, idx: number) => (
               <div
-                className="w-[220px] h-[140px] cursor-pointer border"
+                className="w-[220px] h-[140px] cursor-pointer"
                 key={photo}
                 onClick={() => setIsOpen(!isOpen)}
               >

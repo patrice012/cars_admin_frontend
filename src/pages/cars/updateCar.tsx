@@ -184,7 +184,8 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
       isOpen={isOpen}
       title="Update Item"
       warning={warning}
-      closeModal={() => closeModal(false)}>
+      closeModal={() => closeModal(false)}
+    >
       <form style={{ maxWidth: 600, width: 600 }} onSubmit={handleSubmit}>
         <InputField
           required
@@ -211,8 +212,8 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
                 }))
               : [
                   {
-                    label: item.color.name, 
-                    value: data.fuelType, 
+                    label: item.color.name,
+                    value: data.fuelType,
                   },
                 ]
           }
@@ -446,7 +447,8 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
             flexDirection: "row",
             flexWrap: "wrap",
             gap: 13,
-          }}>
+          }}
+        >
           {itemPhotos.map((uri, index) => (
             <ImageDisplayItem
               onClick={() => removeImage(index, uri)}
@@ -478,10 +480,13 @@ const ImageDisplayItem = ({
   onClick: () => void;
 }) => {
   return (
-    <div style={{ width: 170, position: "relative" }}>
+    <div
+      className="w-[220px] h-[140px] cursor-pointer"
+      style={{ position: "relative" }}
+    >
       <img
         src={typeof item == "string" ? item : URL.createObjectURL(item)}
-        style={{ height: 150, width: 200 }}
+        style={{ height: "100%", width: "100%" }}
       />
       <div
         onClick={onClick}
@@ -491,7 +496,8 @@ const ImageDisplayItem = ({
           right: 0,
           background: "red",
           cursor: "pointer",
-        }}>
+        }}
+      >
         <MdClose color="white" size="20px" />
       </div>
     </div>
