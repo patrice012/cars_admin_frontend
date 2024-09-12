@@ -7,6 +7,7 @@ import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
 import { BsPlusLg, BsTrash } from "react-icons/bs";
 import { useSession } from "../../contexts/authContext";
 import { IUser } from "../../helpers/types";
+import notif from "../../helpers/notif";
 
 const AccountList = () => {
   const { session } = useSession();
@@ -81,6 +82,43 @@ const AccountList = () => {
   //     toggleModal();
   //   }
   // };
+
+  // remove items
+  const handleRemoveAccount = async (id: string, target: any) => {
+    const targetId = id;
+
+    if (!targetId) {
+      return notif("error removing item, retry later");
+    }
+
+    setRemoving(true);
+
+    const reqData = {
+      _id: targetId.trim(),
+    };
+
+    // sending request
+    try {
+      const url = "user/delete";
+      const response = await postReq({ data: reqData, url });
+      console.log(response, 'response')
+      // set data
+      if (response?.status != 400) {
+        setRemoving(false);
+
+        // show success message
+        notif("removed successfully");
+
+        // refresh table
+        getPaginate();
+      } else {
+        notif("failed to remove admin");
+      }
+    } catch (err) {
+      console.log(err, "err remove admin");
+      setRemoving(false);
+    }
+  };
 
   return (
     <>
@@ -183,7 +221,7 @@ const AccountList = () => {
                         <td>
                           <button
                             className="btn btn--delete"
-                            // onClick={() => handleRemoveAccount(user?._id)}
+                            onClick={() => handleRemoveAccount(user?._id)}
                           >
                             <BsTrash />
                           </button>

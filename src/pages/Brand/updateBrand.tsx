@@ -6,7 +6,8 @@ import InputField from "../../components/InputField";
 import Button from "../../components/Button";
 import PropTypes from "prop-types";
 import { useSession } from "../../contexts/authContext";
-import Brand from "../../models/brand.model";
+import { Brand } from "../../models/brand.model";
+import FileUpload from "../../components/FileUpload";
 
 interface UpdateBrandProps {
   brand: Brand;
@@ -21,15 +22,26 @@ const UpdateBrand: React.FC<UpdateBrandProps> = ({
 }) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
-  const [data, setData] = useState({
+  const [data, setData] = useState<{ name: string; logo: File[] }>({
     name: brand.name,
-    description: "",
+    logo: [],
   });
   const [actionBtn, setActionBtn] = useState({
     text: "Save",
     isDisabled: false,
   });
   const [warning, setWarning] = useState("");
+
+  //
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files && files.length == 1) {
+      const files = Array.from(e.target.files || []);
+      setData({ ...data, logo: files });
+    } else {
+      notif("Only one file could be upload");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,8 +55,19 @@ const UpdateBrand: React.FC<UpdateBrandProps> = ({
     setActionBtn({ text: "Saving...", isDisabled: true });
 
     try {
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("id", brand._id);
+      for (const key in data.logo) {
+        if (Object.prototype.hasOwnProperty.call(data.logo, key)) {
+          const element = data.logo[key];
+          formData.append("logo", element);
+        }
+      }
+
       const response = await postReq({
-        data: { ...data, _id: brand._id },
+        data: formData,
+        isFileUpload: true,
         url: "brand/update",
         extras,
       });
@@ -65,7 +88,7 @@ const UpdateBrand: React.FC<UpdateBrandProps> = ({
 
   const closeModal = (state: boolean) => {
     setWarning("");
-    setData({ name: "", description: "" });
+    setData({ name: "", logo: [] });
     toggleModal({ state: state, action: "create" });
   };
 
@@ -85,13 +108,11 @@ const UpdateBrand: React.FC<UpdateBrandProps> = ({
           value={data.name}
           onChange={(e) => setData({ ...data, name: e.target.value })}
         />
-        {/* <TextAreaField
-          label="Add description"
-          id="description"
-          placeholder="Enter description"
-          value={data.description}
-          onChange={(e) => setData({ ...data, description: e.target.value })}
-        /> */}
+        <FileUpload
+          id="photos"
+          label="Brand logo"
+          onChange={handleFileChange}
+        />
         <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>
         </Button>
