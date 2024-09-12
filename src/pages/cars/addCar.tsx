@@ -254,12 +254,12 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
         />
         <Selectable
           items={defaultCarDoorsCount.map((item) => ({
-            label: item.toString(),
+            label: item,
             value: item,
           }))}
-          onChange={(e) => setData({ ...data, doorsCount: e.target.value })}
+          onChange={(e) => setData({ ...data, doorsCount: Number(e.target.value )})}
           title="Car doors"
-          selected={4}
+          selected={data.doorsCount}
         />
         <InputField
           label="Sales price"

@@ -50,7 +50,7 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
     salesPrice: item.salesPrice,
     minPrice: item.minPrice,
     imagesUrls: item.imagesUrls,
-    keywords: item.keywords,
+    keywords: item.keywords.join(";"),
     isElectric: item.isElectric,
     isHybrid: item.isHybrid,
     note: item.note,
@@ -144,6 +144,14 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
           const urls = Array.isArray(value) ? value : [value]; // Convert string to array if necessary
           urls.forEach((item) => {
             formData.append("imagesUrls[]", item); // Ensure it's appended as an array
+          });
+        } else if (key === "keywords") {
+          const keywordsArray = value
+            .split(";")
+            .map((keyword: string) => keyword.trim());
+
+          keywordsArray.forEach((keyword: string) => {
+            formData.append("keywords", keyword);
           });
         } else {
           // For other data types, append directly
