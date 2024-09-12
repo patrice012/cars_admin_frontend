@@ -15,9 +15,11 @@ import UpdateSeller from "./updateSeller";
 import Header from "../../components/Header/Header";
 import { ClipLoader } from "react-spinners";
 import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
-import { Trash } from "iconsax-react";
+import { CloseCircle, Trash } from "iconsax-react";
 import InputField from "../../components/InputField";
 import Item from "../../models/item.model";
+import Selectable from "../../components/Selectable";
+import { characsItemProps } from "../../helpers/types";
 
 const META = {
   title: "Site Data",
@@ -42,6 +44,10 @@ export const SellerList = () => {
   const [deleteList, setDeleteList] = useState([]);
   const [DisableList, setDisableList] = useState([]);
   const [check, setCheck] = useState(false);
+  const [filtre, setFiltre] = useState(null);
+  const extras = [{ key: "authorization", value: "Bearer " + session }];
+  const [models, setModels] = useState([]);
+  const [filterSelected, setFilterSelected] = useState<string | null>(null);
 
   const toggleModal = ({ state = true, action = "create" }) => {
     if (action === "create") {
@@ -51,6 +57,20 @@ export const SellerList = () => {
     }
     if (state) {
       getPaginate();
+    }
+  };
+
+  const fetchData = async (
+    url: string,
+    setState: React.Dispatch<React.SetStateAction<any[]>>
+  ) => {
+    const result = await postReq({
+      data: {},
+      url,
+      extras,
+    });
+    if (result.status === 200) {
+      setState(result.data.data);
     }
   };
 
@@ -72,6 +92,7 @@ export const SellerList = () => {
         page: pageNumber,
         perPage: META.perPage,
         search: debounce.trim(),
+        sellerType: filterSelected,
       },
       url: "seller",
       extras: [{ key: "authorization", value: `Bearer ${session}` }],
@@ -82,7 +103,13 @@ export const SellerList = () => {
     }
   };
 
-  let queryKey = [location.pathname, pageNumber, debounce, "sites-list"];
+  let queryKey = [
+    location.pathname,
+    pageNumber,
+    debounce,
+    filterSelected,
+    "sites-list",
+  ];
   const {
     data: tableData,
     isLoading: tableLoading,
@@ -205,6 +232,30 @@ export const SellerList = () => {
                 ) : (
                   ""
                 )}
+
+                {filterSelected && (
+                  <button
+                    style={{ background: "#ca8a04" }}
+                    onClick={() => setFilterSelected(null)}
+                    className="btn border-0 btn-square">
+                    <CloseCircle color="white" />
+                  </button>
+                )}
+
+                <Selectable
+                  items={models.map((ele: characsItemProps) => ({
+                    label: ele.name,
+                    value: ele._id,
+                  }))}
+                  onOpen={() =>
+                    !models.length && fetchData("seller_type", setModels)
+                  }
+                  onChange={(e) => {
+                    setFilterSelected(e.target.value);
+                  }}
+                  title=""
+                  selected={filterSelected ? filterSelected : ""}
+                />
 
                 <InputField
                   label=""

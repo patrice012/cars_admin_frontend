@@ -13,11 +13,12 @@ import UpdateData from "./updateItem";
 import DeletedData from "./deleteData";
 import { useSession } from "../../../contexts/authContext";
 import { LoadingSkeleton } from "../../Table/LoadingSkeleton";
-import { subItemProps } from "../../../helpers/types";
-import { Trash } from "iconsax-react";
+import { characsItemProps, subItemProps } from "../../../helpers/types";
+import { CloseCircle, Trash } from "iconsax-react";
 import InputField from "../../InputField";
 import Item from "../../../models/item.model";
 import { DeleteManyModal } from "../../Modal";
+import Selectable from "../../Selectable";
 
 const META = {
   title: "Site Data",
@@ -49,6 +50,8 @@ export const ItemList = ({ page }: { page: string }) => {
   const [check, setCheck] = useState(false);
   // toggle view data
   const [rowData, setRowData] = useState({});
+  const [models, setModels] = useState([]);
+  const [filterSelected, setFilterSelected] = useState<string | null>(null);
 
   const toggleModal = ({ state = true, action = "create" }) => {
     if (action === "create") {
@@ -60,6 +63,20 @@ export const ItemList = ({ page }: { page: string }) => {
     }
     if (state) {
       getPaginate();
+    }
+  };
+
+  const fetchData = async (
+    url: string,
+    setState: React.Dispatch<React.SetStateAction<any[]>>
+  ) => {
+    const result = await postReq({
+      data: {},
+      url,
+      extras,
+    });
+    if (result.status === 200) {
+      setState(result.data.data);
     }
   };
 
@@ -99,12 +116,15 @@ export const ItemList = ({ page }: { page: string }) => {
   // get table data
   const handleTableData = async () => {
     console.log(relationUri);
+    console.log(uri, filterSelected);
     // send req
     const result = await postReq({
       data: {
         page: pageNumber,
         perPage: META.perPage,
         search: debounce.trim(),
+        country: uri === "city" ? filterSelected : null,
+        brand: uri === "model" ? filterSelected : null,
       },
       url: uri,
       extras,
@@ -113,7 +133,13 @@ export const ItemList = ({ page }: { page: string }) => {
     if (result.status == 200) return result.data;
   };
 
-  let queryKey = [location.pathname, pageNumber, debounce, "sites-list"];
+  let queryKey = [
+    location.pathname,
+    pageNumber,
+    debounce,
+    filterSelected,
+    "sites-list",
+  ];
   const {
     data: tableData,
     isLoading: tableLoading,
@@ -249,6 +275,37 @@ export const ItemList = ({ page }: { page: string }) => {
                 ""
               )}
 
+              {filterSelected && (
+                <button
+                  style={{ background: "#ca8a04" }}
+                  onClick={() => setFilterSelected(null)}
+                  className="btn border-0 btn-square">
+                  <CloseCircle color="white" />
+                </button>
+              )}
+
+              {(page?.toLowerCase() === "model" ||
+                page?.toLowerCase() === "city") && (
+                <Selectable
+                  items={models.map((ele: characsItemProps) => ({
+                    label: ele.name,
+                    value: ele._id,
+                  }))}
+                  onOpen={() =>
+                    !models.length &&
+                    fetchData(
+                      page?.toLowerCase() === "model" ? "brand" : "country",
+                      setModels
+                    )
+                  }
+                  onChange={(e) => {
+                    setFilterSelected(e.target.value);
+                  }}
+                  title=""
+                  selected={filterSelected ? filterSelected : ""}
+                />
+              )}
+
               <InputField
                 label=""
                 id="title"
@@ -303,14 +360,14 @@ export const ItemList = ({ page }: { page: string }) => {
                 })}
 
               {/* error on nothing found */}
-              {(error || tableData?.data.docs?.length === 0) && (
-                <>
-                  <div className="nodata">
-                    <img src="/img/nodata.svg" alt="no data found" />
-                    <h3>No record found</h3>
-                  </div>
-                </>
-              )}
+              {(error || tableData?.data.length === 0) && (
+                  <>
+                    <div className="nodata">
+                      <img src="/img/nodata.svg" alt="no data found" />
+                      <h3>No record found</h3>
+                    </div>
+                  </>
+                )}
 
               {/* user-data */}
               {tableData?.data.length &&

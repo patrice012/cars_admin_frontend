@@ -271,7 +271,7 @@ export const BrandList = () => {
                           className="pl-3"
                           width={40}
                           height={40}
-                          src={brand.logo}
+                          src={brand?.logo}
                         />
                         <td>{brand?.name}</td>
                         <th
