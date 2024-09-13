@@ -34,7 +34,7 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [data, setData] = useState({
-    name: item.name,
+    name: item.name_en,
     model: item.model._id,
     color: item.color._id,
     engineType: item.engineType._id,
@@ -53,7 +53,7 @@ const UpdateItem: React.FC<UpdateItemProps> = ({
     keywords: item.keywords.join(";"),
     isElectric: item.isElectric,
     isHybrid: item.isHybrid,
-    note: item.note,
+    note: item.note_en,
     oldphotos: [],
     uploadsImages: [],
   });

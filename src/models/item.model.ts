@@ -8,7 +8,8 @@ interface ItemType {
 type Item = {
   isActive: boolean;
   _id: string;
-  name: string,
+  name_en: string,
+  name_fr: string,
   model: ItemType,
   color: ItemType,
   engineType: ItemType,
@@ -28,7 +29,8 @@ type Item = {
   keywords: string[],
   isElectric: boolean,
   isHybrid: boolean,
-  note: string,
+  note_en: string,
+  note_fr: string,
 };
 
 export interface ItemData {
