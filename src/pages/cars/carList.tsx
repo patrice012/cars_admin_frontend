@@ -401,6 +401,7 @@ export const ItemList = () => {
                           key={key}
                           onClick={() => {
                             handle(key);
+                            setFiltre2(null)
                           }}>
                           <IoClose color="white" size={15} />
                         </button>
