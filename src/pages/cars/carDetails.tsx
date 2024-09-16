@@ -115,7 +115,7 @@ const ItemDetails = () => {
                   <td>Car Name:</td>
                   <td>{itemDetails?.name}</td>
                 </tr>
-                
+
                 <tr>
                   <td>Model:</td>
                   <td>{itemDetails?.model?.name}</td>
@@ -123,10 +123,6 @@ const ItemDetails = () => {
                 <tr>
                   <td>Seller:</td>
                   <td>{itemDetails?.seller?.firstname}</td>
-                </tr>
-                <tr>
-                  <td>Note:</td>
-                  <td>{itemDetails?.note}</td>
                 </tr>
                 <tr>
                   <td>Sales price:</td>
@@ -179,6 +175,10 @@ const ItemDetails = () => {
                 <tr>
                   <td>IsElectric:</td>
                   <td>{itemDetails.isElectric ? "Yes" : "No"}</td>
+                </tr>
+                <tr>
+                  <td>Note:</td>
+                  <td>{itemDetails?.note}</td>
                 </tr>
               </tbody>
             </table>

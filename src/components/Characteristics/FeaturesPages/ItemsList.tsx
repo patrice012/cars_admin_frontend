@@ -258,7 +258,8 @@ export const ItemList = ({ page }: { page: string }) => {
             <div className="actions flex items-center justify-start gap-8">
               <button
                 onClick={() => toggleModal({ state: true, action: "create" })}
-                className="btn btn-primary flex items-center justify-center gap-2">
+                className="btn btn-primary flex items-center justify-center gap-2"
+              >
                 <BsPlusLg /> <p>Add new</p>
               </button>
               {tableData?.data ? <p>{tableData?.data?.length} items</p> : null}
@@ -268,7 +269,8 @@ export const ItemList = ({ page }: { page: string }) => {
                 <button
                   style={{ background: "red" }}
                   onClick={() => setRemovingMany(true)}
-                  className="btn border-0 btn-square">
+                  className="btn border-0 btn-square"
+                >
                   <Trash color="white" />
                 </button>
               ) : (
@@ -279,7 +281,8 @@ export const ItemList = ({ page }: { page: string }) => {
                 <button
                   style={{ background: "#ca8a04" }}
                   onClick={() => setFilterSelected(null)}
-                  className="btn border-0 btn-square">
+                  className="btn border-0 btn-square"
+                >
                   <CloseCircle color="white" />
                 </button>
               )}
@@ -288,8 +291,8 @@ export const ItemList = ({ page }: { page: string }) => {
                 page?.toLowerCase() === "city") && (
                 <Selectable
                   items={models.map((ele: characsItemProps) => ({
-                    label: ele.name,
-                    value: ele._id,
+                    label: ele?.name ?? ele?.name,
+                    value: ele?._id,
                   }))}
                   onOpen={() =>
                     !models.length &&
@@ -361,13 +364,13 @@ export const ItemList = ({ page }: { page: string }) => {
 
               {/* error on nothing found */}
               {(error || tableData?.data.length === 0) && (
-                  <>
-                    <div className="nodata">
-                      <img src="/img/nodata.svg" alt="no data found" />
-                      <h3>No record found</h3>
-                    </div>
-                  </>
-                )}
+                <>
+                  <div className="nodata">
+                    <img src="/img/nodata.svg" alt="no data found" />
+                    <h3>No record found</h3>
+                  </div>
+                </>
+              )}
 
               {/* user-data */}
               {tableData?.data.length &&
@@ -389,7 +392,7 @@ export const ItemList = ({ page }: { page: string }) => {
                       </td>
                       <td>{item?.name}</td>
 
-                      {hasRelation && <td> {item?.[relationUri].name} </td>}
+                      {hasRelation && <td>{item?.[relationUri].name}</td>}
 
                       <th
                         className="view-data"
@@ -397,7 +400,8 @@ export const ItemList = ({ page }: { page: string }) => {
                           e.stopPropagation();
                           console.log(item);
                           UpdateRowData(item);
-                        }}>
+                        }}
+                      >
                         <RxUpdate />
                       </th>
                       <th
@@ -405,7 +409,8 @@ export const ItemList = ({ page }: { page: string }) => {
                         onClick={(e) => {
                           e.stopPropagation();
                           DeleteRowData(item._id);
-                        }}>
+                        }}
+                      >
                         <MdDeleteOutline />
                       </th>
                     </tr>
@@ -421,7 +426,8 @@ export const ItemList = ({ page }: { page: string }) => {
               <button
                 disabled={!tableData?.hasPrevPage}
                 className="btn"
-                onClick={handlePrev}>
+                onClick={handlePrev}
+              >
                 Previous
               </button>
 
@@ -432,7 +438,8 @@ export const ItemList = ({ page }: { page: string }) => {
               <button
                 disabled={!tableData?.hasNextPage}
                 className="btn"
-                onClick={handleNext}>
+                onClick={handleNext}
+              >
                 Next
               </button>
             </div>
