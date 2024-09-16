@@ -8,7 +8,7 @@ import Button from "../../Button";
 
 import PropTypes from "prop-types";
 import { useSession } from "../../../contexts/authContext";
-import Selectable from "../../Selectable";
+import {Selectable} from "../../Selectable";
 import { mockItemList } from "../../../helpers/mockData";
 import { characsItemProps } from "../../../helpers/types";
 

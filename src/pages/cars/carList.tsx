@@ -21,10 +21,11 @@ import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
 import InputField from "../../components/InputField";
 import { CloseCircle, Trash } from "iconsax-react";
 import { useSession } from "../../contexts/authContext";
-import Selectable from "../../components/Selectable";
+import { Selectable, SelectableFilter } from "../../components/Selectable";
 import Button from "../../components/Button";
 import FileUpload from "../../components/FileUpload";
 import TextAreaField from "../../components/TextAreaField";
+import { IoClose } from "react-icons/io5";
 import {
   defaultCarDoorsCount,
   defaultCarsYear,
@@ -63,7 +64,19 @@ export const ItemList = () => {
 
   const [filtre, setFiltre] = useState(null);
 
+  const [data, setData] = useState({
+    model: "",
+    color: "",
+    engine: "",
+    transmission: "",
+    fuel: "",
+    city: "",
+    seller: "",
+    brand: "",
+  });
+
   const [filtre2, setFiltre2] = useState<string | null>(null);
+
   const filtres = [
     { label: "all", value: null },
     { label: "active", value: true },
@@ -104,12 +117,8 @@ export const ItemList = () => {
   }, [search]);
 
   useEffect(() => {
-    if (filtre2 === "all") {
-      console.log(filtre2);
-      setFilterSelected(null);
-      getPaginate();
-    }
-  }, [addFilter, filtre2]);
+    console.log(data);
+  }, [data]);
 
   const handleTableData = async () => {
     console.log(filtre);
@@ -119,14 +128,14 @@ export const ItemList = () => {
         perPage: META.perPage,
         search: debounce.trim(),
         isActive: filtre === "all" ? null : filtre,
-        brand: filtre2 === "brand" ? filterSelected : null,
-        model: filtre2 === "model" ? filterSelected : null,
-        seller: filtre2 === "seller" ? filterSelected : null,
-        color: filtre2 === "color" ? filterSelected : null,
-        city: filtre2 === "city" ? filterSelected : null,
-        engine: filtre2 === "engine" ? filterSelected : null,
-        transmission: filtre2 === "transmission" ? filterSelected : null,
-        fuel: filtre2 === "fuel" ? filterSelected : null,
+        brand: data.brand,
+        model: data.model,
+        seller: data.seller,
+        color: data.color,
+        city: data.city,
+        engine: data.engine,
+        transmission: data.transmission,
+        fuel: data.fuel,
       },
       url: "car/in-admin",
     });
@@ -142,7 +151,7 @@ export const ItemList = () => {
     pageNumber,
     debounce,
     filtre,
-    filterSelected,
+    data,
     "sites-list",
   ];
   const {
@@ -266,87 +275,176 @@ export const ItemList = () => {
     console.log(res);
   }; */
 
+  const handle = (item: string) => {
+    if (item === "color") {
+      setData({ ...data, color: "" });
+    } else if (item === "engine") {
+      setData({ ...data, engine: "" });
+    } else if (item === "model") {
+      setData({ ...data, model: "" });
+    } else if (item === "transmission") {
+      setData({ ...data, transmission: "" });
+    } else if (item === "fuel") {
+      setData({ ...data, fuel: "" });
+    } else if (item === "city") {
+      setData({ ...data, city: "" });
+    } else if (item === "seller") {
+      setData({ ...data, seller: "" });
+    } else if (item === "brand") {
+      setData({ ...data, brand: "" });
+    }
+  };
+
   return (
     <>
       <section className="table-container">
         <div className="site--container">
           {/* user-data */}
-          <div className="wrapper-btn justify-between">
-            <div className="actions flex items-center justify-start gap-8">
-              <button
-                onClick={() => toggleModal({ state: true, action: "create" })}
-                className="btn btn-primary flex items-center justify-center gap-2">
-                <BsPlusLg /> <p>Add new</p>
-              </button>
-              {tableData ? (
-                <p>{tableData?.data.length || tableData?.length} item(s)</p>
-              ) : null}
-            </div>
-            <div className="flex gap-[24px]">
-              {deleteList.length > 0 ? (
-                <>
-                  {allSelected !== null && (
+          <div className="flex flex-col items-center justify-between ">
+            <div className="flex items-center justify-between w-full">
+              <div className="actions flex items-center justify-start gap-8">
+                <button
+                  onClick={() => toggleModal({ state: true, action: "create" })}
+                  className="btn btn-primary flex items-center justify-center gap-2">
+                  <BsPlusLg /> <p>Add new</p>
+                </button>
+                {tableData ? (
+                  <p>{tableData?.data.length || tableData?.length} item(s)</p>
+                ) : null}
+              </div>
+              <div className="flex gap-[24px] items-center">
+                {deleteList.length > 0 ? (
+                  <>
+                    {allSelected !== null && (
+                      <button
+                        style={{ background: "#2563eb" }}
+                        onClick={() => setDeactivatingMany(true)}
+                        className="btn border-0 btn-square">
+                        <CloseCircle color="white" />
+                      </button>
+                    )}
                     <button
-                      style={{ background: "#2563eb" }}
-                      onClick={() => setDeactivatingMany(true)}
+                      style={{ background: "red" }}
+                      onClick={() => setRemovingMany(true)}
                       className="btn border-0 btn-square">
-                      <CloseCircle color="white" />
+                      <Trash color="white" />
                     </button>
-                  )}
+                  </>
+                ) : (
+                  ""
+                )}
+
+                {filterSelected && (
                   <button
-                    style={{ background: "red" }}
-                    onClick={() => setRemovingMany(true)}
+                    style={{ background: "#ca8a04" }}
+                    onClick={() => {
+                      setData({
+                        model: "",
+                        color: "",
+                        engine: "",
+                        transmission: "",
+                        fuel: "",
+                        city: "",
+                        seller: "",
+                        brand: "",
+                      });
+                      setFiltre2(null);
+                    }}
                     className="btn border-0 btn-square">
-                    <Trash color="white" />
+                    <CloseCircle color="white" />
                   </button>
-                </>
+                )}
+
+                <Selectable
+                  items={filtres2.map((item: any) => ({
+                    label: item.label,
+                    value: item.value,
+                  }))}
+                  onChange={(e) => {
+                    setFiltre2(e.target.value);
+                    setAddFilter(true);
+                    setPageNumber(1);
+                  }}
+                  title=""
+                  selected={filtre2 ? filtre2 : ""}
+                />
+
+                <Selectable
+                  items={filtres.map((item: any) => ({
+                    label: item.label,
+                    value: item.value,
+                  }))}
+                  onChange={(e) => {
+                    setFiltre(e.target.value);
+                    setPageNumber(1);
+                  }}
+                  title=""
+                />
+                <InputField
+                  label=""
+                  id="title"
+                  type="text"
+                  placeholder="search"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex justify-center items-center gap-[20px]">
+              {Object.entries(data).map(([key, value]) => {
+                if (value) {
+                  return (
+                    <>
+                      <div className="relative">
+                        <button
+                          className="bg-[red] p-1 rounded-full absolute right-[-5px] bottom-[20px]"
+                          key={key}
+                          onClick={() => {
+                            handle(key);
+                            setFiltre2(null)
+                          }}>
+                          <IoClose color="white" size={15} />
+                        </button>
+                        <button
+                          className="py-1 px-4 bg-[#2563eb] rounded-md text-[#fff]"
+                          key={key}>
+                          {key}
+                        </button>
+                      </div>
+                    </>
+                  );
+                }
+                return null;
+              })}
+
+              {data.brand ||
+              data.city ||
+              data.color ||
+              data.engine ||
+              data.fuel ||
+              data.model ||
+              data.seller ||
+              data.transmission ? (
+                <button
+                  className="py-2 px-2 bg-[#ca8a04] rounded-md text-[#fff]"
+                  onClick={() => {
+                    setData({
+                      model: "",
+                      color: "",
+                      engine: "",
+                      transmission: "",
+                      fuel: "",
+                      city: "",
+                      seller: "",
+                      brand: "",
+                    });
+                    setFiltre2(null);
+                  }}>
+                  <CloseCircle color="white" size={20} />
+                </button>
               ) : (
                 ""
               )}
-
-              {filterSelected && (
-                <button
-                  style={{ background: "#ca8a04" }}
-                  onClick={() =>{ setFilterSelected(null); setFiltre2(null)}}
-                  className="btn border-0 btn-square">
-                  <CloseCircle color="white" />
-                </button>
-              )}
-
-              <Selectable
-                items={filtres2.map((item: any) => ({
-                  label: item.label,
-                  value: item.value,
-                }))}
-                onChange={(e) => {
-                  setFiltre2(e.target.value);
-                  setAddFilter(true);
-                  setPageNumber(1);
-                }}
-                title=""
-                selected={filtre2 ? filtre2 : ""}
-              />
-
-              <Selectable
-                items={filtres.map((item: any) => ({
-                  label: item.label,
-                  value: item.value,
-                }))}
-                onChange={(e) => {
-                  setFiltre(e.target.value);
-                  setPageNumber(1);
-                }}
-                title=""
-                
-              />
-              <InputField
-                label=""
-                id="title"
-                type="text"
-                placeholder="search"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
             </div>
           </div>
 
@@ -521,13 +619,13 @@ export const ItemList = () => {
         />
       )}
 
-      {filtre2 !== "all" && addFilter && (
+      {filtre2 && addFilter && (
         <AddFilter
           isOpen={addFilter}
           close={setAddFilter}
           item={filtre2}
-          seleted={filterSelected}
-          setSelected={setFilterSelected}
+          seleted={data}
+          setSelected={setData}
         />
       )}
     </>
@@ -541,7 +639,16 @@ interface AddItemProps {
   isOpen: boolean;
   close: any;
   item: string;
-  seleted: string | null;
+  seleted: {
+    model: string;
+    color: string;
+    engine: string;
+    transmission: string;
+    fuel: string;
+    city: string;
+    seller: string;
+    brand: string;
+  };
   setSelected: any;
 }
 
@@ -570,8 +677,6 @@ const AddFilter: React.FC<AddItemProps> = ({
     let url = "";
     if (uri === "color") {
       url = "colors";
-    } else if (uri === "cylinder") {
-      url = "cylinders";
     } else if (uri === "engine") {
       url = "engine_type";
     } else if (uri === "model") {
@@ -622,7 +727,26 @@ const AddFilter: React.FC<AddItemProps> = ({
           }))}
           onOpen={() => !models.length && fetchData(item, setModels)}
           onChange={(e) => {
-            setSelected(e.target.value), close(false);
+            if (item === "color") {
+              setSelected({ ...seleted, color: e.target.value }), close(false);
+            } else if (item === "engine") {
+              setSelected({ ...seleted, engine: e.target.value }), close(false);
+            } else if (item === "model") {
+              setSelected({ ...seleted, model: e.target.value }), close(false);
+            } else if (item === "transmission") {
+              setSelected({ ...seleted, transmission: e.target.value }),
+                close(false);
+            } else if (item === "fuel") {
+              setSelected({ ...seleted, fuel: e.target.value }), close(false);
+            } else if (item === "title") {
+              setSelected({ ...seleted, title: e.target.value }), close(false);
+            } else if (item === "city") {
+              setSelected({ ...seleted, city: e.target.value }), close(false);
+            } else if (item === "seller") {
+              setSelected({ ...seleted, seller: e.target.value }), close(false);
+            } else if (item === "brand") {
+              setSelected({ ...seleted, brand: e.target.value }), close(false);
+            }
           }}
           title={`filter ${item}`}
           selected=""

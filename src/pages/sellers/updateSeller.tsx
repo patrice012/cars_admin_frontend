@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import { useSession } from "../../contexts/authContext";
 import { Seller } from "../../models/brand.model";
 import PhoneInput from "react-phone-input-2";
-import Selectable from "../../components/Selectable";
+import {Selectable} from "../../components/Selectable";
 import { mockItemList } from "../../helpers/mockData";
 import { characsItemProps } from "../../helpers/types";
 import { useQuery } from "react-query";

@@ -169,6 +169,10 @@ const ItemDetails = () => {
                   <td>{itemDetails?.city?.name}</td>
                 </tr>
                 <tr>
+                  <td>Keywords:</td>
+                  <td>{itemDetails?.keywords.join(";")}</td>
+                </tr>
+                <tr>
                   <td>IsHybrid:</td>
                   <td>{itemDetails.isHybrid ? "Yes" : "No"}</td>
                 </tr>

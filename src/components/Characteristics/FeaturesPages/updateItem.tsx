@@ -9,7 +9,7 @@ import Button from "../../Button";
 import PropTypes from "prop-types";
 import { useSession } from "../../../contexts/authContext";
 import { hasRelationProps } from "./addNew";
-import Selectable from "../../Selectable";
+import {Selectable} from "../../Selectable";
 import { characsItemProps } from "../../../helpers/types";
 
 interface UpdateDataProps {

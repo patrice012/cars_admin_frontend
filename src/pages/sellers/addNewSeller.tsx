@@ -6,7 +6,7 @@ import InputField from "../../components/InputField";
 import Button from "../../components/Button";
 import PropTypes from "prop-types";
 import { useSession } from "../../contexts/authContext";
-import Selectable from "../../components/Selectable";
+import {Selectable} from "../../components/Selectable";
 import { mockItemList } from "../../helpers/mockData";
 import { characsItemProps } from "../../helpers/types";
 import { defaultQuestion } from "../../helpers/constants";
@@ -141,7 +141,7 @@ const AddNewSeller: React.FC<AddNewSellerProps> = ({ isOpen, toggleModal }) => {
         />
         <Selectable
           items={
-            sellerType?.data.length
+            sellerType?.data?.length
               ? sellerType?.data.map((item: characsItemProps) => ({
                   label: item.name,
                   value: item._id,
