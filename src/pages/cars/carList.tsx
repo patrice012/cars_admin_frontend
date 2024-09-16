@@ -525,7 +525,7 @@ export const ItemList = () => {
                         }}
                       />
                     </td>
-                    <td>{item?.name_en}</td>
+                    <td>{item?.name}</td>
                     <td>{item.brand?.name}</td>
                     <td>{item.model?.name}</td>
                     <td>{item.seller?.firstname}</td>

@@ -113,7 +113,7 @@ const ItemDetails = () => {
 
                 <tr>
                   <td>Car Name:</td>
-                  <td>{itemDetails?.name_en}</td>
+                  <td>{itemDetails?.name}</td>
                 </tr>
                 
                 <tr>
@@ -126,7 +126,7 @@ const ItemDetails = () => {
                 </tr>
                 <tr>
                   <td>Note:</td>
-                  <td>{itemDetails?.note_en}</td>
+                  <td>{itemDetails?.note}</td>
                 </tr>
                 <tr>
                   <td>Sales price:</td>

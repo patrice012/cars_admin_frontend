@@ -9,6 +9,7 @@ type Item = {
   isActive: boolean;
   _id: string;
   name_en: string,
+  name: string;
   name_fr: string,
   model: ItemType,
   color: ItemType,
@@ -31,6 +32,7 @@ type Item = {
   isHybrid: boolean,
   note_en: string,
   note_fr: string,
+  note:string;
 };
 
 export interface ItemData {
