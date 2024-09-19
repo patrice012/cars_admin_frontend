@@ -7,21 +7,18 @@ import { DeleteModal, DisableModal } from "../../components/Modal";
 import UpdateItem from "./updateCar";
 import { useQuery } from "react-query";
 import postReq from "../../helpers/postReq";
-import { useSession } from "../../contexts/authContext";
-import { CloseCircle, Edit, TickCircle, Trash } from "iconsax-react";
+import { CloseCircle, Edit, Send2, TickCircle, Trash } from "iconsax-react";
+import SendToallModal from "./sendModal";
 
 const ItemDetails = () => {
   const location = useLocation();
   const item = location.state;
-  const { session } = useSession();
-  const extras = [{ key: "authorization", value: "Bearer " + session }];
   const navigate = useNavigate();
-  const items = item.imagesUrls;
-  const itemsLenght = items.length;
   const [isOpen, setIsOpen] = useState(false);
   const [removing, setRemoving] = useState(false);
   const [deactivating, setDeactivating] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [sendToall, setSendToall] = useState(false);
 
   const getItem = async () => {
     const result = await postReq({
@@ -52,6 +49,13 @@ const ItemDetails = () => {
 
   const actions = (
     <div className="flex gap-4 my-2 justify-end">
+      <button
+        style={{ background: "#28a745" }}
+        onClick={() => setSendToall(true)}
+        className="btn border-0 btn-square bg-successs"
+      >
+        <Send2 color="white" />
+      </button>
       <button
         style={{ background: "#ca8a04" }}
         onClick={() => setDeactivating(true)}
@@ -223,6 +227,14 @@ const ItemDetails = () => {
             url="car/update-field"
             isOpen={deactivating}
             closeModal={() => setDeactivating(!deactivating)}
+          />
+        )}
+
+        {sendToall && (
+          <SendToallModal
+            _id={item?._id}
+            isOpen={sendToall}
+            closeModal={() => setSendToall(!sendToall)}
           />
         )}
       </div>
