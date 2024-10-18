@@ -1,14 +1,16 @@
 import { useEffect, useState, useContext, ChangeEvent } from "react";
 import postReq from "../../helpers/postReq";
-import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import notif from "../../helpers/notif";
 import UserContext from "../../contexts/UserContext";
+import { useSession } from "../../contexts/authContext";
 
 const ChangePassword = () => {
+  const { session } = useSession();
   const navigate = useNavigate();
-  const { login, changeLogin } = useContext(UserContext);
+  const { login } = useContext(UserContext);
+  const extras = [{ key: "authorization", value: "Bearer " + session }];
   const [data, setData] = useState({ oldPass: "", newPass: "", confirm: "" });
   const [isLoading, setIsloading] = useState(false);
   const [pwdMatchedWarnings, setPwdMatchedWarnings] = useState({
@@ -34,13 +36,16 @@ const ChangePassword = () => {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
+    console.log(session);
     setIsloading(true);
+    delete data.confirm;
     const result = await postReq({
       data: { ...data, _id: login?._id },
       url: "user/password/change",
+      extras,
     });
     setIsloading(false);
-    console.log(result.data);
+    console.log(result.status);
     if (result.status == 200) {
       notif("Passord changed successfuly");
       navigate(-1);

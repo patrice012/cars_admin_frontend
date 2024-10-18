@@ -53,7 +53,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
         signIn: async (signInData: signInProps) => {
           const result: ResponseData = await postReq({
             data: signInData,
-            url: "auth/login",
+            url: "auth/admin/login",
           });
           if (result.status == 200) {
             const { token, user } = result.data as ResponseResult;

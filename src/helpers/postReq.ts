@@ -22,7 +22,6 @@ const postReq = async ({ url, data, isFileUpload, extras }: requestProps) => {
 
   // fetch
   let endpoint = `${API_ENDPOINT}${url}`;
-  console.log(endpoint, "endpoint");
 
   try {
     const req = await fetch(endpoint, {
@@ -47,6 +46,5 @@ const postReq = async ({ url, data, isFileUpload, extras }: requestProps) => {
     return { status: 400, data: {} };
   }
 };
-
 
 export default postReq;
