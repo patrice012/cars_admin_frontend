@@ -75,6 +75,7 @@ export const BrandList = () => {
       extras: [{ key: "authorization", value: `Bearer ${session}` }],
     });
     if (result.status == 200) {
+      console.log(result.data);
       return result.data;
     }
   };
@@ -170,9 +171,7 @@ export const BrandList = () => {
               >
                 <BsPlusLg /> <p>Add new</p>
               </button>
-              {tableData ? (
-                <p>{tableData?.data.length || tableData?.docs?.length} items</p>
-              ) : null}
+              {tableData ? <p>{tableData?.totalCount} items</p> : null}
             </div>
             <div className="flex gap-[24px]">
               {deleteList.length > 0 ? (
@@ -303,31 +302,29 @@ export const BrandList = () => {
           </table>
         </div>
         {/* footer */}
-        {tableData?.data.length > META.perPage - 2 && (
-          <div className="table-footer">
-            <div className="elms">
-              <button
-                disabled={!tableData?.hasPrevPage}
-                className="btn"
-                onClick={handlePrev}
-              >
-                Previous
-              </button>
+        <div className="table-footer">
+          <div className="elms">
+            <button
+              disabled={!tableData?.hasPrevPage}
+              className="btn"
+              onClick={handlePrev}
+            >
+              Previous
+            </button>
 
-              <p>
-                Page {tableData?.page} of {tableData?.totalPages}
-              </p>
+            <p>
+              Page {tableData?.page} of {tableData?.totalPages}
+            </p>
 
-              <button
-                disabled={!tableData?.hasNextPage}
-                className="btn"
-                onClick={handleNext}
-              >
-                Next
-              </button>
-            </div>
+            <button
+              disabled={!tableData?.hasNextPage}
+              className="btn"
+              onClick={handleNext}
+            >
+              Next
+            </button>
           </div>
-        )}
+        </div>
       </section>
       {isCreating && (
         <AddNewBrand isOpen={isCreating} toggleModal={toggleModal} />

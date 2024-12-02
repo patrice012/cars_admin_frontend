@@ -18,7 +18,7 @@ import { CloseCircle, Trash } from "iconsax-react";
 import InputField from "../../InputField";
 import Item from "../../../models/item.model";
 import { DeleteManyModal } from "../../Modal";
-import {Selectable} from "../../Selectable";
+import { Selectable } from "../../Selectable";
 
 const META = {
   title: "Site Data",
@@ -262,7 +262,7 @@ export const ItemList = ({ page }: { page: string }) => {
               >
                 <BsPlusLg /> <p>Add new</p>
               </button>
-              {tableData?.data ? <p>{tableData?.data?.length} items</p> : null}
+              {tableData?.data ? <p>{tableData?.totalCount} items</p> : null}
             </div>
             <div className="flex gap-[24px]">
               {deleteList.length > 0 ? (
@@ -420,31 +420,29 @@ export const ItemList = ({ page }: { page: string }) => {
           </table>
         </div>
         {/* footer */}
-        {tableData?.totalPages > META.perPage - 2 && (
-          <div className="table-footer">
-            <div className="elms">
-              <button
-                disabled={!tableData?.hasPrevPage}
-                className="btn"
-                onClick={handlePrev}
-              >
-                Previous
-              </button>
+        <div className="table-footer">
+          <div className="elms">
+            <button
+              disabled={!tableData?.hasPrevPage}
+              className="btn"
+              onClick={handlePrev}
+            >
+              Previous
+            </button>
 
-              <p>
-                Page {tableData?.page} of {tableData?.totalPages}
-              </p>
+            <p>
+              Page {tableData?.page} of {tableData?.totalPages}
+            </p>
 
-              <button
-                disabled={!tableData?.hasNextPage}
-                className="btn"
-                onClick={handleNext}
-              >
-                Next
-              </button>
-            </div>
+            <button
+              disabled={!tableData?.hasNextPage}
+              className="btn"
+              onClick={handleNext}
+            >
+              Next
+            </button>
           </div>
-        )}
+        </div>
       </section>
       {isCreating && (
         <AddNew
