@@ -8,7 +8,6 @@ import { MdDeleteOutline } from "react-icons/md";
 import postReq from "../../helpers/postReq";
 import { useQuery } from "react-query";
 import AddItem from "./addCar";
-import PropTypes from "prop-types";
 import Item from "../../models/item.model";
 import Modal, {
   DeleteModal,
@@ -16,22 +15,12 @@ import Modal, {
   DisableModalMany,
 } from "../../components/Modal";
 import UpdateItem from "./updateCar";
-import { ClipLoader } from "react-spinners";
 import { LoadingSkeleton } from "../../components/Table/LoadingSkeleton";
 import InputField from "../../components/InputField";
 import { CloseCircle, Trash } from "iconsax-react";
 import { useSession } from "../../contexts/authContext";
-import { Selectable, SelectableFilter } from "../../components/Selectable";
-import Button from "../../components/Button";
-import FileUpload from "../../components/FileUpload";
-import TextAreaField from "../../components/TextAreaField";
+import { Selectable } from "../../components/Selectable";
 import { IoClose } from "react-icons/io5";
-import {
-  defaultCarDoorsCount,
-  defaultCarsYear,
-  cylinders,
-} from "../../helpers/constants";
-import notif from "../../helpers/notif";
 import { characsItemProps } from "../../helpers/types";
 
 const META = {
@@ -40,8 +29,6 @@ const META = {
   perPage: 10,
   page: 1,
 };
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const ItemList = () => {
   const location = useLocation();
@@ -305,7 +292,8 @@ export const ItemList = () => {
               <div className="actions flex items-center justify-start gap-8">
                 <button
                   onClick={() => toggleModal({ state: true, action: "create" })}
-                  className="btn btn-primary flex items-center justify-center gap-2">
+                  className="btn btn-primary flex items-center justify-center gap-2"
+                >
                   <BsPlusLg /> <p>Add new</p>
                 </button>
                 {tableData ? (
@@ -319,14 +307,16 @@ export const ItemList = () => {
                       <button
                         style={{ background: "#2563eb" }}
                         onClick={() => setDeactivatingMany(true)}
-                        className="btn border-0 btn-square">
+                        className="btn border-0 btn-square"
+                      >
                         <CloseCircle color="white" />
                       </button>
                     )}
                     <button
                       style={{ background: "red" }}
                       onClick={() => setRemovingMany(true)}
-                      className="btn border-0 btn-square">
+                      className="btn border-0 btn-square"
+                    >
                       <Trash color="white" />
                     </button>
                   </>
@@ -350,7 +340,8 @@ export const ItemList = () => {
                       });
                       setFiltre2(null);
                     }}
-                    className="btn border-0 btn-square">
+                    className="btn border-0 btn-square"
+                  >
                     <CloseCircle color="white" />
                   </button>
                 )}
@@ -401,13 +392,15 @@ export const ItemList = () => {
                           key={key}
                           onClick={() => {
                             handle(key);
-                            setFiltre2(null)
-                          }}>
+                            setFiltre2(null);
+                          }}
+                        >
                           <IoClose color="white" size={15} />
                         </button>
                         <button
                           className="py-1 px-4 bg-[#2563eb] rounded-md text-[#fff]"
-                          key={key}>
+                          key={key}
+                        >
                           {key}
                         </button>
                       </div>
@@ -439,7 +432,8 @@ export const ItemList = () => {
                       brand: "",
                     });
                     setFiltre2(null);
-                  }}>
+                  }}
+                >
                   <CloseCircle color="white" size={20} />
                 </button>
               ) : (
@@ -511,7 +505,8 @@ export const ItemList = () => {
                     onClick={() => {
                       handleSiteKeywordDetail(item);
                     }}
-                    className="cursor-pointer items-center">
+                    className="cursor-pointer items-center"
+                  >
                     <td>
                       <input
                         type="checkbox"
@@ -537,7 +532,8 @@ export const ItemList = () => {
                         e.stopPropagation();
                         setSelectedItem(item);
                         setIsUpdating(true);
-                      }}>
+                      }}
+                    >
                       <RxUpdate color="blue" />
                     </th>
                     <th
@@ -546,7 +542,8 @@ export const ItemList = () => {
                         e.stopPropagation();
                         setSelectedId(item._id);
                         setRemoving(true);
-                      }}>
+                      }}
+                    >
                       <MdDeleteOutline color="red" />
                     </th>
                   </tr>
@@ -562,7 +559,8 @@ export const ItemList = () => {
               <button
                 disabled={!tableData.hasPrevPage}
                 className="btn"
-                onClick={handlePrev}>
+                onClick={handlePrev}
+              >
                 Previous
               </button>
 
@@ -573,7 +571,8 @@ export const ItemList = () => {
               <button
                 disabled={!tableData.hasNextPage}
                 className="btn"
-                onClick={handleNext}>
+                onClick={handleNext}
+              >
                 Next
               </button>
             </div>
@@ -718,7 +717,8 @@ const AddFilter: React.FC<AddItemProps> = ({
       isOpen={isOpen}
       title="Filter Item"
       warning={warning}
-      closeModal={() => closeModal(false)}>
+      closeModal={() => closeModal(false)}
+    >
       <form onSubmit={handleSubmit}>
         <Selectable
           items={models.map((ele: characsItemProps) => ({
