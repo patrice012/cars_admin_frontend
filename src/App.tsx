@@ -35,6 +35,8 @@ import CreateNewAccount from "./pages/Account/CreateNewAccount";
 import useNetworkStatus from "./hooks/useNetworkStatus";
 import NoConnection from "./pages/404/NoConnection";
 import { SellerList } from "./pages/sellers/sellerList";
+import { SubmittedCars } from "./pages/cars/submittedCars";
+import SubmittedCarDetails from "./pages/cars/submittedCarDetails";
 
 const App = () => {
   const { isOnline } = useNetworkStatus();
@@ -89,6 +91,11 @@ const App = () => {
                   <Route path="/auth/logout" element={<Logout />} />
                   <Route path="/items" element={<CarItemsData />} />
                   <Route path="/items/:id" element={<ItemDetails />} />
+                  <Route path="/submitted_cars" element={<SubmittedCars />} />
+                  <Route
+                    path="/submitted_cars/:id"
+                    element={<SubmittedCarDetails />}
+                  />
                   <Route path="/sellers" element={<SellerList />} />
 
                   <Route
@@ -119,7 +126,10 @@ const App = () => {
                   />
                   <Route path="/characteristics/title" element={<Title />} />
                   <Route path="/characteristics/fuel" element={<Fuel />} />
-                  <Route path="/characteristics/seller_type" element={<SellerType />} />
+                  <Route
+                    path="/characteristics/seller_type"
+                    element={<SellerType />}
+                  />
 
                   <Route
                     path="/characteristics/brands"

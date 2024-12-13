@@ -4,13 +4,7 @@ import { useLocation, Link } from "react-router-dom";
 // icons
 import { AiOutlineHome } from "react-icons/ai";
 ("react-icons/tb");
-import {
-  IoMdAddCircle,
-  IoMdAlbums,
-  IoMdPeople,
-  IoMdPerson,
-  IoMdSettings,
-} from "react-icons/io";
+import { IoMdPeople, IoMdSettings } from "react-icons/io";
 import { IoCarSport } from "react-icons/io5";
 import { RiSettingsLine } from "react-icons/ri";
 
@@ -23,6 +17,7 @@ import { closeSideBar } from "../../helpers/toggleMobileView";
 // context
 import UserContext from "../../contexts/UserContext";
 import SidebarItem from "../SidebarItem";
+import { Archive, Car } from "iconsax-react";
 
 const Sidebar = () => {
   // loaction
@@ -81,6 +76,12 @@ const Sidebar = () => {
                 title="Cars"
                 link="/items"
                 children={<IoCarSport />}
+              />
+
+              <SidebarItem
+                title="Submitted Cars"
+                link="/submitted_cars"
+                children={<Archive variant="Bold" size={18} />}
               />
 
               <SidebarItem
