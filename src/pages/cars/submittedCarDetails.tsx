@@ -7,7 +7,14 @@ import { DeleteModal, DisableModal } from "../../components/Modal";
 import UpdateItem from "./updateCar";
 import { useQuery } from "react-query";
 import postReq from "../../helpers/postReq";
-import { CloseCircle, Edit, Send2, TickCircle, Trash } from "iconsax-react";
+import {
+  CloseCircle,
+  DocumentDownload,
+  Edit,
+  Send2,
+  TickCircle,
+  Trash,
+} from "iconsax-react";
 import SendToallModal from "./sendModal";
 
 const SubmittedCarDetails = () => {
@@ -47,8 +54,17 @@ const SubmittedCarDetails = () => {
     }
   };
 
+  const handleDownloadPhotos = () => {};
+
   const actions = (
     <div className="flex gap-4 my-2 justify-end">
+      <button
+        style={{ background: "blue" }}
+        onClick={() => {}}
+        className="btn border-0 btn-square"
+      >
+        <DocumentDownload color="white" />
+      </button>
       <button
         style={{ background: "#28a745" }}
         onClick={() => setSendToall(true)}
@@ -66,13 +82,6 @@ const SubmittedCarDetails = () => {
         ) : (
           <TickCircle color="white" />
         )}
-      </button>
-      <button
-        style={{ background: "#2563eb" }}
-        onClick={() => setIsUpdating(true)}
-        className="btn border-0 btn-square"
-      >
-        <Edit color="white" />
       </button>
       <button
         style={{ background: "red" }}
@@ -112,7 +121,7 @@ const SubmittedCarDetails = () => {
               <tbody>
                 <tr>
                   <td>Car Brand</td>
-                  <td>{itemDetails?.brand?.name}</td>
+                  <td>{itemDetails?.brand}</td>
                 </tr>
                 <tr>
                   <td>Car Name:</td>
@@ -125,6 +134,24 @@ const SubmittedCarDetails = () => {
                 <tr>
                   <td>Note:</td>
                   <td>{itemDetails?.note}</td>
+                </tr>
+                <tr>
+                  <td>Car condition</td>
+                  <td>{`${
+                    item?.condition == "older" ? "Used car" : "New car"
+                  }`}</td>
+                </tr>
+                <tr>
+                  <td>User phone</td>
+                  <td>{`+${itemDetails?.user?.phone}`}</td>
+                </tr>
+                <tr>
+                  <td>Publish date</td>
+                  <td>
+                    {itemDetails.createdAt
+                      ? new Date(itemDetails?.createdAt!).toLocaleString()
+                      : "Not defined"}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -151,7 +178,7 @@ const SubmittedCarDetails = () => {
           <DeleteModal
             deleteItem={toggleDeleteData}
             _id={item?._id}
-            url="car/delete"
+            url="submitted_car/delete"
             isOpen={removing}
             closeModal={() => setRemoving(!removing)}
           />

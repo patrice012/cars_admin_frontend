@@ -406,7 +406,9 @@ export const SubmittedCars = () => {
                         }}
                       />
                     </th>
+                    <th>User phone</th>
                     <th>Name</th>
+                    <th>Condition</th>
                     <th>Brand</th>
                     <th>Sales Price</th>
                     <th>Status</th>
@@ -462,8 +464,13 @@ export const SubmittedCars = () => {
                           }}
                         />
                       </td>
+
+                      <td>{`+ ${item?.user?.phone}`}</td>
                       <td>{item?.name}</td>
-                      <td>{item.brand?.name}</td>
+                      <td>
+                        {item?.condition == "older" ? "Used car" : "New Car"}
+                      </td>
+                      <td>{item.brand}</td>
                       <td>{item?.minPrice}</td>
                       <td>{item?.isActive ? "Active" : "Inactive"}</td>
                       {/* <th
