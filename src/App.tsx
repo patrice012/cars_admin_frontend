@@ -37,6 +37,10 @@ import NoConnection from "./pages/404/NoConnection";
 import { SellerList } from "./pages/sellers/sellerList";
 import { SubmittedCars } from "./pages/cars/submittedCars";
 import SubmittedCarDetails from "./pages/cars/submittedCarDetails";
+import { Sections } from "./pages/sections/sections";
+import SelectedCars from "./pages/sections/SelectedCars";
+import { ChooseCar } from "./pages/sections/chooseCar";
+import Choose from "./pages/sections/Choose";
 
 const App = () => {
   const { isOnline } = useNetworkStatus();
@@ -47,9 +51,7 @@ const App = () => {
   window.addEventListener("resize", toggleMobileView);
   useEffect(toggleMobileView, []);
 
-  useEffect(() => {
-    checkConnection();
-  }, [session]);
+  
 
   if (isLoading) {
     return <h1>Loading</h1>;
@@ -102,6 +104,9 @@ const App = () => {
                     path="/characteristics"
                     element={<Characteristics />}
                   />
+                  <Route path="/sections" element={<Sections/>} />
+                  <Route path="/section/choose_cars" element={<Choose/>} />
+                  <Route path="/sections/selected_cars" element={<SelectedCars/>} />
                   <Route
                     path="/characteristics/colors"
                     element={<ColorsData />}

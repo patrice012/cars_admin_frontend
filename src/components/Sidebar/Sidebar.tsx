@@ -17,7 +17,7 @@ import { closeSideBar } from "../../helpers/toggleMobileView";
 // context
 import UserContext from "../../contexts/UserContext";
 import SidebarItem from "../SidebarItem";
-import { Archive, Car } from "iconsax-react";
+import { Archive, Car, ElementPlus } from "iconsax-react";
 
 const Sidebar = () => {
   // loaction
@@ -82,6 +82,12 @@ const Sidebar = () => {
                 title="Submitted Cars"
                 link="/submitted_cars"
                 children={<Archive variant="Bold" size={18} />}
+              />
+
+              <SidebarItem
+                title="Sections"
+                link="/sections"
+                children={<ElementPlus variant="Bold" size={18} />}
               />
 
               <SidebarItem
