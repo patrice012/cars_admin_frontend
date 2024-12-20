@@ -107,6 +107,14 @@ export const ChooseCar = () => {
   }, [search]);
 
   useEffect(() => {
+    if (state) {
+      const Ids = state.section_uri.split("=")[1];
+      setDeleteList(Ids.split(","));
+      console.log(Ids.split(","));
+    }
+  }, []);
+
+  useEffect(() => {
     console.log(data);
   }, [data]);
 
@@ -295,9 +303,15 @@ export const ChooseCar = () => {
             <div className="flex items-center justify-between w-full">
               <div className="actions flex items-center justify-start gap-8">
                 <button
-                  onClick={() => toggleModal({ state: true, action: "create" })}
+                  onClick={() =>
+                    toggleModal({
+                      state: true,
+                      action: "create",
+                    })
+                  }
                   className="btn btn-primary flex items-center justify-center gap-2">
-                  <BsPlusLg />{state ? <p>Update</p> : <p>Create</p>}
+                  <BsPlusLg />
+                  {state ? <p>Update</p> : <p>Create</p>}
                 </button>
                 {tableData ? (
                   <p>{tableData?.data.length || tableData?.length} item(s)</p>
@@ -576,6 +590,7 @@ export const ChooseCar = () => {
           isOpen={isCreating}
           toggleModal={toggleModal}
           List={deleteList}
+          update={state}
         />
       )}
       {isUpdating && selectedITem && (

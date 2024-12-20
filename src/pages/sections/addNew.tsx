@@ -7,25 +7,30 @@ import Button from "../../components/Button";
 import PropTypes from "prop-types";
 import { useSession } from "../../contexts/authContext";
 import FileUpload from "../../components/FileUpload";
+import { useNavigate } from "react-router-dom";
 
 interface AddNewSelectedCarsProps {
   isOpen: boolean;
   toggleModal: ({ state, action }: { state: boolean; action: string }) => void;
   List: [];
+  update: any;
 }
 
 const AddNewSelectedCars: React.FC<AddNewSelectedCarsProps> = ({
   isOpen,
   toggleModal,
   List,
+  update,
 }) => {
+  console.log(update)
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
+  const navigate = useNavigate();
   const [data, setData] = useState<{
-    section_title: string;
+    section_title: string | null;
     section_uri: string;
   }>({
-    section_title: "",
+    section_title: update ? update.section_title : "",
     section_uri: "",
   });
   const [actionBtn, setActionBtn] = useState({
@@ -48,20 +53,35 @@ const AddNewSelectedCars: React.FC<AddNewSelectedCarsProps> = ({
     setActionBtn({ text: "Saving...", isDisabled: true });
     const uri = `https://autova-dot-clonegpt-fe34c.uc.r.appspot.com/?_id=${List.toString()}`;
     try {
-      const response = await postReq({
-        data: {
-          section_title: data.section_title,
-          section_uri: uri.toString(),
-        },
-        url: "section/create",
-        extras,
-      });
+      let response;
+      if (update) {
+        response = await postReq({
+          data: {
+            _id: update._id,
+            section_title: data.section_title,
+            section_uri: uri.toString(),
+          },
+          url: "section/update",
+          extras,
+        });
+      } else {
+        response = await postReq({
+          data: {
+            section_title: data.section_title,
+            section_uri: uri.toString(),
+          },
+          url: "section/create",
+          extras,
+        });
+      }
+
       console.log(response);
 
       if (response.status == 201) {
         notif(response.data?.message ?? "Success, Data has been added");
         setActionBtn({ text: "Save", isDisabled: false });
         closeModal(true);
+        navigate("/sections/selected_cars");
       } else {
         notif(response.data?.message ?? "Failed to add data");
         setActionBtn({ text: "Save", isDisabled: false });

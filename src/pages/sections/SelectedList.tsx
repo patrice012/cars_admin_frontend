@@ -222,7 +222,7 @@ export const ItemList = () => {
                           onClick={(e) => {
                             e.stopPropagation();
                             navigate("/section/choose_cars", {
-                              state: Selected.section_uri,
+                              state: Selected,
                             });
                           }}>
                           <RxUpdate />
