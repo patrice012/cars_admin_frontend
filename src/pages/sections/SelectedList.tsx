@@ -47,6 +47,7 @@ export const ItemList = () => {
   const [deleteList, setDeleteList] = useState([]);
   const [selectedId, setSelectedId] = useState("");
   const { session } = useSession();
+  const [check, setCheck] = useState(false);
   const [pageNumber, setPageNumber] = useState(META.page);
   const extras = [{ key: "authorization", value: "Bearer " + session }];
 
@@ -134,6 +135,28 @@ export const ItemList = () => {
     }
   };
 
+  const handleDelete = (id: string) => {
+    if (id === "all") {
+      if (check) {
+        setDeleteList([]);
+      } else {
+        tableData?.map((item: Item, idx: number) => {
+          setDeleteList((idSelected) => {
+            return [...idSelected, item._id];
+          });
+        });
+      }
+    } else {
+      setDeleteList((idSelected) => {
+        if (deleteList.includes(id)) {
+          return idSelected.filter((selected) => selected != id);
+        } else {
+          return [...idSelected, id];
+        }
+      });
+    }
+  };
+
   return (
     <>
       <section className="table-container">
@@ -148,14 +171,28 @@ export const ItemList = () => {
                   <BsPlusLg /> <p>Add new</p>
                 </button>
               </div>
+
               <div className="flex gap-[24px] items-center">
+                {deleteList.length > 0 ? (
+                  <>
+                    <button
+                      style={{ background: "red" }}
+                      onClick={() => setRemovingMany(true)}
+                      className="btn border-0 btn-square">
+                      <Trash color="white" />
+                    </button>
+                  </>
+                ) : (
+                  ""
+                )}
+
                 <InputField
                   label=""
                   id="title"
                   type="text"
                   placeholder="search"
-                  value=""
-                  onChange={(e) => {}}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
             </div>
@@ -171,6 +208,13 @@ export const ItemList = () => {
                   <input
                     type="checkbox"
                     className=" items-start justify-start flex"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                    onChange={(e) => {
+                      setCheck(!check);
+                      handleDelete("all");
+                    }}
                   />
                 </th>
                 <th>Name</th>
@@ -213,6 +257,13 @@ export const ItemList = () => {
                           <input
                             type="checkbox"
                             className=" items-start justify-start flex"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                            checked={deleteList.includes(Selected._id)}
+                            onChange={(e) => {
+                              handleDelete(Selected?._id);
+                            }}
                           />
                         </td>
                         <td>{Selected?.section_title}</td>
@@ -280,7 +331,7 @@ export const ItemList = () => {
           <DeleteManyModal
             deleteItem={toggleDeleteManyData}
             _id={deleteList}
-            url="section/delete-many"
+            url="section/delete/many"
             isOpen={removingMany}
             setDelete={setDeleteList}
             closeModal={() => setRemovingMany(!removingMany)}
