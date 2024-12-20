@@ -11,56 +11,50 @@ import FileUpload from "../../components/FileUpload";
 interface AddNewSelectedCarsProps {
   isOpen: boolean;
   toggleModal: ({ state, action }: { state: boolean; action: string }) => void;
+  List: [];
 }
 
 const AddNewSelectedCars: React.FC<AddNewSelectedCarsProps> = ({
   isOpen,
   toggleModal,
+  List,
 }) => {
   const { session } = useSession();
   const extras = [{ key: "authorization", value: "Bearer " + session }];
-  const [data, setData] = useState<{ name: string; logo: File[] }>({
-    name: "",
-    logo: [],
+  const [data, setData] = useState<{
+    section_title: string;
+    section_uri: string;
+  }>({
+    section_title: "",
+    section_uri: "",
   });
   const [actionBtn, setActionBtn] = useState({
     text: "Save",
     isDisabled: false,
   });
   const [warning, setWarning] = useState("");
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files && files.length == 1) {
-      const files = Array.from(e.target.files || []);
-      setData({ ...data, logo: files });
-    } else {
-      notif("Only one file could be upload");
-    }
-  };
-
+  const uri = `https://autova-dot-clonegpt-fe34c.uc.r.appspot.com/?_id=${List.toString()}`;
+  console.log(uri);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     console.log(data);
     e.preventDefault();
     e.stopPropagation();
 
-    if (!data.name || !(data.logo.length > 0)) {
+    if (!data.section_title || !(List.length > 0)) {
       setWarning("Please fill all fields");
       return;
     }
 
     setActionBtn({ text: "Saving...", isDisabled: true });
-
+    const uri = `https://autova-dot-clonegpt-fe34c.uc.r.appspot.com/?_id=${List.toString()}`;
     try {
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("logo", data.logo[0]);
-
       const response = await postReq({
-        data: formData,
-        url: "brand/create",
+        data: {
+          section_title: data.section_title,
+          section_uri: uri.toString(),
+        },
+        url: "section/create",
         extras,
-        isFileUpload: true,
       });
       console.log(response);
 
@@ -81,7 +75,7 @@ const AddNewSelectedCars: React.FC<AddNewSelectedCarsProps> = ({
 
   const closeModal = (state: boolean) => {
     setWarning("");
-    setData({ name: "", logo: [] });
+    setData({ section_title: "", section_uri: "" });
     toggleModal({ state: state, action: "create" });
   };
 
@@ -91,17 +85,17 @@ const AddNewSelectedCars: React.FC<AddNewSelectedCarsProps> = ({
       title="Add New Item"
       warning={warning}
       closeModal={() => closeModal(false)}>
-      <form>
+      <form onSubmit={handleSubmit}>
         <InputField
           label="Section name"
           id="name"
           type="text"
           placeholder="Enter name"
-          value={data.name}
-          onChange={(e) => setData({ ...data, name: e.target.value })}
+          value={data.section_title}
+          onChange={(e) => setData({ ...data, section_title: e.target.value })}
         />
 
-        <Button disabled={actionBtn.isDisabled}>
+        <Button onClick={handleSubmit} disabled={actionBtn.isDisabled}>
           <span>{actionBtn.text}</span>
         </Button>
       </form>

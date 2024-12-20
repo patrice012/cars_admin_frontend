@@ -32,6 +32,8 @@ const META = {
 };
 
 export const ChooseCar = () => {
+  const { state } = useLocation();
+  console.log(state);
   const location = useLocation();
   const navigate = useNavigate();
   const [pageNumber, setPageNumber] = useState(META.page);
@@ -232,6 +234,7 @@ export const ChooseCar = () => {
           return [...idSelected, id];
         }
       });
+      console.log(deleteList);
     }
   };
 
@@ -293,9 +296,8 @@ export const ChooseCar = () => {
               <div className="actions flex items-center justify-start gap-8">
                 <button
                   onClick={() => toggleModal({ state: true, action: "create" })}
-                  className="btn btn-primary flex items-center justify-center gap-2"
-                >
-                  <BsPlusLg /> <p>Create</p>
+                  className="btn btn-primary flex items-center justify-center gap-2">
+                  <BsPlusLg />{state ? <p>Update</p> : <p>Create</p>}
                 </button>
                 {tableData ? (
                   <p>{tableData?.data.length || tableData?.length} item(s)</p>
@@ -308,16 +310,14 @@ export const ChooseCar = () => {
                       <button
                         style={{ background: "#2563eb" }}
                         onClick={() => setDeactivatingMany(true)}
-                        className="btn border-0 btn-square"
-                      >
+                        className="btn border-0 btn-square">
                         <CloseCircle color="white" />
                       </button>
                     )}
                     <button
                       style={{ background: "red" }}
                       onClick={() => setRemovingMany(true)}
-                      className="btn border-0 btn-square"
-                    >
+                      className="btn border-0 btn-square">
                       <Trash color="white" />
                     </button>
                   </>
@@ -341,8 +341,7 @@ export const ChooseCar = () => {
                       });
                       setFiltre2(null);
                     }}
-                    className="btn border-0 btn-square"
-                  >
+                    className="btn border-0 btn-square">
                     <CloseCircle color="white" />
                   </button>
                 )}
@@ -394,14 +393,12 @@ export const ChooseCar = () => {
                           onClick={() => {
                             handle(key);
                             setFiltre2(null);
-                          }}
-                        >
+                          }}>
                           <IoClose color="white" size={15} />
                         </button>
                         <button
                           className="py-1 px-4 bg-[#2563eb] rounded-md text-[#fff]"
-                          key={key}
-                        >
+                          key={key}>
                           {key}
                         </button>
                       </div>
@@ -433,8 +430,7 @@ export const ChooseCar = () => {
                       brand: "",
                     });
                     setFiltre2(null);
-                  }}
-                >
+                  }}>
                   <CloseCircle color="white" size={20} />
                 </button>
               ) : (
@@ -506,8 +502,7 @@ export const ChooseCar = () => {
                     onClick={() => {
                       handleSiteKeywordDetail(item);
                     }}
-                    className="cursor-pointer items-center"
-                  >
+                    className="cursor-pointer items-center">
                     <td>
                       <input
                         type="checkbox"
@@ -533,8 +528,7 @@ export const ChooseCar = () => {
                         e.stopPropagation();
                         setSelectedItem(item);
                         setIsUpdating(true);
-                      }}
-                    >
+                      }}>
                       <RxUpdate color="blue" />
                     </th>
                     <th
@@ -543,8 +537,7 @@ export const ChooseCar = () => {
                         e.stopPropagation();
                         setSelectedId(item._id);
                         setRemoving(true);
-                      }}
-                    >
+                      }}>
                       <MdDeleteOutline color="red" />
                     </th>
                   </tr>
@@ -560,8 +553,7 @@ export const ChooseCar = () => {
               <button
                 disabled={!tableData.hasPrevPage}
                 className="btn"
-                onClick={handlePrev}
-              >
+                onClick={handlePrev}>
                 Previous
               </button>
 
@@ -572,15 +564,20 @@ export const ChooseCar = () => {
               <button
                 disabled={!tableData.hasNextPage}
                 className="btn"
-                onClick={handleNext}
-              >
+                onClick={handleNext}>
                 Next
               </button>
             </div>
           </div>
         )}
       </section>
-      {isCreating && <AddNewSelectedCars isOpen={isCreating} toggleModal={toggleModal} />}
+      {isCreating && (
+        <AddNewSelectedCars
+          isOpen={isCreating}
+          toggleModal={toggleModal}
+          List={deleteList}
+        />
+      )}
       {isUpdating && selectedITem && (
         <UpdateItem
           item={selectedITem}
@@ -718,8 +715,7 @@ const AddFilter: React.FC<AddItemProps> = ({
       isOpen={isOpen}
       title="Filter Item"
       warning={warning}
-      closeModal={() => closeModal(false)}
-    >
+      closeModal={() => closeModal(false)}>
       <form onSubmit={handleSubmit}>
         <Selectable
           items={models.map((ele: characsItemProps) => ({
