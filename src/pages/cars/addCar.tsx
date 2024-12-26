@@ -15,6 +15,7 @@ import {
   defaultCarsYear,
 } from "../../helpers/constants";
 import { characsItemProps } from "../../helpers/types";
+import RswEditor from "react-simple-wysiwyg";
 
 interface AddItemProps {
   isOpen: boolean;
@@ -141,13 +142,13 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             formData.append("imagesUrls", item);
           });
         } else if (key === "keywords") {
+          const keywordsArray = value
+            .split(";")
+            .map((keyword: string) => keyword.trim());
 
-          const keywordsArray = value.split(";").map((keyword: string) => keyword.trim());
-    
           keywordsArray.forEach((keyword: string) => {
-            formData.append("keywords", keyword); 
+            formData.append("keywords", keyword);
           });
-
         } else {
           // For other data types, append directly
           formData.append(key, value);
@@ -213,7 +214,8 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
       isOpen={isOpen}
       title="Add New Item"
       warning={warning}
-      closeModal={() => closeModal(false)}>
+      closeModal={() => closeModal(false)}
+    >
       <form onSubmit={handleSubmit}>
         <InputField
           required
@@ -224,13 +226,26 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
           value={data.name}
           onChange={(e) => setData({ ...data, name: e.target.value })}
         />
-        <TextAreaField
+        {/* <TextAreaField
           label="Add note"
           id="note"
           placeholder="Enter note"
           value={data.note}
           onChange={(e) => setData({ ...data, note: e.target.value })}
-        />
+        /> */}
+
+        <div className="form-group mb-4">
+          <span>Add note</span>
+
+          <RswEditor
+            autoFocus
+            containerProps={{ style: { resize: "vertical" } }}
+            placeholder="Test 2"
+            value={data.note}
+            onChange={(e) => setData({ ...data, note: e.target.value })}
+            title="ed1"
+          />
+        </div>
 
         <Selectable
           items={brands.map((item: characsItemProps) => ({
@@ -257,7 +272,9 @@ const AddItem: React.FC<AddItemProps> = ({ isOpen, toggleModal }) => {
             label: item,
             value: item,
           }))}
-          onChange={(e) => setData({ ...data, doorsCount: Number(e.target.value )})}
+          onChange={(e) =>
+            setData({ ...data, doorsCount: Number(e.target.value) })
+          }
           title="Car doors"
           selected={data.doorsCount}
         />

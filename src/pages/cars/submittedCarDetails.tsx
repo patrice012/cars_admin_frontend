@@ -54,13 +54,39 @@ const SubmittedCarDetails = () => {
     }
   };
 
-  const handleDownloadPhotos = () => {};
+  const downloadImages = async (imageUrls: string[]) => {
+    for (const url of imageUrls) {
+      try {
+        // Fetch the image
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch image from ${url}`);
+        }
+
+        // Convert the image to a Blob
+        const blob = await response.blob();
+
+        // Create a temporary anchor element to trigger the download
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = url.split("/").pop() || "downloaded-image";
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up the temporary URL and remove the link element
+        URL.revokeObjectURL(link.href);
+        document.body.removeChild(link);
+      } catch (error) {
+        console.error(`Error downloading image from ${url}:`, error);
+      }
+    }
+  };
 
   const actions = (
     <div className="flex gap-4 my-2 justify-end">
       <button
         style={{ background: "blue" }}
-        onClick={() => {}}
+        onClick={() => downloadImages(itemDetails?.imagesUrls)}
         className="btn border-0 btn-square"
       >
         <DocumentDownload color="white" />
